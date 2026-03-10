@@ -4,13 +4,13 @@ import json
 import os
 
 # 設置頁面配置
-st.set_page_config(page_title="妍菲天堂 - 全能數據搜尋中心 v5.6", page_icon="🔍", layout="wide")
+st.set_page_config(page_title="妍菲天堂 - 全能數據搜尋中心 v5.7", page_icon="🔍", layout="wide")
 
 # API 基礎設定
 LINE_URL = "https://line.me/ti/g2/IlKNIaRrZwDZAaABlz_6EBhtad-KMRNRg3aC0A?utm_source=invitation&utm_medium=link_copy&utm_campaign=default"
 LOCAL_DATA_FILE = "data.json"
 
-# --- 全站視覺強化鎖定 CSS v5.6 (徹底解決 Expander 與深色模式衝突) ---
+# --- 全站視覺強化鎖定 CSS v5.7 (新增標題透明粉紅色背景) ---
 st.markdown(f"""
     <style>
     /* 1. 全域背景與基礎文字 */
@@ -34,14 +34,24 @@ st.markdown(f"""
         color: #ffffff !important;
     }}
     
-    /* 4. 強制鎖定 Expander (摺疊選單) 的文字顏色 (解決展開後字體變白問題) */
-    /* 標題部分 */
+    /* 4. 強制鎖定 Expander (摺疊選單) 的樣式 */
+    /* 標題區底色改成透明粉紅色 */
+    [data-testid="stExpander"] details summary {{
+        background-color: rgba(255, 182, 193, 0.4) !important; /* 透明粉紅色 */
+        border-radius: 8px !important;
+        padding: 10px !important;
+        margin-bottom: 5px !important;
+        border: 1px solid rgba(255, 105, 180, 0.2) !important;
+    }}
+    
+    /* 標題文字顏色鎖定為深藍色 */
     [data-testid="stExpander"] details summary p {{
         color: #004494 !important;
         font-weight: bold !important;
         font-size: 1.1em !important;
     }}
-    /* 展開後的內容部分 */
+    
+    /* 展開後的內容部分文字顏色 */
     [data-testid="stExpander"] [data-testid="stMarkdownContainer"] p,
     [data-testid="stExpander"] [data-testid="stMarkdownContainer"] span,
     [data-testid="stExpander"] [data-testid="stMarkdownContainer"] b {{
@@ -90,7 +100,7 @@ data_source = load_all_data()
 
 # --- 側邊欄 ---
 st.sidebar.markdown('<div style="text-align:center;"><img src="https://static-s3.skyworkcdn.com/fe/skywork-site-assets/images/skybot/avatar2-new.png" width="80"></div>', unsafe_allow_html=True)
-st.sidebar.markdown("<h2 style='text-align:center; color:white;'>妍菲天堂 v5.6</h2>", unsafe_allow_html=True)
+st.sidebar.markdown("<h2 style='text-align:center; color:white;'>妍菲天堂 v5.7</h2>", unsafe_allow_html=True)
 st.sidebar.markdown(f'<a href="{LINE_URL}" target="_blank" class="line-button">🟢 加入官方 LINE 社群</a>', unsafe_allow_html=True)
 
 st.sidebar.markdown("---")
@@ -175,4 +185,4 @@ elif menu == "🎁 新手大禮包":
     }))
 
 st.markdown("---")
-st.markdown('<div style="text-align:center; color:#999;">© 2026 妍菲天堂 v5.6 | 搜尋視覺修正版</div>', unsafe_allow_html=True)
+st.markdown('<div style="text-align:center; color:#999;">© 2026 妍菲天堂 v5.7 | 選單視覺強化版</div>', unsafe_allow_html=True)
