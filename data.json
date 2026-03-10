@@ -1,0 +1,23 @@
+{
+  "weapons": [
+    {"name": "對武器施法的卷軸", "type": "卷軸", "info": "強化武器命中與傷害"},
+    {"name": "瑟魯基之劍", "type": "劍", "info": "高傷害單手劍"},
+    {"name": "細劍", "type": "劍", "info": "對不死系有額外加成"}
+  ],
+  "armors": [
+    {"name": "對防具施法的卷軸", "type": "卷軸", "info": "降低防禦力(AC)"},
+    {"name": "力套", "type": "手套", "info": "力量+2"}
+  ],
+  "monsters": [
+    {"name": "黑豹", "level": 70, "hp": 5000, "mp": 200, "ac": -80},
+    {"name": "思克巴", "level": 60, "hp": 3000, "mp": 500, "ac": -60}
+  ],
+  "drops": [
+    {"item_name": "瑟魯基之劍", "monster_name": "克特", "rate": "0.1%"},
+    {"item_name": "對武器施法的卷軸", "monster_name": "黑豹", "rate": "2%"}
+  ],
+  "items": [
+    {"name": "金幣", "type": "貨幣"},
+    {"name": "紅藥水", "type": "恢復"}
+  ]
+}
