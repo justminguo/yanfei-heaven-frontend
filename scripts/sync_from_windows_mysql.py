@@ -43,6 +43,51 @@ ARMOR_COLUMNS = [
     "greater_flag", "magic_hit_modifier", "up_hp_potion", "uhp_number", "pvp_dmg", "pvp_dmg_reduction", "armor_group",
 ]
 
+# ---------------------------------------------------------------------------
+# Character DB probe order — tried in sequence when --mysql-char-db is not set.
+# Add your actual DB name first if you know it, or just pass --mysql-char-db.
+# Common names:
+#   lin2user  — L2J / L2OFF standard user DB
+#   l1jdb     — L1J (Lineage 1 Java) default DB
+#   lineage   — some L1J/custom packs use this
+#   lin       — short alias sometimes used
+#   user      — some older setups
+# ---------------------------------------------------------------------------
+CANDIDATE_CHAR_DBS = ["lin2user", "l1jdb", "lineage", "lin", "user"]
+
+# ---------------------------------------------------------------------------
+# Column name styles for the `characters` table.
+#
+#   l2j  — Lineage 2 Java / L2OFF:  level, base_class, online
+#   l1j  — Lineage 1 Java (381):    Lev,   classtype,  OnlineStatus
+#
+# Use --char-style to pick explicitly, or leave as "auto" to try l2j then l1j.
+# ---------------------------------------------------------------------------
+CHAR_QUERY_TEMPLATES = {
+    "l2j": """\
+USE `{db}`;
+SELECT char_id,
+       {c('account_name')},
+       {c('char_name')},
+       IFNULL(level, 0),
+       IFNULL(base_class, 0),
+       IFNULL(online, 0)
+FROM characters
+ORDER BY char_id;
+""",
+    "l1j": """\
+USE `{db}`;
+SELECT char_id,
+       {c('account_name')},
+       {c('char_name')},
+       IFNULL(Lev, 0),
+       IFNULL(classtype, 0),
+       IFNULL(OnlineStatus, 0)
+FROM characters
+ORDER BY char_id;
+""",
+}
+
 
 def powershell_encoded(script: str) -> str:
     return base64.b64encode(script.encode("utf-16le")).decode()
@@ -91,8 +136,119 @@ def to_int(v: str) -> int:
     return int(v)
 
 
+def _clean(col: str) -> str:
+    return f"REPLACE(REPLACE(REPLACE(IFNULL({col}, ''), '\\r', ' '), '\\n', ' '), '\\t', ' ')"
+
+
+def build_char_query(db: str, style: str) -> str:
+    template = CHAR_QUERY_TEMPLATES[style]
+    return template.format(db=db.replace("`", ""), c=_clean)
+
+
+def try_char_sync(
+    db: str,
+    style: str,
+    remote_kw: dict,
+) -> tuple[list[list[str]], str] | None:
+    """
+    Attempt to fetch characters from `db` using `style` column names.
+    Returns (rows, description) on success, None on failure.
+    A zero-row result is considered a failure for auto-probe (logs a warning).
+    """
+    query = build_char_query(db, style)
+    print(f"  [char-sync] Trying DB={db!r}  style={style!r} ...", end=" ", flush=True)
+    try:
+        rows = parse_tsv(run_remote_mysql(query, **remote_kw))
+    except Exception as exc:
+        print(f"FAILED ({exc!s:.120})")
+        return None
+
+    if not rows:
+        print(f"OK but 0 rows returned — skipping (DB exists but table may be empty or wrong columns)")
+        return None
+
+    desc = f"{db}.characters [{style} columns]"
+    print(f"OK — {len(rows)} rows")
+    return rows, desc
+
+
+def sync_characters(
+    char_db: str,
+    char_style: str,
+    remote_kw: dict,
+) -> tuple[list[list[str]], str]:
+    """
+    Return (character_rows, source_description).
+    Raises RuntimeError with actionable guidance if nothing works.
+    """
+    # Explicit DB name given — try it with the requested style(s).
+    if char_db:
+        styles = [char_style] if char_style != "auto" else ["l2j", "l1j"]
+        for style in styles:
+            result = try_char_sync(char_db, style, remote_kw)
+            if result is not None:
+                return result
+        # All styles failed for the explicit DB.
+        tried = " and ".join(styles)
+        raise RuntimeError(
+            f"Character sync failed for DB '{char_db}' (tried column styles: {tried}).\n"
+            f"  Verify the DB/table exists and check column names with:\n"
+            f"    USE `{char_db}`; SHOW COLUMNS FROM characters;\n"
+            f"  Then re-run with the correct --char-style (l2j or l1j)."
+        )
+
+    # No DB name — auto-probe the candidate list.
+    print(f"  [char-sync] --mysql-char-db not set; probing candidates: {CANDIDATE_CHAR_DBS}")
+    styles = [char_style] if char_style != "auto" else ["l2j", "l1j"]
+    for candidate in CANDIDATE_CHAR_DBS:
+        for style in styles:
+            result = try_char_sync(candidate, style, remote_kw)
+            if result is not None:
+                return result
+
+    raise RuntimeError(
+        "Character auto-probe exhausted all candidates without success.\n"
+        f"  Candidates tried: {CANDIDATE_CHAR_DBS}\n"
+        f"  Styles tried: {styles}\n"
+        "\n"
+        "  ACTION REQUIRED — find the correct DB name on the Windows MySQL:\n"
+        "    SHOW DATABASES;\n"
+        "    SHOW TABLES FROM <db_name>;\n"
+        "    USE <db_name>; SHOW COLUMNS FROM characters;\n"
+        "\n"
+        "  Then re-run with:\n"
+        "    --mysql-char-db <db_name>   (e.g. lin2user, l1jdb, lineage)\n"
+        "    --char-style l1j            (if server is Lineage 1 / L1J)\n"
+        "    --char-style l2j            (if server is Lineage 2 / L2J)"
+    )
+
+
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Sync Lineage MySQL data from Windows to local SQLite")
+    parser = argparse.ArgumentParser(
+        description="Sync Lineage MySQL data from Windows to local SQLite",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Characters / Online Count sync
+-------------------------------
+The --mysql-char-db argument controls which MySQL database contains the
+`characters` table used for the real-time online player count on the website.
+
+If you do NOT pass --mysql-char-db, the script will automatically probe a
+list of common database names (%(char_candidates)s).
+
+Use --char-style to select the right column naming convention for your server:
+  l2j  Lineage 2 Java / L2OFF: level, base_class, online
+  l1j  Lineage 1 Java (381):   Lev,   classtype,  OnlineStatus
+  auto Try l2j first, then l1j (default)
+
+Pass --mysql-char-db=none  (or --mysql-char-db='') to skip character sync entirely.
+
+Example — explicit DB + L1J columns:
+  python scripts/sync_from_windows_mysql.py \\
+    --host 211.20.245.169 --ssh-user user --ssh-key /path/to/key \\
+    --mysql-db 381 --mysql-char-db l1jdb --char-style l1j
+""" % {"char_candidates": ", ".join(CANDIDATE_CHAR_DBS)},
+    )
     parser.add_argument("--host", required=True)
     parser.add_argument("--ssh-user", default="user")
     parser.add_argument("--ssh-key", required=True)
@@ -102,9 +258,25 @@ def main() -> None:
     parser.add_argument("--mysql-db", default="381")
     parser.add_argument(
         "--mysql-char-db",
-        default="lin2user",
-        help="MySQL database containing the characters table (default: lin2user). "
-             "Set to empty string to skip character sync.",
+        default="",
+        metavar="DB_NAME",
+        help=(
+            "MySQL database that contains the `characters` table. "
+            "Leave empty (default) to auto-probe common names. "
+            "Pass 'none' to skip character sync entirely. "
+            "Common values: lin2user (L2J), l1jdb (L1J/381), lineage, lin, user."
+        ),
+    )
+    parser.add_argument(
+        "--char-style",
+        default="auto",
+        choices=["auto", "l2j", "l1j"],
+        help=(
+            "Column name style for the characters table. "
+            "l2j=level/base_class/online (Lineage 2 Java). "
+            "l1j=Lev/classtype/OnlineStatus (Lineage 1 Java / 381 servers). "
+            "auto=try l2j first, then l1j (default)."
+        ),
     )
     parser.add_argument("--out", default=str(DEFAULT_DB_PATH))
     args = parser.parse_args()
@@ -187,23 +359,11 @@ ORDER BY item_id;
         mysql_password=args.mysql_password,
     )
 
-    # Build character query if a char-db is specified.
-    # Assumes L2J-style columns: char_id, account_name, char_name, level, base_class, online.
-    # Adjust column names here if your server uses different names (e.g. Lev, class, onlinestatus).
-    char_db = args.mysql_char_db.strip()
-    if char_db:
-        clean_char = lambda col: f"REPLACE(REPLACE(REPLACE(IFNULL({col}, ''), '\\r', ' '), '\\n', ' '), '\\t', ' ')"
-        char_query = f"""
-USE `{char_db.replace('`', '')}`;
-SELECT char_id,
-       {clean_char('account_name')},
-       {clean_char('char_name')},
-       IFNULL(level, 0),
-       IFNULL(base_class, 0),
-       IFNULL(online, 0)
-FROM characters
-ORDER BY char_id;
-"""
+    # ------------------------------------------------------------------
+    # Decide whether to attempt character sync.
+    # ------------------------------------------------------------------
+    char_db_arg = args.mysql_char_db.strip()
+    skip_chars = char_db_arg.lower() in ("none", "-")
 
     items = parse_tsv(run_remote_mysql(item_query, **remote_kw))
     monsters = parse_tsv(run_remote_mysql(monster_query, **remote_kw))
@@ -212,12 +372,20 @@ ORDER BY char_id;
     armors = parse_tsv(run_remote_mysql(armor_query, **remote_kw))
 
     characters: list[list[str]] = []
-    if char_db:
+    char_source: str = "(none)"
+
+    if skip_chars:
+        print("Character sync skipped (--mysql-char-db=none).")
+    else:
+        print(f"Starting character sync (char-db={char_db_arg or '<auto-probe>'!r}, style={args.char_style!r}) ...")
         try:
-            characters = parse_tsv(run_remote_mysql(char_query, **remote_kw))
-            print(f"Fetched {len(characters)} character rows from {char_db}.characters")
-        except Exception as exc:
-            print(f"WARNING: character sync skipped — {exc}")
+            characters, char_source = sync_characters(char_db_arg, args.char_style, remote_kw)
+            print(f"  [char-sync] SUCCESS: {len(characters)} characters from {char_source}")
+            if len(characters) == 0:
+                print("  [char-sync] WARNING: 0 characters written — online count will fall back to site_config value.")
+        except RuntimeError as exc:
+            print(f"\nWARNING: character sync failed — {exc}\n")
+            print("  Online count will fall back to site_config.server_online_count value.")
 
     out_path = Path(args.out)
     out_path.parent.mkdir(parents=True, exist_ok=True)
@@ -333,6 +501,12 @@ ORDER BY char_id;
 
     print(f"Wrote SQLite DB: {out_path}")
     print(counts)
+    if counts["characters"] == 0 and not skip_chars:
+        print(
+            "\nNOTE: characters table is empty — real online count is unavailable.\n"
+            "  The website will display the fallback value from site_config.server_online_count.\n"
+            "  To fix this, re-run with the correct --mysql-char-db and --char-style."
+        )
 
 
 if __name__ == "__main__":
