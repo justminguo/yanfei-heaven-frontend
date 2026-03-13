@@ -253,7 +253,6 @@ INSERT OR IGNORE INTO site_config (key, value) VALUES
   ('launcher_url',        '/download'),
   ('patch_url',           '/download'),
   ('guide_url',           '/guide'),
-  ('discord_url',         '#discord'),
   ('forum_url',           '#forum'),
   ('line_group_url',      'https://line.me/ti/g2/IlKNIaRrZwDZAaABlz_6EBhtad-KMRNRg3aC0A?utm_source=invitation&utm_medium=link_copy&utm_campaign=default'),
   ('brand_slogan',        '精心打造的天堂 II 私服，還原經典、追求平衡。與志同道合的玩家一起書寫屬於你的傳奇篇章。'),

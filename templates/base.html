@@ -26,7 +26,7 @@
             <a href="{{ url_for('drops') }}">掉落查詢</a>
           </div>
         </div>
-        <a href="{{ site_cfg.get('discord_url', '#discord') }}">聯繫我們</a>
+        <a href="{{ site_cfg.get('line_group_url', '#line') }}">LINE 群組</a>
         <a href="{{ url_for('download_page') }}" class="nav-cta">立即下載</a>
       </nav>
     </div>
@@ -41,7 +41,7 @@
         <strong>{{ site_cfg.get('brand_name', '妍菲天堂') }}</strong>
         <p>{{ site_cfg.get('brand_slogan', '精心打造的天堂 II 私服，還原經典、追求平衡。') }}</p>
         <div class="footer-social">
-          <a href="{{ site_cfg.get('discord_url', '#discord') }}" class="social-btn">Discord 社群</a>
+          <a href="{{ site_cfg.get('line_group_url', '#line') }}" class="social-btn">LINE 群組</a>
           <a href="{{ site_cfg.get('forum_url', '#forum') }}" class="social-btn">官方論壇</a>
         </div>
       </div>
@@ -60,9 +60,9 @@
         </div>
         <div>
           <strong>社群與支援</strong>
-          <a href="{{ site_cfg.get('discord_url', '#discord') }}">Discord</a>
+          <a href="{{ site_cfg.get('line_group_url', '#line') }}">LINE 群組</a>
           <a href="{{ site_cfg.get('forum_url', '#forum') }}">論壇</a>
-          <a href="{{ site_cfg.get('discord_url', '#discord') }}">客服支援</a>
+          <a href="{{ site_cfg.get('line_group_url', '#line') }}">客服支援</a>
         </div>
       </div>
     </div>
