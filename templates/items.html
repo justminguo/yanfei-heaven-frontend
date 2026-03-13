@@ -4,7 +4,7 @@
 <section class="card">
   <h1>物品查詢</h1>
   <form class="filters" method="get">
-    <input type="text" name="q" placeholder="輸入物品名稱 / 名稱 ID / 備註" value="{{ q }}">
+    <input type="text" name="q" placeholder="輸入物品名稱 / 備註" value="{{ q }}">
     <select name="item_type">
       <option value="">全部類型</option>
       {% for t in types %}
@@ -15,21 +15,18 @@
   </form>
   <div class="table-wrap">
     <table>
-      <thead><tr><th>ID</th><th>名稱</th><th>名稱ID</th><th>類型</th><th>用途</th><th>材質</th><th>重量</th><th>可堆疊</th></tr></thead>
+      <thead><tr><th>名稱</th><th>類型</th><th>材質</th><th>重量</th><th>可堆疊</th></tr></thead>
       <tbody>
       {% for row in rows %}
         <tr>
-          <td>{{ row.id }}</td>
           <td><a href="{{ url_for('item_detail', item_id=row.id) }}">{{ row.name }}</a></td>
-          <td>{{ row.name_id }}</td>
           <td>{{ row.item_type }}</td>
-          <td>{{ row.use_type }}</td>
           <td>{{ row.material }}</td>
           <td>{{ row.weight }}</td>
           <td>{{ '是' if row.stackable else '否' }}</td>
         </tr>
       {% else %}
-        <tr><td colspan="8">查無資料</td></tr>
+        <tr><td colspan="5">查無資料</td></tr>
       {% endfor %}
       </tbody>
     </table>
