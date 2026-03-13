@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}掉落查詢{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>掉落查詢</h1>
+  <form class="filters" method="get">
+    <input type="text" name="q" placeholder="輸入怪物或物品名稱" value="{{ q }}">
+    <button type="submit">查詢</button>
+  </form>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>怪物</th><th>等級</th><th>掉落物</th><th>類型</th><th>數量</th><th>機率</th><th>備註</th></tr></thead>
+      <tbody>
+      {% for row in rows %}
+        <tr>
+          <td><a href="{{ url_for('monster_detail', monster_id=row.monster_id) }}">{{ row.monster_name }}</a></td>
+          <td>{{ row.monster_level }}</td>
+          <td><a href="{{ url_for('item_detail', item_id=row.item_id) }}">{{ row.item_name }}</a></td>
+          <td>{{ row.item_type }}</td>
+          <td>{{ row.min_count }} ~ {{ row.max_count }}</td>
+          <td>{{ row.chance }}</td>
+          <td>{{ row.note or '' }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="7">查無資料</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

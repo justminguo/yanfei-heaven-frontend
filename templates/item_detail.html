@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}{{ item.name }}{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>{{ item.name }}</h1>
+  <p class="muted">名稱ID：{{ item.name_id }}｜類型：{{ item.item_type }}｜用途：{{ item.use_type }}</p>
+  <div class="detail-grid">
+    <div><strong>材質</strong><span>{{ item.material }}</span></div>
+    <div><strong>重量</strong><span>{{ item.weight }}</span></div>
+    <div><strong>傷害</strong><span>{{ item.dmg_small }} / {{ item.dmg_large }}</span></div>
+    <div><strong>可堆疊</strong><span>{{ '是' if item.stackable else '否' }}</span></div>
+    <div><strong>等級限制</strong><span>{{ item.min_lvl }} ~ {{ item.max_lvl }}</span></div>
+    <div><strong>備註</strong><span>{{ item.note or '—' }}</span></div>
+  </div>
+</section>
+<section class="card">
+  <h2>掉落來源</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>怪物</th><th>等級</th><th>家族</th><th>數量</th><th>機率</th></tr></thead>
+      <tbody>
+      {% for row in drop_sources %}
+      <tr>
+        <td><a href="{{ url_for('monster_detail', monster_id=row.monster_id) }}">{{ row.monster_name }}</a></td>
+        <td>{{ row.level }}</td>
+        <td>{{ row.family }}</td>
+        <td>{{ row.min_count }} ~ {{ row.max_count }}</td>
+        <td>{{ row.chance }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5">這個物品目前沒有掉落來源資料</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

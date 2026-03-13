@@ -1,4 +1,2 @@
-streamlit
-pandas
-requests
-beautifulsoup4
+Flask==3.1.0
+gunicorn==23.0.0

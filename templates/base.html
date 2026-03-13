@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ site_cfg.get('brand_name', '妍菲天堂') }} — {{ site_cfg.get('site_subtitle', '天堂 II 私服') }}{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <a class="brand" href="{{ url_for('home') }}">
+        <span class="brand-icon">⚔</span>
+        <span class="brand-text">{{ site_cfg.get('brand_name', '妍菲天堂') }}</span>
+        <span class="brand-tag">私服</span>
+      </a>
+      <nav class="nav">
+        <a href="{{ url_for('home') }}#announcements">最新公告</a>
+        <a href="{{ url_for('download_page') }}">遊戲下載</a>
+        <a href="{{ url_for('guide_page') }}">新手教學</a>
+        <div class="nav-dropdown">
+          <span class="nav-dropdown-label">遊戲資料 ▾</span>
+          <div class="nav-dropdown-menu">
+            <a href="{{ url_for('monsters') }}">怪物圖鑑</a>
+            <a href="{{ url_for('items') }}">物品大全</a>
+            <a href="{{ url_for('drops') }}">掉落查詢</a>
+          </div>
+        </div>
+        <a href="{{ site_cfg.get('discord_url', '#discord') }}">聯繫我們</a>
+        <a href="{{ url_for('download_page') }}" class="nav-cta">立即下載</a>
+      </nav>
+    </div>
+  </header>
+  <main class="{% block main_class %}container page{% endblock %}">
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <span class="brand-icon">⚔</span>
+        <strong>{{ site_cfg.get('brand_name', '妍菲天堂') }}</strong>
+        <p>{{ site_cfg.get('brand_slogan', '精心打造的天堂 II 私服，還原經典、追求平衡。') }}</p>
+        <div class="footer-social">
+          <a href="{{ site_cfg.get('discord_url', '#discord') }}" class="social-btn">Discord 社群</a>
+          <a href="{{ site_cfg.get('forum_url', '#forum') }}" class="social-btn">官方論壇</a>
+        </div>
+      </div>
+      <div class="footer-links">
+        <div>
+          <strong>遊戲資料庫</strong>
+          <a href="{{ url_for('items') }}">物品查詢</a>
+          <a href="{{ url_for('monsters') }}">怪物查詢</a>
+          <a href="{{ url_for('drops') }}">掉落查詢</a>
+        </div>
+        <div>
+          <strong>新手入門</strong>
+          <a href="{{ url_for('download_page') }}">下載遊戲</a>
+          <a href="{{ url_for('guide_page') }}">新手教學</a>
+          <a href="{{ url_for('guide_page') }}#faq">常見問題</a>
+        </div>
+        <div>
+          <strong>社群與支援</strong>
+          <a href="{{ site_cfg.get('discord_url', '#discord') }}">Discord</a>
+          <a href="{{ site_cfg.get('forum_url', '#forum') }}">論壇</a>
+          <a href="{{ site_cfg.get('discord_url', '#discord') }}">客服支援</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container footer-bottom-inner">
+        <span>© 2026 {{ site_cfg.get('brand_name', '妍菲天堂') }} · 本站為私人架設，與 NCSoft 無關</span>
+        <span>為玩家、由玩家打造</span>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

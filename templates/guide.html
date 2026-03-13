@@ -1,0 +1,373 @@
+{% extends 'base.html' %}
+{% block title %}新手教學與常見問題 — {{ site_cfg.get('brand_name', '妍菲天堂') }}{% endblock %}
+{% block main_class %}{% endblock %}
+{% block content %}
+
+<!-- ===== 頁面 Hero ===== -->
+<section class="page-hero">
+  <div class="container page-hero-inner">
+    <h1 class="page-hero-title">新手教學</h1>
+    <p class="page-hero-sub">從零開始，帶你踏上亞丁大陸的傳奇旅程</p>
+  </div>
+</section>
+
+<!-- ===== 快速導覽 ===== -->
+<section class="container section-block">
+  <div class="quick-grid">
+    <a href="#getting-started" class="quick-card">
+      <div class="quick-icon">🚀</div>
+      <strong>第一步：開始遊戲</strong>
+      <p>帳號建立、登入、創角完整流程</p>
+    </a>
+    <a href="#classes" class="quick-card">
+      <div class="quick-icon">⚔</div>
+      <strong>種族與職業選擇</strong>
+      <p>六大種族、各職業特色一次看懂</p>
+    </a>
+    <a href="#gameplay" class="quick-card">
+      <div class="quick-icon">🗺</div>
+      <strong>基礎操作與升級</strong>
+      <p>操作介面、升級路線、裝備取得</p>
+    </a>
+    <a href="#server-info" class="quick-card">
+      <div class="quick-icon">🛡</div>
+      <strong>伺服器特色說明</strong>
+      <p>倍率、規則、GM 服務說明</p>
+    </a>
+    <a href="#faq" class="quick-card">
+      <div class="quick-icon">❓</div>
+      <strong>常見問題 FAQ</strong>
+      <p>連線、帳號、遊戲規則常見疑問</p>
+    </a>
+    <a href="{{ url_for('download_page') }}" class="quick-card">
+      <div class="quick-icon">⬇</div>
+      <strong>前往下載頁面</strong>
+      <p>取得遊戲客戶端與 LINE 社群連結</p>
+    </a>
+  </div>
+</section>
+
+<!-- ===== 第一步：開始遊戲 ===== -->
+<section class="container section-block" id="getting-started">
+  <h2 class="section-title">🚀 第一步：開始遊戲</h2>
+  <div class="guide-card">
+    <h3 class="guide-h3">1. 下載與安裝</h3>
+    <p>首先請前往<a href="{{ url_for('download_page') }}">遊戲下載頁面</a>，加入官方 LINE 社群，在群組公告中取得最新客戶端下載連結。下載完成後依指示安裝，並啟動登入器進行補丁更新。</p>
+
+    <h3 class="guide-h3">2. 建立帳號</h3>
+    <p>首次啟動登入器時，點擊「建立帳號」，填寫您想使用的帳號名稱與密碼（帳號限英數字，密碼建議 8 字元以上）。帳號建立完成後即可直接登入，無需電子郵件驗證。</p>
+    <div class="guide-tip">
+      <span class="guide-tip-icon">💡</span>
+      <span>帳號一旦建立無法更名，請謹慎選擇。密碼請勿使用過於簡單的組合，且請勿分享給他人。</span>
+    </div>
+
+    <h3 class="guide-h3">3. 登入並創建角色</h3>
+    <p>輸入帳號密碼後進入角色選擇畫面，點擊「創建角色」，依序選擇：</p>
+    <ol class="guide-ol">
+      <li><strong>種族</strong>（人類、妖精、黑暗妖精、獸人、矮人、亡靈族）</li>
+      <li><strong>外觀性別</strong></li>
+      <li><strong>角色名稱</strong>（限英數字，在伺服器中唯一）</li>
+    </ol>
+    <p>創角完成後點擊「進入遊戲」，你的傳奇冒險正式開始！</p>
+  </div>
+</section>
+
+<!-- ===== 種族與職業 ===== -->
+<section class="container section-block" id="classes">
+  <h2 class="section-title">⚔ 種族與職業選擇</h2>
+  <p class="section-desc">天堂 II 共有六大種族，每個種族有其獨特職業樹。以下是各種族的特色簡介，幫助你找到最適合的冒險風格。</p>
+
+  <div class="class-grid">
+    <div class="class-card">
+      <div class="class-icon">👤</div>
+      <strong class="class-name">人類 Human</strong>
+      <span class="class-badge">入門推薦</span>
+      <p>最均衡的種族，擁有最豐富的職業選擇（戰士、術士、神職者等）。適合初次接觸天堂 II 的新手，各職業強度均衡且資源豐富。</p>
+      <ul class="class-jobs">
+        <li>🗡 戰士系 → 騎士 / 暗黑武士</li>
+        <li>🔮 魔法系 → 術士 / 元素法師</li>
+        <li>✝ 神職系 → 神父 / 主教</li>
+        <li>🏹 遠程系 → 探索者 / 遊俠</li>
+      </ul>
+    </div>
+
+    <div class="class-card">
+      <div class="class-icon">🧝</div>
+      <strong class="class-name">妖精 Elf</strong>
+      <span class="class-badge class-badge-green">速度型</span>
+      <p>高速度、高迴避，擅長遠距離攻擊與輔助。妖精弓手是 Party 的重要輸出，而妖精騎士則以速度著稱。</p>
+      <ul class="class-jobs">
+        <li>🏹 弓手系 → 妖精弓手 / 銀鷹弓手</li>
+        <li>🗡 武士系 → 妖精騎士 / 寺廟騎士</li>
+        <li>✝ 神職系 → 妖精神父 / 先知</li>
+      </ul>
+    </div>
+
+    <div class="class-card">
+      <div class="class-icon">🧛</div>
+      <strong class="class-name">黑暗妖精 Dark Elf</strong>
+      <span class="class-badge class-badge-red">高爆發</span>
+      <p>以強大的單體爆發傷害著稱，黑暗妖精刺客是 PvP 的頂尖職業。附帶暗系魔法特效，操作難度稍高。</p>
+      <ul class="class-jobs">
+        <li>🗡 刺客系 → 影之刺客 / 幻影刺客</li>
+        <li>🗡 武士系 → 黑暗武士 / 魔導武士</li>
+        <li>🔮 魔法系 → 黑暗術士 / 暗影召喚師</li>
+      </ul>
+    </div>
+
+    <div class="class-card">
+      <div class="class-icon">🐉</div>
+      <strong class="class-name">獸人 Orc</strong>
+      <span class="class-badge class-badge-warn">高生存</span>
+      <p>擁有最高的體力與防禦力，是天然的 Tank 種族。獸人武士在肉搏戰中幾乎無敵，薩滿則提供強力 Buff 支援全隊。</p>
+      <ul class="class-jobs">
+        <li>🛡 戰士系 → 獸人武士 / 破壞者</li>
+        <li>🔮 薩滿系 → 獸人薩滿 / 霸者</li>
+      </ul>
+    </div>
+
+    <div class="class-card">
+      <div class="class-icon">⚒</div>
+      <strong class="class-name">矮人 Dwarf</strong>
+      <span class="class-badge class-badge-gold">經濟職業</span>
+      <p>天堂 II 中最重要的生產種族，負責製作頂級裝備與道具。如果你喜歡經濟系玩法，矮人是你的最佳選擇。</p>
+      <ul class="class-jobs">
+        <li>⚒ 製作系 → 矮人戰士 / 騙術師 / 戰利品獵人</li>
+        <li>🛒 商人系 → 總匠 / 工程師</li>
+      </ul>
+    </div>
+
+    <div class="class-card">
+      <div class="class-icon">💀</div>
+      <strong class="class-name">亡靈族 Kamael</strong>
+      <span class="class-badge class-badge-red">進階種族</span>
+      <p>特殊的翅膀種族，擁有獨特的靈魂吸收機制。卡馬爾的武士與術士皆有強力的 PvP 技能，但上手難度較高。</p>
+      <ul class="class-jobs">
+        <li>⚔ 戰士系 → 卡馬爾士兵 / 憤怒守衛</li>
+        <li>🔮 魔法系 → 卡馬爾術士 / 靈魂法師</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="guide-tip guide-tip-blue">
+    <span class="guide-tip-icon">💡</span>
+    <span>
+      <strong>新手建議：</strong>第一個角色推薦選擇<strong>人類</strong>，職業選<strong>戰士（→ 騎士）</strong>或<strong>術士</strong>。
+      這兩條路線的攻略資源最多，在 Party 中也最容易找到隊友。等熟悉遊戲後再嘗試其他種族！
+    </span>
+  </div>
+</section>
+
+<!-- ===== 基礎操作與升級 ===== -->
+<section class="container section-block" id="gameplay">
+  <h2 class="section-title">🗺 基礎操作與升級</h2>
+  <div class="guide-card">
+    <h3 class="guide-h3">基本操作</h3>
+    <div class="keys-grid">
+      <div class="key-row"><span class="key-key">左鍵點擊</span><span>選擇目標 / 移動</span></div>
+      <div class="key-row"><span class="key-key">右鍵點擊</span><span>攻擊選定目標</span></div>
+      <div class="key-row"><span class="key-key">Tab</span><span>切換目標</span></div>
+      <div class="key-row"><span class="key-key">Ctrl + 左鍵</span><span>強制攻擊（PK 模式）</span></div>
+      <div class="key-row"><span class="key-key">Alt + 左鍵</span><span>拾取地板道具</span></div>
+      <div class="key-row"><span class="key-key">I</span><span>開啟背包</span></div>
+      <div class="key-row"><span class="key-key">P</span><span>開啟技能欄</span></div>
+      <div class="key-row"><span class="key-key">C</span><span>開啟角色資訊</span></div>
+      <div class="key-row"><span class="key-key">M</span><span>開啟地圖</span></div>
+      <div class="key-row"><span class="key-key">F1~F12</span><span>快捷列技能 / 道具</span></div>
+    </div>
+
+    <h3 class="guide-h3">新手升級路線（1 ~ 40 級）</h3>
+    <div class="guide-tip guide-tip-green">
+      <span class="guide-tip-icon">📍</span>
+      <span>以下地點以本服 1× 倍率為準，建議每個地點打至可以輕鬆刷怪的程度再推進。</span>
+    </div>
+    <ul class="level-guide-list">
+      <li>
+        <span class="level-range">Lv. 1 – 10</span>
+        <div>
+          <strong>初始村莊周邊</strong>
+          <p>各種族起始村莊附近的小怪（哥布林、蜘蛛、骷髏等）。善用初始 NPC 新手任務可獲得額外裝備與 Adena（遊戲幣）。</p>
+        </div>
+      </li>
+      <li>
+        <span class="level-range">Lv. 10 – 20</span>
+        <div>
+          <strong>格路丁廢礦 / 妖精森林</strong>
+          <p>格路丁廢礦外圍適合力量型職業，妖精森林適合魔法系。記得接受 NPC 的職業轉職任務，在 20 級左右完成一轉！</p>
+        </div>
+      </li>
+      <li>
+        <span class="level-range">Lv. 20 – 30</span>
+        <div>
+          <strong>棄礦（Abandoned Mine）/ 蒼白地（Wasteland）</strong>
+          <p>棄礦提供豐富的骷髏類怪物，適合 Party。蒼白地則適合獨自刷怪的遠程職業。</p>
+        </div>
+      </li>
+      <li>
+        <span class="level-range">Lv. 30 – 40</span>
+        <div>
+          <strong>古魯丁地監（Cruma Tower）1 ~ 3 層</strong>
+          <p>地監是這個階段最主要的刷怪聖地，掉落物品豐富。建議組 Party 進入以提升效率與安全性。</p>
+        </div>
+      </li>
+    </ul>
+
+    <h3 class="guide-h3">裝備取得建議</h3>
+    <ul class="guide-ul">
+      <li>初期裝備可向村莊 NPC 商店購買，或在拍賣場（私人商店）用 Adena 購入。</li>
+      <li>善用<a href="{{ url_for('drops') }}">掉落查詢</a>頁面，查詢目標裝備由哪隻怪物掉落，規劃刷怪路線。</li>
+      <li>40 級後建議換上 D 等級裝備（藍色名稱），差距相當顯著。</li>
+      <li>裝備可透過「靈魂晶石」附魔強化，詳見進階教學。</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===== 伺服器特色 ===== -->
+<section class="container section-block" id="server-info">
+  <h2 class="section-title">🛡 伺服器特色說明</h2>
+  <div class="info-grid">
+    <div class="info-card">
+      <div class="info-icon">⚖</div>
+      <strong>1× 標準倍率</strong>
+      <p>本服採用最接近正式服的 1× 經驗與掉寶倍率，重現最純粹的升級體驗。每一分努力都有意義。</p>
+    </div>
+    <div class="info-card">
+      <div class="info-icon">🚫</div>
+      <strong>無商城付費優勢</strong>
+      <p>商城提供的道具均為外觀、倉儲擴充等便利性商品，絕不販售任何影響戰鬥平衡的付費優勢道具（P2W）。</p>
+    </div>
+    <div class="info-card">
+      <div class="info-icon">👮</div>
+      <strong>GM 24H 在線</strong>
+      <p>管理團隊分班 24 小時值勤，對外掛、Bug 濫用採零容忍政策，一經查證永久封號。</p>
+    </div>
+    <div class="info-card">
+      <div class="info-icon">🔄</div>
+      <strong>定期版本更新</strong>
+      <p>定期推出新地圖、副本與遊戲內活動，讓老玩家保持新鮮感，讓新玩家有持續的目標可以追求。</p>
+    </div>
+    <div class="info-card">
+      <div class="info-icon">💬</div>
+      <strong>活躍社群</strong>
+      <p>LINE 社群每日活躍，玩家互助氛圍濃厚。GM 也定期在群組舉辦問答活動，公告最新消息。</p>
+    </div>
+    <div class="info-card">
+      <div class="info-icon">📊</div>
+      <strong>完整遊戲資料庫</strong>
+      <p>本站提供完整的怪物圖鑑、物品大全與掉落查詢，讓你規劃攻略時有據可查。</p>
+    </div>
+  </div>
+
+  <div class="guide-card" style="margin-top:20px">
+    <h3 class="guide-h3">重要遊戲規則</h3>
+    <ul class="guide-ul">
+      <li>禁止使用任何形式的外掛程式（機器人、自動點擊、速度外掛等），一旦確認，永久封號。</li>
+      <li>禁止在遊戲內或社群中對其他玩家進行騷擾、歧視或言語攻擊。</li>
+      <li>禁止利用系統 Bug 謀取不當利益，發現 Bug 應立即回報 GM。</li>
+      <li>禁止在非 PvP 區域對低等玩家進行惡意 PK（紅名將受伺服器懲罰）。</li>
+      <li>RMT（現實貨幣交易遊戲道具）嚴格禁止，違者永久封號。</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===== FAQ ===== -->
+<section class="container section-block" id="faq">
+  <h2 class="section-title">❓ 常見問題 FAQ</h2>
+  <div class="faq-list">
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        這個私服完全免費嗎？
+        <span class="faq-arrow">▶</span>
+      </button>
+      <div class="faq-a">
+        是的，妍菲天堂完全免費遊玩。我們承諾不販售影響遊戲平衡的付費道具（無 P2W），所有強力裝備皆可透過遊戲內容獲得。商城僅提供外觀與便利性道具。
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        我是第一次玩天堂 II，適合加入嗎？
+        <span class="faq-arrow">▶</span>
+      </button>
+      <div class="faq-a">
+        非常適合！本服有活躍的社群與友善的老玩家，新手進入後很快就能得到協助。建議先閱讀本頁教學，選擇人類戰士或術士作為入門職業，並加入官方 LINE 群組詢問問題。
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        遊戲需要一直上線才玩得下去嗎？
+        <span class="faq-arrow">▶</span>
+      </button>
+      <div class="faq-a">
+        不需要。天堂 II 雖然是一款重視社群互動的 MMORPG，但本服支援單人刷怪升級，你可以按照自己的步調進行。不過加入公會（Clan）後，攻城戰、副本等內容更加精彩，推薦在熟悉遊戲後找一個公會加入。
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        遊戲內遇到外掛玩家或 Bug 怎麼回報？
+        <span class="faq-arrow">▶</span>
+      </button>
+      <div class="faq-a">
+        請透過以下方式回報：①在遊戲內輸入 GM 指令（如 /gmlist 查看在線 GM）；②前往官方 LINE 群組，以文字 + 截圖方式向管理員回報。回報時請提供：時間、地點、涉及帳號名稱及截圖，以加速處理。
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        一個帳號可以開幾個角色？可以多開嗎？
+        <span class="faq-arrow">▶</span>
+      </button>
+      <div class="faq-a">
+        每個帳號最多可建立 7 個角色（各伺服器設定可能不同）。關於多開（在同一台電腦同時執行多個客戶端），請於 LINE 群組確認目前政策，避免違反伺服器規定。
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        遊戲內 Adena（遊戲幣）不夠用怎麼辦？
+        <span class="faq-arrow">▶</span>
+      </button>
+      <div class="faq-a">
+        新手賺 Adena 的主要方式：①刷怪掉落物品後至村莊 NPC 或私人商店販賣；②製作道具販售（矮人職業）；③完成任務獲得獎勵。可以善用<a href="{{ url_for('drops') }}">掉落查詢</a>找出哪些怪物掉落高價值物品，針對刷怪。
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        角色刪除了還能找回來嗎？
+        <span class="faq-arrow">▶</span>
+      </button>
+      <div class="faq-a">
+        角色刪除後通常需要等待系統確認期（通常 7 天）才會完全刪除。在此期間，可透過 GM 協助取消刪除。請在 LINE 群組聯繫 GM，並提供角色名稱與帳號資訊。七天後完全刪除的角色則無法復原，請謹慎操作。
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        遊戲有語音嗎？支援繁體中文介面嗎？
+        <span class="faq-arrow">▶</span>
+      </button>
+      <div class="faq-a">
+        本服提供繁體中文化介面，包含技能名稱、物品說明與 NPC 對話均已漢化。部分音效為原版英文配音，但不影響遊戲體驗。如有翻譯錯誤，歡迎在 LINE 群組回報讓我們改善。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 底部 CTA ===== -->
+<section class="final-cta">
+  <div class="container final-cta-inner">
+    <h2>學完了？開始冒險吧！</h2>
+    <p>已經準備好踏上征途了嗎？前往下載頁面，加入 LINE 社群取得遊戲客戶端。</p>
+    <div style="display:flex; gap:14px; justify-content:center; flex-wrap:wrap; margin-top:8px">
+      <a href="{{ url_for('download_page') }}" class="btn-primary">⬇ 前往下載頁面</a>
+      <a href="{{ url_for('monsters') }}" class="btn-outline">👾 瀏覽怪物圖鑑</a>
+    </div>
+  </div>
+</section>
+
+<script>
+function toggleFaq(btn) {
+  const item = btn.parentElement;
+  const isOpen = item.classList.contains('faq-open');
+  document.querySelectorAll('.faq-item').forEach(el => el.classList.remove('faq-open'));
+  if (!isOpen) item.classList.add('faq-open');
+}
+</script>
+
+{% endblock %}

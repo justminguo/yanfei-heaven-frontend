@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+{% block title %}遊戲下載 — {{ site_cfg.get('brand_name', '妍菲天堂') }}{% endblock %}
+{% block main_class %}{% endblock %}
+{% block content %}
+
+<!-- ===== 頁面 Hero ===== -->
+<section class="page-hero">
+  <div class="container page-hero-inner">
+    <h1 class="page-hero-title">遊戲下載</h1>
+    <p class="page-hero-sub">加入妍菲天堂，踏上你的傳奇冒險之路</p>
+  </div>
+</section>
+
+<!-- ===== 主要入口：加入 LINE 社群 ===== -->
+<section class="container section-block">
+  <div class="dl-primary-card">
+    <div class="dl-primary-badge">📲 主要入口</div>
+    <div class="dl-primary-icon">💬</div>
+    <h2 class="dl-primary-title">加入 LINE 官方社群</h2>
+    <p class="dl-primary-desc">
+      妍菲天堂目前透過 LINE 群組提供遊戲客戶端下載連結、補丁更新通知，以及即時 GM 支援。<br>
+      加入後即可取得最新版本下載連結，並與其他玩家交流攻略！
+    </p>
+    <a href="{{ site_cfg.get('line_group_url', '#') }}"
+       target="_blank" rel="noopener noreferrer"
+       class="btn-line">
+      <span class="btn-line-icon">💬</span>
+      點此加入 LINE 社群（取得下載連結）
+    </a>
+    <p class="dl-note">※ 點擊後將在新視窗開啟 LINE 邀請連結，需安裝 LINE App 或使用 LINE 網頁版。</p>
+  </div>
+</section>
+
+<!-- ===== 加入步驟 ===== -->
+<section class="container section-block">
+  <h2 class="section-title">四步驟輕鬆上手</h2>
+  <div class="steps-grid">
+    <div class="step-card">
+      <div class="step-num">1</div>
+      <div class="step-icon">💬</div>
+      <strong>加入 LINE 社群</strong>
+      <p>點擊上方「加入 LINE 社群」按鈕，掃描 QR Code 或點擊邀請連結加入官方群組。</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">2</div>
+      <div class="step-icon">⬇</div>
+      <strong>下載客戶端</strong>
+      <p>在 LINE 群組公告或置頂訊息中找到最新遊戲客戶端下載連結，下載完整安裝包（約 2~3 GB）。</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">3</div>
+      <div class="step-icon">⚙</div>
+      <strong>安裝並更新</strong>
+      <p>執行安裝程式，完成後開啟登入器（Launcher），系統將自動下載最新補丁並完成更新。</p>
+    </div>
+    <div class="step-card">
+      <div class="step-num">4</div>
+      <div class="step-icon">⚔</div>
+      <strong>開始冒險</strong>
+      <p>在登入器中輸入帳號與密碼，點擊「進入遊戲」，選擇你的種族與職業，踏上傳奇征途！</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 系統需求 ===== -->
+<section class="container section-block">
+  <h2 class="section-title">系統需求</h2>
+  <div class="sysreq-grid">
+    <div class="sysreq-card">
+      <div class="sysreq-label">最低需求</div>
+      <ul class="sysreq-list">
+        <li><span class="sysreq-key">作業系統</span><span>Windows 7 / 10 / 11（64 位元）</span></li>
+        <li><span class="sysreq-key">處理器</span><span>Intel Core i3 或同等級</span></li>
+        <li><span class="sysreq-key">記憶體</span><span>4 GB RAM</span></li>
+        <li><span class="sysreq-key">顯示卡</span><span>NVIDIA GeForce 8600 / AMD Radeon HD 2600 以上</span></li>
+        <li><span class="sysreq-key">硬碟空間</span><span>5 GB 可用空間</span></li>
+        <li><span class="sysreq-key">網路</span><span>寬頻網路連線</span></li>
+      </ul>
+    </div>
+    <div class="sysreq-card sysreq-rec">
+      <div class="sysreq-label sysreq-label-rec">建議規格</div>
+      <ul class="sysreq-list">
+        <li><span class="sysreq-key">作業系統</span><span>Windows 10 / 11（64 位元）</span></li>
+        <li><span class="sysreq-key">處理器</span><span>Intel Core i5 第 8 代以上</span></li>
+        <li><span class="sysreq-key">記憶體</span><span>8 GB RAM</span></li>
+        <li><span class="sysreq-key">顯示卡</span><span>NVIDIA GeForce GTX 1050 / AMD RX 570 以上</span></li>
+        <li><span class="sysreq-key">硬碟空間</span><span>10 GB SSD</span></li>
+        <li><span class="sysreq-key">網路</span><span>10 Mbps 以上</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 常見下載問題 ===== -->
+<section class="container section-block">
+  <h2 class="section-title">常見下載問題</h2>
+  <div class="faq-list">
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        在哪裡可以找到下載連結？
+        <span class="faq-arrow">▶</span>
+      </button>
+      <div class="faq-a">
+        下載連結統一發布於官方 LINE 群組的置頂公告中。請先加入群組，再查看置頂訊息即可找到最新版本下載連結。我們不會在其他非官方管道提供下載。
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        下載後要如何安裝？
+        <span class="faq-arrow">▶</span>
+      </button>
+      <div class="faq-a">
+        下載完成後，解壓縮壓縮包（如有），執行安裝程式（Setup.exe）並依畫面指示完成安裝。安裝完成後，開啟資料夾中的「登入器（Launcher）」，系統將自動下載最新補丁。補丁更新完畢後即可點擊「進入遊戲」。
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        防毒軟體提示威脅，是病毒嗎？
+        <span class="faq-arrow">▶</span>
+      </button>
+      <div class="faq-a">
+        部分防毒軟體對遊戲保護程式或登入器可能產生誤判（False Positive）。請確認您的下載來源為官方 LINE 群組，並將遊戲安裝資料夾加入防毒白名單。如有疑慮，歡迎在 LINE 群組詢問 GM 協助確認。
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        登入器顯示「更新失敗」或無法連線怎麼辦？
+        <span class="faq-arrow">▶</span>
+      </button>
+      <div class="faq-a">
+        請依序嘗試以下步驟：①確認網路連線正常；②關閉防火牆或防毒軟體後重試；③以「系統管理員」身份執行登入器；④若問題持續，請至官方 LINE 群組回報，GM 將協助您處理。
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        支援 Mac 或 Linux 嗎？
+        <span class="faq-arrow">▶</span>
+      </button>
+      <div class="faq-a">
+        目前遊戲客戶端僅支援 Windows 作業系統。Mac 使用者可嘗試透過 Parallels Desktop 或 CrossOver 等虛擬化工具執行，但官方不提供此類設定的技術支援。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 底部 CTA ===== -->
+<section class="final-cta">
+  <div class="container final-cta-inner">
+    <h2>準備好了嗎？</h2>
+    <p>加入妍菲天堂官方 LINE 社群，取得下載連結，與數百名玩家一同踏上史詩征途！</p>
+    <a href="{{ site_cfg.get('line_group_url', '#') }}"
+       target="_blank" rel="noopener noreferrer"
+       class="btn-line btn-line-lg">
+      <span class="btn-line-icon">💬</span>
+      立即加入 LINE 社群
+    </a>
+  </div>
+</section>
+
+<script>
+function toggleFaq(btn) {
+  const item = btn.parentElement;
+  const isOpen = item.classList.contains('faq-open');
+  document.querySelectorAll('.faq-item').forEach(el => el.classList.remove('faq-open'));
+  if (!isOpen) item.classList.add('faq-open');
+}
+</script>
+
+{% endblock %}

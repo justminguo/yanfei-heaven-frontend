@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}{{ monster.name }}{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>{{ monster.name }}</h1>
+  <p class="muted">名稱ID：{{ monster.nameid }}｜等級：{{ monster.level }}｜HP：{{ monster.hp }}｜MP：{{ monster.mp }}｜EXP：{{ monster.exp }}</p>
+  <div class="detail-grid">
+    <div><strong>家族</strong><span>{{ monster.family }}</span></div>
+    <div><strong>弱點屬性</strong><span>{{ monster.weak_attr }}</span></div>
+    <div><strong>攻擊模式</strong><span>{{ '遠程' if monster.ranged else '近戰' }}</span></div>
+    <div><strong>備註</strong><span>{{ monster.note or '—' }}</span></div>
+  </div>
+</section>
+<section class="card">
+  <h2>掉落列表</h2>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>物品</th><th>名稱ID</th><th>類型</th><th>數量</th><th>機率</th></tr></thead>
+      <tbody>
+      {% for row in drops %}
+      <tr>
+        <td><a href="{{ url_for('item_detail', item_id=row.item_id) }}">{{ row.item_name }}</a></td>
+        <td>{{ row.name_id }}</td>
+        <td>{{ row.item_type }}</td>
+        <td>{{ row.min_count }} ~ {{ row.max_count }}</td>
+        <td>{{ row.chance }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5">這隻怪目前沒有掉落資料</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}
