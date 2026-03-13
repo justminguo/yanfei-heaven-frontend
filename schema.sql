@@ -246,7 +246,7 @@ INSERT OR IGNORE INTO site_config (key, value) VALUES
   ('hero_cta_primary',    '立即加入冒險'),
   ('hero_cta_secondary',  '進入資料庫'),
   ('server_status_text',  '伺服器運行中'),
-  ('server_online_count', '872 人'),
+  ('server_online_count', '2'),
   ('exp_rate',            '1×'),
   ('no_p2w_label',        '無付費優勢'),
   ('download_url',        '/download'),
