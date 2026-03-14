@@ -3,55 +3,79 @@
 {% block content %}
 <section class="card">
   <h1>變身查詢</h1>
-  <p class="section-desc">天堂1 變身系統資料，來源：381.polymorphs（共 {{ total }} 筆）</p>
+  <p class="section-desc">
+    天堂1 變身系統完整資料，來源：381.polymorphs（共 {{ total }} 筆）。<br>
+    變身後角色外型改變為指定怪物，部分變身可穿戴武器／防具或使用技能。
+    最低等級限制代表角色須達該等級才可使用對應變身卷軸。
+  </p>
+
   <form class="filters" method="get">
-    <input type="text" name="q" placeholder="輸入變身名稱 / 備註" value="{{ q }}">
+    <input type="text" name="q" placeholder="輸入變身名稱 / 備註關鍵字" value="{{ q }}">
     <select name="cause">
       <option value="">全部來源</option>
-      <option value="0" {% if cause == '0' %}selected{% endif %}>0 — 變身卷軸</option>
-      <option value="1" {% if cause == '1' %}selected{% endif %}>1 — 特殊/寵物</option>
+      <option value="0" {% if cause == '0' %}selected{% endif %}>卷軸變身（cause=0）</option>
+      <option value="1" {% if cause == '1' %}selected{% endif %}>特殊／寵物變身（cause=1）</option>
     </select>
     <select name="skill_use">
-      <option value="">技能限制</option>
+      <option value="">技能限制（全部）</option>
       <option value="1" {% if skill_use == '1' %}selected{% endif %}>可使用技能</option>
       <option value="0" {% if skill_use == '0' %}selected{% endif %}>無法使用技能</option>
     </select>
     <button type="submit">查詢</button>
   </form>
+
   <div class="table-wrap">
     <table>
       <thead>
         <tr>
-          <th>名稱</th>
-          <th>外型 ID</th>
-          <th>最低等級</th>
-          <th>武器裝備</th>
-          <th>防具裝備</th>
-          <th>可施法</th>
-          <th>來源</th>
+          <th>變身名稱</th>
+          <th title="套用的怪物外型編號（polyid）">外型 ID</th>
+          <th title="使用此變身所需的角色最低等級">最低等級</th>
+          <th title="變身後是否可穿戴武器">武器</th>
+          <th title="變身後是否可穿戴防具">防具</th>
+          <th title="變身後是否可使用技能">施法</th>
+          <th title="0=卷軸變身；1=特殊或寵物專屬">來源</th>
           <th>備註</th>
         </tr>
       </thead>
       <tbody>
       {% for row in rows %}
         <tr>
-          <td>{{ row['name'] }}</td>
-          <td>{{ row['polyid'] }}</td>
+          <td><strong>{{ row['name'] }}</strong></td>
+          <td style="color:var(--muted);font-size:12px">{{ row['polyid'] }}</td>
           <td>Lv.{{ row['minlevel'] }}</td>
-          <td>{{ '可' if row['weaponequip'] else '—' }}</td>
-          <td>{{ '可' if row['armorequip'] else '—' }}</td>
-          <td>{% if row['isSkillUse'] %}<span style="color:var(--accent)">✓</span>{% else %}<span style="color:var(--muted)">✗</span>{% endif %}</td>
-          <td>{{ '卷軸' if row['cause'] == 0 else '特殊' }}</td>
-          <td>{{ row['note'] or '' }}</td>
+          <td>{% if row['weaponequip'] %}<span style="color:var(--accent)">可</span>{% else %}<span style="color:var(--muted)">—</span>{% endif %}</td>
+          <td>{% if row['armorequip'] %}<span style="color:var(--accent)">可</span>{% else %}<span style="color:var(--muted)">—</span>{% endif %}</td>
+          <td>{% if row['isSkillUse'] %}<span style="color:var(--accent)" title="可使用技能">✓</span>{% else %}<span style="color:var(--muted)" title="無法使用技能">✗</span>{% endif %}</td>
+          <td>
+            {% if row['cause'] == 0 %}
+              <span class="badge badge-scroll">卷軸</span>
+            {% else %}
+              <span class="badge badge-special">特殊</span>
+            {% endif %}
+          </td>
+          <td style="font-size:12px;color:var(--muted)">{{ row['note'] or '' }}</td>
         </tr>
       {% else %}
-        <tr><td colspan="8" style="text-align:center;color:var(--muted)">查無資料</td></tr>
+        <tr><td colspan="8" style="text-align:center;color:var(--muted);padding:24px">查無符合條件的變身資料</td></tr>
       {% endfor %}
       </tbody>
     </table>
   </div>
-  <p style="margin-top:12px;color:var(--muted);font-size:13px">
-    ※ 顯示最多 200 筆。完整資料待同步 381.polymorphs 後自動更新。
-  </p>
+
+  <div class="info-box" style="margin-top:16px">
+    <p style="font-size:13px;color:var(--muted);margin:0">
+      <strong>常見範例：</strong>
+      浮遊眼（Lv.1 卷軸）、骷髏（Lv.1 卷軸）、南瓜頭（Lv.1 卷軸）、獸人戰士（Lv.10）、
+      狼人（Lv.15）、Kelenis Morph（特殊）、Ken Rauhel Morph（特殊）。<br>
+      ※ 顯示最多 200 筆，依最低等級排序。
+    </p>
+  </div>
 </section>
+
+<style>
+.badge { display:inline-block; padding:1px 6px; border-radius:3px; font-size:11px; font-weight:600; }
+.badge-scroll { background:rgba(var(--accent-rgb,100,180,255),0.15); color:var(--accent,#64b4ff); }
+.badge-special { background:rgba(255,200,100,0.15); color:#f5c842; }
+</style>
 {% endblock %}
