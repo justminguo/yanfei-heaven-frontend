@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}{{ site_cfg.get('brand_name', '妍菲天堂') }} — {{ site_cfg.get('site_subtitle', '天堂 II 私服') }}{% endblock %}</title>
+  <title>{% block title %}{{ site_cfg.get('brand_name', '妍菲天堂') }} — {{ site_cfg.get('site_subtitle', '天堂1 私服') }}{% endblock %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
@@ -39,7 +39,7 @@
       <div class="footer-brand">
         <span class="brand-icon">⚔</span>
         <strong>{{ site_cfg.get('brand_name', '妍菲天堂') }}</strong>
-        <p>{{ site_cfg.get('brand_slogan', '精心打造的天堂 II 私服，還原經典、追求平衡。') }}</p>
+        <p>{{ site_cfg.get('brand_slogan', '精心打造的天堂1 私服，還原經典、追求平衡。') }}</p>
         <div class="footer-social">
           <a href="{{ site_cfg.get('line_group_url', '#line') }}" class="social-btn">LINE 群組</a>
           <a href="{{ site_cfg.get('forum_url', '#forum') }}" class="social-btn">官方論壇</a>

@@ -239,7 +239,7 @@ CREATE TABLE IF NOT EXISTS announcements (
 -- Default site config values (INSERT OR IGNORE = safe to re-run)
 INSERT OR IGNORE INTO site_config (key, value) VALUES
   ('brand_name',          '妍菲天堂'),
-  ('site_subtitle',       '天堂 II 私服官方網站'),
+  ('site_subtitle',       '天堂1 私服官方網站'),
   ('hero_title',          '妍菲天堂'),
   ('hero_subtitle',       '重返榮耀，再創傳奇。最純粹的史詩冒險，正等待你的加入！'),
   ('hero_tags',           '1× 倍率,無商城干擾,公平競技,定期更新,GM 24H 在線'),
@@ -255,7 +255,7 @@ INSERT OR IGNORE INTO site_config (key, value) VALUES
   ('guide_url',           '/guide'),
   ('forum_url',           '#forum'),
   ('line_group_url',      'https://line.me/ti/g2/IlKNIaRrZwDZAaABlz_6EBhtad-KMRNRg3aC0A?utm_source=invitation&utm_medium=link_copy&utm_campaign=default'),
-  ('brand_slogan',        '精心打造的天堂 II 私服，還原經典、追求平衡。與志同道合的玩家一起書寫屬於你的傳奇篇章。'),
+  ('brand_slogan',        '精心打造的天堂1 私服，還原經典、追求平衡。與志同道合的玩家一起書寫屬於你的傳奇篇章。'),
   ('final_cta_title',     '還在等什麼？'),
   ('final_cta_body',      '你的戰友正在亞丁大陸集結，立即下載遊戲，開啟屬於你的傳奇篇章！');
 
