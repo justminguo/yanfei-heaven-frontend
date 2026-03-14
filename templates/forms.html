@@ -1,90 +1,57 @@
 {% extends 'base.html' %}
-{% block title %}變身系統介紹 — {{ site_cfg.get('brand_name', '妍菲天堂') }}{% endblock %}
-{% block main_class %}{% endblock %}
+{% block title %}變身查詢 — {{ site_cfg.get('brand_name', '妍菲天堂') }}{% endblock %}
 {% block content %}
-<section class="page-hero">
-  <div class="container page-hero-inner">
-    <h1 class="page-hero-title">變身系統</h1>
-    <p class="page-hero-sub">對照 381 資料庫的 polymorphs 表，整理天堂1常用變身資訊</p>
+<section class="card">
+  <h1>變身查詢</h1>
+  <p class="section-desc">天堂1 變身系統資料，來源：381.polymorphs（共 {{ total }} 筆）</p>
+  <form class="filters" method="get">
+    <input type="text" name="q" placeholder="輸入變身名稱 / 備註" value="{{ q }}">
+    <select name="cause">
+      <option value="">全部來源</option>
+      <option value="0" {% if cause == '0' %}selected{% endif %}>0 — 變身卷軸</option>
+      <option value="1" {% if cause == '1' %}selected{% endif %}>1 — 特殊/寵物</option>
+    </select>
+    <select name="skill_use">
+      <option value="">技能限制</option>
+      <option value="1" {% if skill_use == '1' %}selected{% endif %}>可使用技能</option>
+      <option value="0" {% if skill_use == '0' %}selected{% endif %}>無法使用技能</option>
+    </select>
+    <button type="submit">查詢</button>
+  </form>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>名稱</th>
+          <th>外型 ID</th>
+          <th>最低等級</th>
+          <th>武器裝備</th>
+          <th>防具裝備</th>
+          <th>可施法</th>
+          <th>來源</th>
+          <th>備註</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for row in rows %}
+        <tr>
+          <td>{{ row['name'] }}</td>
+          <td>{{ row['polyid'] }}</td>
+          <td>Lv.{{ row['minlevel'] }}</td>
+          <td>{{ '可' if row['weaponequip'] else '—' }}</td>
+          <td>{{ '可' if row['armorequip'] else '—' }}</td>
+          <td>{% if row['isSkillUse'] %}<span style="color:var(--accent)">✓</span>{% else %}<span style="color:var(--muted)">✗</span>{% endif %}</td>
+          <td>{{ '卷軸' if row['cause'] == 0 else '特殊' }}</td>
+          <td>{{ row['note'] or '' }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="8" style="text-align:center;color:var(--muted)">查無資料</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
   </div>
-</section>
-
-<section class="container section-block">
-  <h2 class="section-title">⚗ 系統說明</h2>
-  <div class="guide-card">
-    <p>天堂1的變身系統主要透過 <strong>變身卷軸</strong> 或伺服器內建便利功能進行切換。不同變身會影響角色可使用的裝備、是否可施放技能，以及實際戰鬥手感。本站目前依照 <code>381.polymorphs</code> 表整理欄位，先讓玩家看得懂資料怎麼判讀。</p>
-    <div class="guide-tip">
-      <span class="guide-tip-icon">💡</span>
-      <span>目前已確認變身資料表為 <code>polymorphs</code>，欄位包含名稱、變身外型 ID、最低等級、武器/防具限制、技能使用、取得來源與備註。</span>
-    </div>
-  </div>
-</section>
-
-<section class="container section-block" id="fields">
-  <h2 class="section-title">📊 polymorphs 欄位對照</h2>
-  <p class="section-desc">以下欄位已依 381 資料庫實際表結構校正，不再使用天堂2式的猜測欄位。</p>
-  <div class="card">
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th>欄位</th><th>說明</th><th>用途</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><code>id</code></td><td>資料列主鍵</td><td>網站後續串接與排序用</td></tr>
-          <tr><td><code>name</code></td><td>變身名稱</td><td>玩家主要辨識名稱</td></tr>
-          <tr><td><code>polyid</code></td><td>變身外型 ID</td><td>對應實際變身外觀</td></tr>
-          <tr><td><code>minlevel</code></td><td>最低使用等級</td><td>判斷新手能否使用</td></tr>
-          <tr><td><code>weaponequip</code></td><td>武器使用限制</td><td>判斷變身後可否持用特定武器</td></tr>
-          <tr><td><code>armorequip</code></td><td>防具使用限制</td><td>判斷變身後裝備限制</td></tr>
-          <tr><td><code>isSkillUse</code></td><td>是否可使用技能</td><td>法系/輔助玩法的重要判斷</td></tr>
-          <tr><td><code>cause</code></td><td>來源/類型代碼</td><td>可作為分類依據</td></tr>
-          <tr><td><code>note</code></td><td>備註</td><td>補充變身效果或用途</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-<section class="container section-block" id="samples">
-  <h2 class="section-title">🐾 已確認樣本</h2>
-  <p class="section-desc">以下樣本為我直接從 381.polymorphs 抓到的前幾筆資料，可先用來確認網站方向與查詢結構。</p>
-  <div class="card">
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th>id</th><th>name</th><th>polyid</th><th>minlevel</th><th>isSkillUse</th><th>note</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>1</td><td>floating eye</td><td>29</td><td>1</td><td>1</td><td>資料庫原始備註保留</td></tr>
-          <tr><td>2</td><td>re ungoliant</td><td>146</td><td>1</td><td>1</td><td>資料庫原始備註保留</td></tr>
-          <tr><td>3</td><td>beagle</td><td>938</td><td>1</td><td>1</td><td>資料庫原始備註保留</td></tr>
-          <tr><td>4</td><td>milkcow</td><td>945</td><td>1</td><td>1</td><td>資料庫原始備註保留</td></tr>
-          <tr><td>5</td><td>deer</td><td>947</td><td>1</td><td>1</td><td>資料庫原始備註保留</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <p style="margin-top:12px;color:var(--muted);font-size:13px">※ 目前先保留資料庫原始名稱；下一步可再補中文名稱對照、用途分類與效果說明。</p>
-</section>
-
-<section class="container section-block" id="tips">
-  <h2 class="section-title">📌 玩家怎麼看這張表</h2>
-  <div class="guide-card">
-    <ul class="guide-ul">
-      <li><strong>看等級：</strong>先看 <code>minlevel</code>，確認角色現在能不能用。</li>
-      <li><strong>看技能限制：</strong><code>isSkillUse</code> 很重要，會影響法師、妖精、幻術師的實戰手感。</li>
-      <li><strong>看裝備限制：</strong><code>weaponequip</code> / <code>armorequip</code> 能幫助後續整理哪些變身適合近戰或日常練功。</li>
-      <li><strong>看備註：</strong>等後續把 note 整理乾淨，就能做成更直覺的變身說明頁。</li>
-    </ul>
-  </div>
-</section>
-
-<section class="final-cta">
-  <div class="container final-cta-inner">
-    <h2>探索更多遊戲系統</h2>
-    <p>下一步將持續把 polymorphs 真資料整理成可搜尋、可分類的變身圖鑑。</p>
-    <a href="{{ url_for('dolls_page') }}" class="btn-primary">魔法娃娃介紹</a>
-    <a href="{{ url_for('guide_page') }}" class="btn-outline" style="margin-left:12px">新手教學</a>
-  </div>
+  <p style="margin-top:12px;color:var(--muted);font-size:13px">
+    ※ 顯示最多 200 筆。完整資料待同步 381.polymorphs 後自動更新。
+  </p>
 </section>
 {% endblock %}

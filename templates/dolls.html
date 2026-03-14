@@ -1,93 +1,56 @@
 {% extends 'base.html' %}
-{% block title %}魔法娃娃介紹 — {{ site_cfg.get('brand_name', '妍菲天堂') }}{% endblock %}
-{% block main_class %}{% endblock %}
+{% block title %}魔法娃娃查詢 — {{ site_cfg.get('brand_name', '妍菲天堂') }}{% endblock %}
 {% block content %}
-<section class="page-hero">
-  <div class="container page-hero-inner">
-    <h1 class="page-hero-title">魔法娃娃</h1>
-    <p class="page-hero-sub">對照 381 的 etcitem_doll_type / etcitem_doll_power，整理娃娃效果與用途</p>
+<section class="card">
+  <h1>魔法娃娃查詢</h1>
+  <p class="section-desc">天堂1 魔法娃娃系統，來源：381.etcitem_doll_type × etcitem_doll_power（共 {{ total }} 筆）</p>
+  <form class="filters" method="get">
+    <input type="text" name="q" placeholder="輸入娃娃名稱 / 效果說明" value="{{ q }}">
+    <select name="mode">
+      <option value="">全部類型</option>
+      <option value="1" {% if mode == '1' %}selected{% endif %}>基礎型（防禦/HP/MP）</option>
+      <option value="2" {% if mode == '2' %}selected{% endif %}>屬性型（STR/CON/DEX）</option>
+    </select>
+    <select name="power_class">
+      <option value="">全部效果</option>
+      {% for pc in power_classes %}
+      <option value="{{ pc['classname'] }}" {% if power_class == pc['classname'] %}selected{% endif %}>{{ pc['classname'] }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit">查詢</button>
+  </form>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>娃娃名稱</th>
+          <th>效果類型</th>
+          <th>效果值</th>
+          <th>效果說明</th>
+          <th>持續時間</th>
+          <th>類型</th>
+          <th>娃娃備註</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for row in rows %}
+        <tr>
+          <td>{{ row['nameid'] }}</td>
+          <td>{{ row['classname'] or '—' }}</td>
+          <td>{{ row['type1'] if row['classname'] else '—' }}</td>
+          <td>{{ row['power_note'] or '—' }}</td>
+          <td>{{ row['time'] }} 秒</td>
+          <td>{{ '基礎' if row['mode'] == 1 else '屬性' }}</td>
+          <td>{{ row['doll_note'] or '' }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="7" style="text-align:center;color:var(--muted)">查無資料</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
   </div>
-</section>
-
-<section class="container section-block">
-  <h2 class="section-title">🎎 系統說明</h2>
-  <div class="guide-card">
-    <p>天堂1的魔法娃娃不只是外觀收藏，而是會直接影響角色實戰體感的重要系統。381 目前可確認至少有兩張核心表：<code>etcitem_doll_type</code> 與 <code>etcitem_doll_power</code>。前者偏向娃娃本體與需求，後者偏向效果模板。</p>
-    <div class="guide-tip">
-      <span class="guide-tip-icon">💡</span>
-      <span>之後網站會把娃娃本體與效果模板對起來，讓玩家能直接查「這隻娃娃到底有什麼功能」。</span>
-    </div>
-  </div>
-</section>
-
-<section class="container section-block" id="fields">
-  <h2 class="section-title">📊 實際資料表欄位</h2>
-  <div class="features-grid">
-    <div class="feature-card">
-      <strong>etcitem_doll_type</strong>
-      <p>娃娃本體資料</p>
-      <ul class="guide-ul">
-        <li><code>itemid</code>：對應道具 ID</li>
-        <li><code>nameid</code>：顯示名稱字串</li>
-        <li><code>powers</code>：效果關聯代碼</li>
-        <li><code>note</code>：效果備註說明</li>
-        <li><code>need</code> / <code>count</code>：需求道具與數量</li>
-        <li><code>time</code>：持續時間</li>
-        <li><code>gfxid</code>：外觀圖像</li>
-        <li><code>mode</code>：模式/分類代碼</li>
-      </ul>
-    </div>
-    <div class="feature-card">
-      <strong>etcitem_doll_power</strong>
-      <p>娃娃效果模板</p>
-      <ul class="guide-ul">
-        <li><code>id</code>：效果模板 ID</li>
-        <li><code>classname</code>：效果類型名稱</li>
-        <li><code>type1</code> / <code>type2</code> / <code>type3</code>：效果數值或類型代碼</li>
-        <li><code>note</code>：人類可讀的效果說明</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<section class="container section-block" id="samples">
-  <h2 class="section-title">🎀 已確認效果樣本</h2>
-  <p class="section-desc">以下內容直接來自 381 的真資料，可先用來做玩家說明與後續查詢頁。</p>
-  <div class="card">
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th>來源表</th><th>樣本</th><th>說明</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>etcitem_doll_power</td><td>Doll_Ac</td><td>可對應防禦加成，已確認有 AC -1 / -2 / -3 / -4 等模板。</td></tr>
-          <tr><td>etcitem_doll_power</td><td>Doll_Hp</td><td>可對應最大 HP 加成，已確認至少有 HP +10 樣本。</td></tr>
-          <tr><td>etcitem_doll_type</td><td>itemid / nameid / powers</td><td>可用來把「娃娃本體」對到「實際效果模板」。</td></tr>
-          <tr><td>etcitem_doll_type</td><td>time</td><td>可顯示娃娃持續時間，例：1800 秒。</td></tr>
-          <tr><td>etcitem_doll_type</td><td>note</td><td>部分紀錄已直接寫出效果摘要，適合先做網站顯示。</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-<section class="container section-block" id="usage">
-  <h2 class="section-title">📌 玩家怎麼使用這些資料</h2>
-  <div class="guide-card">
-    <ul class="guide-ul">
-      <li><strong>先看娃娃本體：</strong>從 <code>etcitem_doll_type</code> 看名稱、需求與持續時間。</li>
-      <li><strong>再看效果模板：</strong>從 <code>etcitem_doll_power</code> 看真正加成，例如 AC、HP、MP、傷害或特殊功能。</li>
-      <li><strong>後續網站會做對照：</strong>把本體與效果模板合併，讓你直接查到「這隻娃娃到底加了什麼」。</li>
-    </ul>
-  </div>
-</section>
-
-<section class="final-cta">
-  <div class="container final-cta-inner">
-    <h2>探索更多遊戲系統</h2>
-    <p>下一步將持續把娃娃本體與效果模板串起來，整理成真正可查的娃娃功能表。</p>
-    <a href="{{ url_for('forms_page') }}" class="btn-primary">變身系統介紹</a>
-    <a href="{{ url_for('guide_page') }}" class="btn-outline" style="margin-left:12px">新手教學</a>
-  </div>
+  <p style="margin-top:12px;color:var(--muted);font-size:13px">
+    ※ 顯示最多 200 筆。完整資料待同步 381.etcitem_doll_type / etcitem_doll_power 後自動更新。
+  </p>
 </section>
 {% endblock %}

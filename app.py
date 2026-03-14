@@ -363,11 +363,84 @@ def create_app() -> Flask:
 
     @app.route("/forms")
     def forms_page():
-        return render_template("forms.html")
+        q = request.args.get("q", "").strip()
+        cause = request.args.get("cause", "").strip()
+        skill_use = request.args.get("skill_use", "").strip()
+        sql = """
+            SELECT id, name, polyid, minlevel, weaponequip, armorequip, isSkillUse, cause, note
+            FROM polymorphs
+            WHERE 1=1
+        """
+        params: list[Any] = []
+        if q:
+            like = f"%{q}%"
+            sql += " AND (name LIKE ? OR note LIKE ?)"
+            params.extend([like, like])
+        if cause in ("0", "1"):
+            sql += " AND cause = ?"
+            params.append(int(cause))
+        if skill_use in ("0", "1"):
+            sql += " AND isSkillUse = ?"
+            params.append(int(skill_use))
+        sql += " ORDER BY minlevel ASC, id ASC LIMIT 200"
+        db = get_db()
+        rows = db.execute(sql, params).fetchall()
+        try:
+            total = db.execute("SELECT COUNT(*) AS c FROM polymorphs").fetchone()["c"]
+        except Exception:
+            total = 0
+        return render_template(
+            "forms.html",
+            rows=rows,
+            q=q,
+            cause=cause,
+            skill_use=skill_use,
+            total=total,
+        )
 
     @app.route("/dolls")
     def dolls_page():
-        return render_template("dolls.html")
+        q = request.args.get("q", "").strip()
+        mode = request.args.get("mode", "").strip()
+        power_class = request.args.get("power_class", "").strip()
+        sql = """
+            SELECT t.itemid, t.nameid, t.powers, t.note AS doll_note,
+                   t.time, t.mode,
+                   p.classname, p.type1, p.note AS power_note
+            FROM etcitem_doll_type t
+            LEFT JOIN etcitem_doll_power p ON p.id = t.powers
+            WHERE 1=1
+        """
+        params: list[Any] = []
+        if q:
+            like = f"%{q}%"
+            sql += " AND (t.nameid LIKE ? OR t.note LIKE ? OR p.classname LIKE ? OR p.note LIKE ?)"
+            params.extend([like, like, like, like])
+        if mode in ("1", "2"):
+            sql += " AND t.mode = ?"
+            params.append(int(mode))
+        if power_class:
+            sql += " AND p.classname = ?"
+            params.append(power_class)
+        sql += " ORDER BY t.mode ASC, t.itemid ASC LIMIT 200"
+        db = get_db()
+        rows = db.execute(sql, params).fetchall()
+        power_classes = db.execute(
+            "SELECT DISTINCT classname FROM etcitem_doll_power ORDER BY classname"
+        ).fetchall()
+        try:
+            total = db.execute("SELECT COUNT(*) AS c FROM etcitem_doll_type").fetchone()["c"]
+        except Exception:
+            total = 0
+        return render_template(
+            "dolls.html",
+            rows=rows,
+            q=q,
+            mode=mode,
+            power_class=power_class,
+            power_classes=power_classes,
+            total=total,
+        )
 
     @app.route("/healthz")
     def healthz():
