@@ -2,162 +2,89 @@
 {% block title %}變身系統介紹 — {{ site_cfg.get('brand_name', '妍菲天堂') }}{% endblock %}
 {% block main_class %}{% endblock %}
 {% block content %}
-
-<!-- ===== 頁面 Hero ===== -->
 <section class="page-hero">
   <div class="container page-hero-inner">
     <h1 class="page-hero-title">變身系統</h1>
-    <p class="page-hero-sub">使用變身卷軸，化身各種生物獲得強化效果</p>
+    <p class="page-hero-sub">對照 381 資料庫的 polymorphs 表，整理天堂1常用變身資訊</p>
   </div>
 </section>
 
-<!-- ===== 系統說明 ===== -->
 <section class="container section-block">
   <h2 class="section-title">⚗ 系統說明</h2>
   <div class="guide-card">
-    <p>天堂 1 的「變身」系統讓角色透過使用<strong>變身卷軸</strong>，暫時化身為特定生物的外型，同時獲得對應的屬性加成或特殊技能。不同的變身種類效果差異顯著，從移動速度、近戰攻擊力，乃至主動技能，都可能隨變身而改變。</p>
+    <p>天堂1的變身系統主要透過 <strong>變身卷軸</strong> 或伺服器內建便利功能進行切換。不同變身會影響角色可使用的裝備、是否可施放技能，以及實際戰鬥手感。本站目前依照 <code>381.polymorphs</code> 表整理欄位，先讓玩家看得懂資料怎麼判讀。</p>
     <div class="guide-tip">
       <span class="guide-tip-icon">💡</span>
-      <span>部分高階變身卷軸可於遊戲中的 NPC、怪物掉落或活動取得。變身期間部分道具與技能的使用可能受限，請依場景選擇適合的變身種類。</span>
-    </div>
-    <div class="guide-tip" style="margin-top:10px">
-      <span class="guide-tip-icon">⏱</span>
-      <span>變身具有持續時間限制，時間到後自動解除，或可主動點擊頭像解除變身狀態。</span>
+      <span>目前已確認變身資料表為 <code>polymorphs</code>，欄位包含名稱、變身外型 ID、最低等級、武器/防具限制、技能使用、取得來源與備註。</span>
     </div>
   </div>
 </section>
 
-<!-- ===== 變身類別 ===== -->
-<section class="container section-block" id="categories">
-  <h2 class="section-title">📋 變身類別</h2>
-  <div class="features-grid">
-    <div class="feature-card">
-      <div class="feature-icon">🐺</div>
-      <strong>一般變身</strong>
-      <p>常見怪物外型，提供基本移動速度或攻擊力加成，卷軸相對容易取得，適合日常使用。</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">🔮</div>
-      <strong>精靈 / 稀有變身</strong>
-      <p>稀有怪物或精靈外型，提供較高的屬性加成或特殊能力，卷軸取得難度較高。</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">🌟</div>
-      <strong>特殊 / 神話變身</strong>
-      <p>限定活動或任務獲得，提供強力加成，部分附帶獨特主動技能，極為稀有。</p>
-    </div>
-  </div>
-</section>
-
-<!-- ===== 屬性欄位說明 ===== -->
 <section class="container section-block" id="fields">
-  <h2 class="section-title">📊 屬性欄位說明</h2>
-  <p class="section-desc">以下欄位對應天堂 1 資料庫中的變身資料結構，資料同步後將提供完整查詢功能。</p>
+  <h2 class="section-title">📊 polymorphs 欄位對照</h2>
+  <p class="section-desc">以下欄位已依 381 資料庫實際表結構校正，不再使用天堂2式的猜測欄位。</p>
   <div class="card">
     <div class="table-wrap">
       <table>
         <thead>
-          <tr>
-            <th>欄位</th>
-            <th>說明</th>
-            <th>範例值</th>
-          </tr>
+          <tr><th>欄位</th><th>說明</th><th>用途</th></tr>
         </thead>
         <tbody>
-          <tr><td><code>name</code></td><td>變身名稱（中文）</td><td>狼人、影魔、赤龍（幼）</td></tr>
-          <tr><td><code>poly_id</code></td><td>變身 ID（資料庫主鍵）</td><td>1001</td></tr>
-          <tr><td><code>category</code></td><td>分類（一般 / 稀有 / 特殊）</td><td>一般</td></tr>
-          <tr><td><code>level_req</code></td><td>使用所需最低角色等級</td><td>30</td></tr>
-          <tr><td><code>duration</code></td><td>持續時間（秒）</td><td>1200</td></tr>
-          <tr><td><code>move_speed</code></td><td>移動速度加成</td><td>+3</td></tr>
-          <tr><td><code>atk_bonus</code></td><td>近戰攻擊力加成</td><td>+15</td></tr>
-          <tr><td><code>ac_bonus</code></td><td>防禦值 (AC) 加成（負值代表提升防禦）</td><td>-5</td></tr>
-          <tr><td><code>special_skill</code></td><td>附帶特殊主動技能</td><td>衝鋒、毒噬、火焰吐息</td></tr>
-          <tr><td><code>obtain_method</code></td><td>取得方式</td><td>NPC 購買、怪物掉落、活動</td></tr>
-          <tr><td><code>note</code></td><td>備註說明</td><td>限制條件、使用注意事項</td></tr>
+          <tr><td><code>id</code></td><td>資料列主鍵</td><td>網站後續串接與排序用</td></tr>
+          <tr><td><code>name</code></td><td>變身名稱</td><td>玩家主要辨識名稱</td></tr>
+          <tr><td><code>polyid</code></td><td>變身外型 ID</td><td>對應實際變身外觀</td></tr>
+          <tr><td><code>minlevel</code></td><td>最低使用等級</td><td>判斷新手能否使用</td></tr>
+          <tr><td><code>weaponequip</code></td><td>武器使用限制</td><td>判斷變身後可否持用特定武器</td></tr>
+          <tr><td><code>armorequip</code></td><td>防具使用限制</td><td>判斷變身後裝備限制</td></tr>
+          <tr><td><code>isSkillUse</code></td><td>是否可使用技能</td><td>法系/輔助玩法的重要判斷</td></tr>
+          <tr><td><code>cause</code></td><td>來源/類型代碼</td><td>可作為分類依據</td></tr>
+          <tr><td><code>note</code></td><td>備註</td><td>補充變身效果或用途</td></tr>
         </tbody>
       </table>
     </div>
   </div>
 </section>
 
-<!-- ===== 範例變身清單 ===== -->
-<section class="container section-block" id="list">
-  <h2 class="section-title">🐾 範例變身清單</h2>
-  <p class="section-desc">以下為示範資料，資料庫對接後將顯示完整伺服器變身清單與即時搜尋功能。</p>
+<section class="container section-block" id="samples">
+  <h2 class="section-title">🐾 已確認樣本</h2>
+  <p class="section-desc">以下樣本為我直接從 381.polymorphs 抓到的前幾筆資料，可先用來確認網站方向與查詢結構。</p>
   <div class="card">
     <div class="table-wrap">
       <table>
         <thead>
-          <tr>
-            <th>變身名稱</th>
-            <th>類別</th>
-            <th>等級需求</th>
-            <th>持續（秒）</th>
-            <th>移速</th>
-            <th>攻擊</th>
-            <th>AC</th>
-            <th>特殊技能</th>
-          </tr>
+          <tr><th>id</th><th>name</th><th>polyid</th><th>minlevel</th><th>isSkillUse</th><th>note</th></tr>
         </thead>
         <tbody>
-          <tr>
-            <td>狼人</td>
-            <td><span class="badge badge-blue">一般</span></td>
-            <td>20</td><td>900</td><td>+2</td><td>+10</td><td>0</td><td>—</td>
-          </tr>
-          <tr>
-            <td>食人魔</td>
-            <td><span class="badge badge-blue">一般</span></td>
-            <td>30</td><td>900</td><td>0</td><td>+20</td><td>-2</td><td>—</td>
-          </tr>
-          <tr>
-            <td>影魔</td>
-            <td><span class="badge badge-green">稀有</span></td>
-            <td>45</td><td>1200</td><td>+3</td><td>+15</td><td>-3</td><td>暗影步</td>
-          </tr>
-          <tr>
-            <td>水精靈</td>
-            <td><span class="badge badge-green">稀有</span></td>
-            <td>40</td><td>1200</td><td>+2</td><td>+5</td><td>-5</td><td>水流治癒</td>
-          </tr>
-          <tr>
-            <td>赤龍（幼）</td>
-            <td><span class="badge badge-gold">特殊</span></td>
-            <td>52</td><td>1800</td><td>+4</td><td>+30</td><td>-8</td><td>火焰吐息</td>
-          </tr>
+          <tr><td>1</td><td>floating eye</td><td>29</td><td>1</td><td>1</td><td>資料庫原始備註保留</td></tr>
+          <tr><td>2</td><td>re ungoliant</td><td>146</td><td>1</td><td>1</td><td>資料庫原始備註保留</td></tr>
+          <tr><td>3</td><td>beagle</td><td>938</td><td>1</td><td>1</td><td>資料庫原始備註保留</td></tr>
+          <tr><td>4</td><td>milkcow</td><td>945</td><td>1</td><td>1</td><td>資料庫原始備註保留</td></tr>
+          <tr><td>5</td><td>deer</td><td>947</td><td>1</td><td>1</td><td>資料庫原始備註保留</td></tr>
         </tbody>
       </table>
     </div>
   </div>
-  <p style="margin-top:12px;color:var(--muted);font-size:13px">※ 以上為示範資料，完整資料將於資料庫同步後更新。</p>
+  <p style="margin-top:12px;color:var(--muted);font-size:13px">※ 目前先保留資料庫原始名稱；下一步可再補中文名稱對照、用途分類與效果說明。</p>
 </section>
 
-<!-- ===== 使用技巧 ===== -->
 <section class="container section-block" id="tips">
-  <h2 class="section-title">📌 使用建議</h2>
+  <h2 class="section-title">📌 玩家怎麼看這張表</h2>
   <div class="guide-card">
-    <h3 class="guide-h3">選擇變身的考量</h3>
-    <ul class="guide-ol" style="list-style:disc;padding-left:20px">
-      <li><strong>升級刷怪</strong>：優先選擇移動速度或攻擊力加成高的變身，提升效率。</li>
-      <li><strong>副本 / PVP</strong>：可考量 AC 加成（防禦型）或具主動技能的特殊變身。</li>
-      <li><strong>資源採集</strong>：部分變身對採集或移動路線有幫助，請依目的靈活選用。</li>
+    <ul class="guide-ul">
+      <li><strong>看等級：</strong>先看 <code>minlevel</code>，確認角色現在能不能用。</li>
+      <li><strong>看技能限制：</strong><code>isSkillUse</code> 很重要，會影響法師、妖精、幻術師的實戰手感。</li>
+      <li><strong>看裝備限制：</strong><code>weaponequip</code> / <code>armorequip</code> 能幫助後續整理哪些變身適合近戰或日常練功。</li>
+      <li><strong>看備註：</strong>等後續把 note 整理乾淨，就能做成更直覺的變身說明頁。</li>
     </ul>
-    <div class="guide-tip" style="margin-top:14px">
-      <span class="guide-tip-icon">⚠</span>
-      <span>高級變身卷軸市場需求高，請注意交易價格；部分卷軸不可交易，請確認屬性後再使用。</span>
-    </div>
   </div>
 </section>
 
-<!-- ===== CTA ===== -->
 <section class="final-cta">
   <div class="container final-cta-inner">
     <h2>探索更多遊戲系統</h2>
-    <p>查閱魔法娃娃、怪物圖鑑、物品資料，或前往新手教學了解更多天堂 1 核心系統。</p>
+    <p>下一步將持續把 polymorphs 真資料整理成可搜尋、可分類的變身圖鑑。</p>
     <a href="{{ url_for('dolls_page') }}" class="btn-primary">魔法娃娃介紹</a>
     <a href="{{ url_for('guide_page') }}" class="btn-outline" style="margin-left:12px">新手教學</a>
   </div>
 </section>
-
 {% endblock %}
