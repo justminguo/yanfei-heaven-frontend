@@ -990,6 +990,35 @@ tr:hover td { background: rgba(91,156,246,.04); }
 .info-card strong { display: block; font-size: 15px; font-weight: 700; margin-bottom: 8px; }
 .info-card p { color: var(--muted); font-size: 13px; line-height: 1.6; }
 
+/* ===== Reward Table ===== */
+.reward-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.reward-table th {
+  background: var(--card-bg);
+  color: var(--accent);
+  font-weight: 700;
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 2px solid var(--accent);
+}
+.reward-table td {
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  vertical-align: top;
+}
+.reward-table tbody tr:hover td { background: rgba(255,255,255,.03); }
+.lv-cell {
+  white-space: nowrap;
+  color: var(--text);
+  font-weight: 600;
+  width: 90px;
+}
+
 /* ===== Responsive ===== */
 @media (max-width: 900px) {
   .quick-grid,
