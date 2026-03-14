@@ -361,6 +361,14 @@ def create_app() -> Flask:
     def guide_page():
         return render_template("guide.html")
 
+    @app.route("/forms")
+    def forms_page():
+        return render_template("forms.html")
+
+    @app.route("/dolls")
+    def dolls_page():
+        return render_template("dolls.html")
+
     @app.route("/healthz")
     def healthz():
         return {"ok": True, "stats": stats_payload()}

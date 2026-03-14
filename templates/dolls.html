@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+{% block title %}魔法娃娃介紹 — {{ site_cfg.get('brand_name', '妍菲天堂') }}{% endblock %}
+{% block main_class %}{% endblock %}
+{% block content %}
+
+<!-- ===== 頁面 Hero ===== -->
+<section class="page-hero">
+  <div class="container page-hero-inner">
+    <h1 class="page-hero-title">魔法娃娃</h1>
+    <p class="page-hero-sub">召喚隨行夥伴，獲得持續強化與特殊能力</p>
+  </div>
+</section>
+
+<!-- ===== 系統說明 ===== -->
+<section class="container section-block">
+  <h2 class="section-title">🎎 系統說明</h2>
+  <div class="guide-card">
+    <p>天堂 1 的「魔法娃娃」是可裝備的隨行夥伴道具，裝備後角色旁會出現娃娃分身，並持續提供<strong>被動能力加成</strong>或在特定條件下觸發<strong>主動效果</strong>。不同娃娃功能截然不同，從提升防禦、協助採集，到定期恢復 HP/MP 均有涵蓋。</p>
+    <div class="guide-tip">
+      <span class="guide-tip-icon">💡</span>
+      <span>每位角色同一時間只能裝備一個魔法娃娃；娃娃具有耐久度，耐久歸零後需修復或重新取得。</span>
+    </div>
+    <div class="guide-tip" style="margin-top:10px">
+      <span class="guide-tip-icon">⚙</span>
+      <span>部分娃娃需達到一定角色等級或完成特定任務後方可使用，請確認條件後再裝備。</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 娃娃類別 ===== -->
+<section class="container section-block" id="categories">
+  <h2 class="section-title">📋 娃娃類別</h2>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🛡</div>
+      <strong>防禦型</strong>
+      <p>提升角色的防禦力（AC）或魔法抗性，適合前排職業或需要穩定生存的角色。</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⚔</div>
+      <strong>攻擊型</strong>
+      <p>提升物理或魔法攻擊力，部分可在攻擊時附加額外效果，適合輸出導向玩家。</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💚</div>
+      <strong>輔助型</strong>
+      <p>定期回復 HP 或 MP，或在特定條件下自動發動治癒、護盾效果，適合長時間刷怪。</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⛏</div>
+      <strong>採集 / 特殊型</strong>
+      <p>加速素材採集、提升掉寶率，或具備其他特殊功能，適合以收集資源為目標的玩家。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 屬性欄位說明 ===== -->
+<section class="container section-block" id="fields">
+  <h2 class="section-title">📊 屬性欄位說明</h2>
+  <p class="section-desc">以下欄位對應天堂 1 資料庫中的魔法娃娃資料結構，資料同步後將提供完整查詢功能。</p>
+  <div class="card">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>欄位</th>
+            <th>說明</th>
+            <th>範例值</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><code>name</code></td><td>娃娃名稱（中文）</td><td>水精靈娃娃、戰士娃娃</td></tr>
+          <tr><td><code>doll_id</code></td><td>娃娃 ID（資料庫主鍵）</td><td>2001</td></tr>
+          <tr><td><code>category</code></td><td>類別（防禦 / 攻擊 / 輔助 / 特殊）</td><td>輔助</td></tr>
+          <tr><td><code>level_req</code></td><td>使用所需最低角色等級</td><td>20</td></tr>
+          <tr><td><code>passive_effect</code></td><td>持續被動效果描述</td><td>AC -3、HP 回復每 5 秒 +2</td></tr>
+          <tr><td><code>active_skill</code></td><td>主動或條件觸發技能</td><td>HP 低於 20% 時自動治癒</td></tr>
+          <tr><td><code>durability</code></td><td>耐久度上限</td><td>2000</td></tr>
+          <tr><td><code>obtain_method</code></td><td>取得方式</td><td>NPC 商店 / 任務 / 怪物掉落</td></tr>
+          <tr><td><code>note</code></td><td>備註說明</td><td>限制職業、特殊使用條件</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 範例娃娃清單 ===== -->
+<section class="container section-block" id="list">
+  <h2 class="section-title">🎀 範例娃娃清單</h2>
+  <p class="section-desc">以下為示範資料，資料庫對接後將顯示完整伺服器娃娃清單與即時搜尋功能。</p>
+  <div class="card">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>娃娃名稱</th>
+            <th>類別</th>
+            <th>等級需求</th>
+            <th>被動效果</th>
+            <th>主動技能</th>
+            <th>取得方式</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>水精靈娃娃</td>
+            <td><span class="badge badge-blue">輔助</span></td>
+            <td>20</td>
+            <td>MP 回復 +3（每 10 秒）</td>
+            <td>—</td>
+            <td>NPC 商店</td>
+          </tr>
+          <tr>
+            <td>戰士娃娃</td>
+            <td><span class="badge badge-warn">攻擊</span></td>
+            <td>30</td>
+            <td>攻擊力 +8</td>
+            <td>—</td>
+            <td>任務獎勵</td>
+          </tr>
+          <tr>
+            <td>守衛娃娃</td>
+            <td><span class="badge badge-green">防禦</span></td>
+            <td>25</td>
+            <td>AC -4（防禦提升）</td>
+            <td>—</td>
+            <td>NPC 商店</td>
+          </tr>
+          <tr>
+            <td>治癒娃娃</td>
+            <td><span class="badge badge-blue">輔助</span></td>
+            <td>35</td>
+            <td>HP 回復 +5（每 8 秒）</td>
+            <td>HP ≤ 20% 自動治癒</td>
+            <td>稀有掉落</td>
+          </tr>
+          <tr>
+            <td>採集娃娃</td>
+            <td><span class="badge badge-gold">特殊</span></td>
+            <td>15</td>
+            <td>素材掉落率 +10%</td>
+            <td>—</td>
+            <td>活動限定</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <p style="margin-top:12px;color:var(--muted);font-size:13px">※ 以上為示範資料，完整資料將於資料庫同步後更新。</p>
+</section>
+
+<!-- ===== 使用建議 ===== -->
+<section class="container section-block" id="tips">
+  <h2 class="section-title">📌 使用建議</h2>
+  <div class="guide-card">
+    <h3 class="guide-h3">依角色需求選擇娃娃</h3>
+    <ul class="guide-ol" style="list-style:disc;padding-left:20px">
+      <li><strong>近戰職業（騎士、王族）</strong>：優先防禦型或輔助型，提升生存能力。</li>
+      <li><strong>魔法職業（法師、妖精）</strong>：輔助型（MP 回復）讓技能循環更順暢。</li>
+      <li><strong>刷素材玩家</strong>：採集 / 特殊型娃娃可大幅提升素材獲取效率。</li>
+    </ul>
+    <div class="guide-tip" style="margin-top:14px">
+      <span class="guide-tip-icon">⚠</span>
+      <span>娃娃耐久歸零前請記得修復，耐久歸零後被動效果將停止發動。</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section class="final-cta">
+  <div class="container final-cta-inner">
+    <h2>探索更多遊戲系統</h2>
+    <p>查閱變身系統、怪物圖鑑、物品資料，或前往新手教學了解更多天堂 1 核心系統。</p>
+    <a href="{{ url_for('forms_page') }}" class="btn-primary">變身系統介紹</a>
+    <a href="{{ url_for('guide_page') }}" class="btn-outline" style="margin-left:12px">新手教學</a>
+  </div>
+</section>
+
+{% endblock %}
