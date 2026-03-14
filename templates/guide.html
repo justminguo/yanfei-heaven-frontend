@@ -7,7 +7,7 @@
 <section class="page-hero">
   <div class="container page-hero-inner">
     <h1 class="page-hero-title">新手教學</h1>
-    <p class="page-hero-sub">從零開始，帶你踏上亞丁大陸的傳奇旅程</p>
+    <p class="page-hero-sub">從零開始，帶你踏上天堂 1 的傳奇旅程</p>
   </div>
 </section>
 
@@ -22,12 +22,12 @@
     <a href="#classes" class="quick-card">
       <div class="quick-icon">⚔</div>
       <strong>職業選擇</strong>
-      <p>七大職業特色與基本操作一次看懂</p>
+      <p>七大職業特色一次看懂</p>
     </a>
     <a href="#gameplay" class="quick-card">
       <div class="quick-icon">🗺</div>
       <strong>基礎操作與升級</strong>
-      <p>滑鼠操作、快捷鍵、練功與裝備取得</p>
+      <p>操作介面、升級路線、裝備取得</p>
     </a>
     <a href="#server-info" class="quick-card">
       <div class="quick-icon">🛡</div>
@@ -64,28 +64,76 @@
     <h3 class="guide-h3">3. 登入並創建角色</h3>
     <p>輸入帳號密碼後進入角色選擇畫面，點擊「創建角色」，依序選擇：</p>
     <ol class="guide-ol">
-      <li><strong>種族</strong>（、妖精、黑暗妖精、、、）</li>
-      <li><strong>外觀性別</strong></li>
+      <li><strong>職業</strong>（王族、騎士、妖精、法師、黑暗妖精、龍騎士、幻術師）</li>
       <li><strong>角色名稱</strong>（限英數字，在伺服器中唯一）</li>
     </ol>
-    <p>創角完成後點擊「進入遊戲」，你的傳奇冒險正式開始！</p>
+    <p>創角完成後點擊「進入遊戲」，你的天堂 1 冒險正式開始！</p>
   </div>
 </section>
 
 <!-- ===== 職業 ===== -->
-<section class="guide-section">
+<section class="container section-block" id="classes">
   <h2 class="section-title">⚔ 職業選擇</h2>
-  <p class="section-desc">天堂1的職業重點在定位明確、養成直接。以下 7 種職業就是玩家最常接觸的核心選擇。</p>
+  <p class="section-desc">天堂 1 共有七大職業，每個職業有其獨特的戰鬥風格與技能樹。以下是各職業的特色簡介，幫助你找到最適合的冒險方式。</p>
+
   <div class="class-grid">
-    <div class="class-card"><strong class="class-name">王族</strong><p>適合喜歡帶人、創盟、打團體內容的玩家，能力均衡但前期輸出較平穩。</p></div>
-    <div class="class-card"><strong class="class-name">騎士</strong><p>近戰穩定、操作直覺，坦度與生存都不錯，新手很好上手。</p></div>
-    <div class="class-card"><strong class="class-name">妖精</strong><p>兼具遠程輸出與輔助能力，練功效率高，是很多新手的安全牌。</p></div>
-    <div class="class-card"><strong class="class-name">法師</strong><p>靠魔法輸出與控制，前期較吃資源，但成形後玩法很多。</p></div>
-    <div class="class-card"><strong class="class-name">黑暗妖精</strong><p>偏高爆發與近戰輸出，節奏快、打擊感強，適合喜歡輸出的玩家。</p></div>
-    <div class="class-card"><strong class="class-name">龍騎士</strong><p>兼具近戰與特殊技能，打王與練功都很有存在感。</p></div>
-    <div class="class-card"><strong class="class-name">幻術師</strong><p>擅長輔助、干擾與戰術玩法，適合喜歡技巧操作的玩家。</p></div>
+    <div class="class-card">
+      <div class="class-icon">👑</div>
+      <strong class="class-name">王族</strong>
+      <span class="class-badge">入門推薦</span>
+      <p>兼具近戰與魔法能力的均衡職業，可使用鈍器與魔法捲軸，技能多元。是初次接觸天堂 1 的新手好選擇。</p>
+    </div>
+
+    <div class="class-card">
+      <div class="class-icon">🛡</div>
+      <strong class="class-name">騎士</strong>
+      <span class="class-badge class-badge-green">高生存</span>
+      <p>以高防禦力與高 HP 著稱的肉盾職業，擅長使用劍盾進行近戰。是 Party 中不可或缺的前排主力。</p>
+    </div>
+
+    <div class="class-card">
+      <div class="class-icon">🧝</div>
+      <strong class="class-name">妖精</strong>
+      <span class="class-badge class-badge-green">速度型</span>
+      <p>移動速度快、迴避率高，擅長弓箭遠距離攻擊。在野外刷怪與 Party 輸出中都表現出色。</p>
+    </div>
+
+    <div class="class-card">
+      <div class="class-icon">🔮</div>
+      <strong class="class-name">法師</strong>
+      <span class="class-badge class-badge-red">高爆發</span>
+      <p>擁有強大的魔法攻擊力，可對敵人造成大量魔法傷害。HP 較低，需謹慎走位，適合熟悉遊戲機制的玩家。</p>
+    </div>
+
+    <div class="class-card">
+      <div class="class-icon">🧛</div>
+      <strong class="class-name">黑暗妖精</strong>
+      <span class="class-badge class-badge-red">高爆發</span>
+      <p>以強大的單體爆發傷害著稱，兼具近戰與暗系魔法能力。在 PvP 環境中表現突出，上手難度稍高。</p>
+    </div>
+
+    <div class="class-card">
+      <div class="class-icon">🐉</div>
+      <strong class="class-name">龍騎士</strong>
+      <span class="class-badge class-badge-warn">進階職業</span>
+      <p>擁有強力的近戰攻擊與龍系特殊技能，耐久度高。是非常有特色的進階職業，適合熟悉遊戲後挑戰。</p>
+    </div>
+
+    <div class="class-card">
+      <div class="class-icon">✨</div>
+      <strong class="class-name">幻術師</strong>
+      <span class="class-badge class-badge-gold">輔助型</span>
+      <p>擅長幻術、召喚與輔助魔法，能在 Party 中提供強力支援。玩法獨特，是喜歡輔助型風格的玩家首選。</p>
+    </div>
   </div>
-  <div class="tip-box"><strong>新手建議：</strong>入門推薦優先考慮<strong>騎士</strong>、<strong>妖精</strong>或<strong>法師</strong>，上手比較直觀。</div>
+
+  <div class="guide-tip guide-tip-blue">
+    <span class="guide-tip-icon">💡</span>
+    <span>
+      <strong>新手建議：</strong>第一個角色推薦選擇<strong>王族</strong>或<strong>騎士</strong>。
+      王族操作靈活、技能多元；騎士生存能力強、不易陣亡。熟悉遊戲後再嘗試法師或黑暗妖精等高爆發職業！
+    </span>
+  </div>
 </section>
 
 <!-- ===== 基礎操作與升級 ===== -->
@@ -93,63 +141,57 @@
   <h2 class="section-title">🗺 基礎操作與升級</h2>
   <div class="guide-card">
     <h3 class="guide-h3">基本操作</h3>
+    <p>天堂 1 以滑鼠為主要操作方式，點擊地面移動，點擊目標進行互動或攻擊。</p>
     <div class="keys-grid">
-      <div class="key-row"><span class="key-key">左鍵點擊</span><span>選擇目標 / 移動</span></div>
-      <div class="key-row"><span class="key-key">右鍵點擊</span><span>攻擊選定目標</span></div>
-      <div class="key-row"><span class="key-key">Tab</span><span>切換目標</span></div>
+      <div class="key-row"><span class="key-key">左鍵點擊（地面）</span><span>移動到目標位置</span></div>
+      <div class="key-row"><span class="key-key">左鍵點擊（目標）</span><span>選取並攻擊 / 與 NPC 互動</span></div>
       <div class="key-row"><span class="key-key">Ctrl + 左鍵</span><span>強制攻擊（PK 模式）</span></div>
-      <div class="key-row"><span class="key-key">Alt + 左鍵</span><span>拾取地板道具</span></div>
-      <div class="key-row"><span class="key-key">I</span><span>開啟背包</span></div>
-      <div class="key-row"><span class="key-key">P</span><span>開啟技能欄</span></div>
-      <div class="key-row"><span class="key-key">C</span><span>開啟角色資訊</span></div>
-      <div class="key-row"><span class="key-key">M</span><span>開啟地圖</span></div>
-      <div class="key-row"><span class="key-key">F4</span><span>快速撿取身邊地上物品</span></div>
-      <div class="key-row"><span class="key-key">F5~F12</span><span>可自訂道具 / 魔法快捷鍵</span></div>
-      <div class="key-row"><span class="key-key">滑鼠左鍵</span><span>移動、對話、攻擊與大部分操作</span></div>
+      <div class="key-row"><span class="key-key">F4</span><span>撿取地面道具（Loot）</span></div>
+      <div class="key-row"><span class="key-key">F5 ~ F12</span><span>可自訂快捷鍵（技能 / 藥水 / 道具）</span></div>
     </div>
 
     <h3 class="guide-h3">新手升級路線（1 ~ 40 級）</h3>
     <div class="guide-tip guide-tip-green">
       <span class="guide-tip-icon">📍</span>
-      <span>以下地點以本服 1× 倍率為準，建議每個地點打至可以輕鬆刷怪的程度再推進。</span>
+      <span>以下地點以本服倍率為準，建議每個地點打至可以輕鬆刷怪的程度再推進。</span>
     </div>
     <ul class="level-guide-list">
       <li>
         <span class="level-range">Lv. 1 – 10</span>
         <div>
-          <strong>初始村莊周邊</strong>
-          <p>各種族起始村莊附近的小怪（哥布林、蜘蛛、骷髏等）。善用初始 NPC 新手任務可獲得額外裝備與 金幣（遊戲幣）。</p>
+          <strong>起始村莊周邊</strong>
+          <p>各職業起始村莊附近的低階怪物。善用初始 NPC 新手任務可獲得額外裝備與 Adena（遊戲幣）。</p>
         </div>
       </li>
       <li>
         <span class="level-range">Lv. 10 – 20</span>
         <div>
-          <strong>格路丁廢礦 / 妖精森林</strong>
-          <p>天堂1多半靠滑鼠點擊移動、攻擊與對話。打怪時記得善用 F4 撿物、F5~F12 設定常用技能與道具，操作會順很多。</p>
+          <strong>近郊狩獵場</strong>
+          <p>村莊周邊的中階野外區域，怪物密度高、掉落穩定。記得向 NPC 接受可用的任務，累積 Adena 與熟練度。</p>
         </div>
       </li>
       <li>
         <span class="level-range">Lv. 20 – 30</span>
         <div>
-          <strong>棄礦（Abandoned Mine）/ 蒼白地（Wasteland）</strong>
-          <p>前期先熟悉村莊周邊與基礎補給，練功時優先注意重量、補品與回卷配置，比衝等更重要。</p>
+          <strong>地區地城 / 野外地圖</strong>
+          <p>進入各地區地城或深入野外地圖，怪物等級與掉落品質提升。建議組 Party 以提升效率。</p>
         </div>
       </li>
       <li>
         <span class="level-range">Lv. 30 – 40</span>
         <div>
-          <strong>古魯丁地監（Cruma Tower）1 ~ 3 層</strong>
-          <p>地監是這個階段最主要的刷怪聖地，掉落物品豐富。建議組 Party 進入以提升效率與安全性。</p>
+          <strong>中高階地城</strong>
+          <p>此階段主要於中高階地城或城堡周邊刷怪，掉落物品豐富。強烈建議組 Party 進入以提升效率與安全性。</p>
         </div>
       </li>
     </ul>
 
     <h3 class="guide-h3">裝備取得建議</h3>
     <ul class="guide-ul">
-      <li>初期裝備可向村莊 NPC 商店購買，或在拍賣場（私人商店）用 金幣 購入。</li>
+      <li>初期裝備可向村莊 NPC 商店購買，或在私人商店用 Adena 購入。</li>
       <li>善用<a href="{{ url_for('drops') }}">掉落查詢</a>頁面，查詢目標裝備由哪隻怪物掉落，規劃刷怪路線。</li>
-      <li>40 級後建議換上 D 等級裝備（藍色名稱），差距相當顯著。</li>
-      <li>裝備可透過「靈魂晶石」附魔強化，詳見進階教學。</li>
+      <li>裝備可透過附魔強化（安全強化值內風險較低），詳情請詢問社群老玩家。</li>
+      <li>武器與防具有職業限制，各職業可裝備的種類不同，選購前請確認。</li>
     </ul>
   </div>
 </section>
@@ -176,7 +218,7 @@
     <div class="info-card">
       <div class="info-icon">🔄</div>
       <strong>定期版本更新</strong>
-      <p>定期推出新地圖、副本與遊戲內活動，讓老玩家保持新鮮感，讓新玩家有持續的目標可以追求。</p>
+      <p>定期推出新地圖、活動與遊戲內容，讓老玩家保持新鮮感，讓新玩家有持續的目標可以追求。</p>
     </div>
     <div class="info-card">
       <div class="info-icon">💬</div>
@@ -217,11 +259,11 @@
     </div>
     <div class="faq-item">
       <button class="faq-q" onclick="toggleFaq(this)">
-        我是第一次玩天堂1，適合加入嗎？
+        我是第一次玩天堂 1，適合加入嗎？
         <span class="faq-arrow">▶</span>
       </button>
       <div class="faq-a">
-        非常適合！本服有活躍的社群與友善的老玩家，新手進入後很快就能得到協助。建議先閱讀本頁教學，入門可優先考慮騎士、妖精或法師，並加入官方 LINE 群組詢問問題。
+        非常適合！本服有活躍的社群與友善的老玩家，新手進入後很快就能得到協助。建議先閱讀本頁教學，選擇王族或騎士作為入門職業，並加入官方 LINE 群組詢問問題。
       </div>
     </div>
     <div class="faq-item">
@@ -230,7 +272,7 @@
         <span class="faq-arrow">▶</span>
       </button>
       <div class="faq-a">
-        不需要。天堂1雖然重視社群互動，但前期也能自己慢慢練功。熟悉後再找血盟或朋友一起玩，體驗會更完整。
+        不需要。天堂 1 雖然是一款重視社群互動的 MMORPG，但本服支援單人刷怪升級，你可以按照自己的步調進行。加入血盟後，攻城戰、地城等內容更加精彩，推薦在熟悉遊戲後找一個血盟加入。
       </div>
     </div>
     <div class="faq-item">
@@ -239,7 +281,7 @@
         <span class="faq-arrow">▶</span>
       </button>
       <div class="faq-a">
-        請透過以下方式回報：①在遊戲內輸入 GM 指令（如 /gmlist 查看在線 GM）；②前往官方 LINE 群組，以文字 + 截圖方式向管理員回報。回報時請提供：時間、地點、涉及帳號名稱及截圖，以加速處理。
+        請透過以下方式回報：①在遊戲內聯繫在線 GM；②前往官方 LINE 群組，以文字 + 截圖方式向管理員回報。回報時請提供：時間、地點、涉及帳號名稱及截圖，以加速處理。
       </div>
     </div>
     <div class="faq-item">
@@ -248,16 +290,16 @@
         <span class="faq-arrow">▶</span>
       </button>
       <div class="faq-a">
-        每個帳號最多可建立 7 個角色（各伺服器設定可能不同）。關於多開（在同一台電腦同時執行多個客戶端），請於 LINE 群組確認目前政策，避免違反伺服器規定。
+        每個帳號可建立數個角色（各伺服器設定可能不同）。關於多開（在同一台電腦同時執行多個客戶端），請於 LINE 群組確認目前政策，避免違反伺服器規定。
       </div>
     </div>
     <div class="faq-item">
       <button class="faq-q" onclick="toggleFaq(this)">
-        遊戲內 金幣（遊戲幣）不夠用怎麼辦？
+        遊戲內 Adena（遊戲幣）不夠用怎麼辦？
         <span class="faq-arrow">▶</span>
       </button>
       <div class="faq-a">
-        新手賺 金幣 的主要方式：①刷怪掉落物品後至村莊 NPC 或私人商店販賣；②製作道具販售（職業）；③完成任務獲得獎勵。可以善用<a href="{{ url_for('drops') }}">掉落查詢</a>找出哪些怪物掉落高價值物品，針對刷怪。
+        新手賺 Adena 的主要方式：①刷怪掉落物品後至村莊 NPC 或私人商店販賣；②完成 NPC 任務獲得獎勵。可以善用<a href="{{ url_for('drops') }}">掉落查詢</a>找出哪些怪物掉落高價值物品，針對刷怪。
       </div>
     </div>
     <div class="faq-item">
@@ -266,16 +308,16 @@
         <span class="faq-arrow">▶</span>
       </button>
       <div class="faq-a">
-        角色刪除後通常需要等待系統確認期（通常 7 天）才會完全刪除。在此期間，可透過 GM 協助取消刪除。請在 LINE 群組聯繫 GM，並提供角色名稱與帳號資訊。七天後完全刪除的角色則無法復原，請謹慎操作。
+        角色刪除後通常需要等待系統確認期才會完全刪除。在此期間，可透過 GM 協助取消刪除。請在 LINE 群組聯繫 GM，並提供角色名稱與帳號資訊。完全刪除後的角色則無法復原，請謹慎操作。
       </div>
     </div>
     <div class="faq-item">
       <button class="faq-q" onclick="toggleFaq(this)">
-        遊戲有語音嗎？支援繁體中文介面嗎？
+        遊戲支援繁體中文介面嗎？
         <span class="faq-arrow">▶</span>
       </button>
       <div class="faq-a">
-        本服提供繁體中文化介面，包含技能名稱、物品說明與 NPC 對話均已漢化。部分音效為原版英文配音，但不影響遊戲體驗。如有翻譯錯誤，歡迎在 LINE 群組回報讓我們改善。
+        本服提供繁體中文化介面，包含技能名稱、物品說明與 NPC 對話均已漢化。如有翻譯錯誤，歡迎在 LINE 群組回報讓我們改善。
       </div>
     </div>
   </div>
