@@ -22,9 +22,9 @@
         <tr>
           <td>{{ row.id }}</td>
           <td><a href="{{ url_for('item_detail', item_id=row.id) }}">{{ row.name }}</a></td>
-          <td>{{ row.name_id }}</td>
-          <td>{{ row.item_type }}</td>
-          <td>{{ row.use_type }}</td>
+          <td>{{ row.name_id | safe_name }}</td>
+          <td>{{ row.item_type | item_type_cn }}</td>
+          <td>{{ row.use_type | use_type_cn }}</td>
           <td>{{ row.material | material_cn }}</td>
           <td>{{ row.weight | commas }}</td>
           <td>{{ '是' if row.stackable else '否' }}</td>

@@ -20,10 +20,10 @@ def create_app() -> Flask:
     # 弱點屬性對照
     WEAK_ATTR_NAMES: dict[int, str] = {
         0: "無",
-        1: "地",
-        2: "火",
-        4: "水",
-        8: "風",
+        1: "水 💧",
+        2: "火 🔥",
+        4: "地 ⛰️",
+        8: "風 🌪️",
     }
 
     # 家族中文對照
@@ -42,6 +42,24 @@ def create_app() -> Flask:
         "asitagio": "阿西塔基歐", "balbados": "巴爾巴多斯", "basilisk": "蛇怪",
         "beastsummoner": "召獸師", "blackwizard": "黑魔法師",
         "bombflower": "爆炸花", "Ifrit": "伊芙利特", "PIQUEST": "試煉",
+    }
+
+    # 物品類型中文對照
+    ITEM_TYPE_NAMES: dict[str, str] = {
+        "arrow": "箭矢", "potion": "藥水", "scroll": "卷軸", "food": "食物",
+        "spellbook": "魔法書/技術書", "wand": "魔杖", "gem": "寶石",
+        "material": "材料", "treasure_box": "寶箱", "light": "照明道具",
+        "totem": "任務圖騰", "questitem": "任務道具", "sting": "飛刀",
+        "petitem": "寵物裝備", "other": "其他/雜物", "ItemIntegration": "綜合道具",
+        "weapon": "武器", "armor": "防具", "accessory": "飾品",
+    }
+
+    # 物品用途中文對照
+    USE_TYPE_NAMES: dict[str, str] = {
+        "normal": "一般", "hpr": "體力回復", "mpr": "魔力回復",
+        "power": "強化/加速", "choice": "選擇性使用", "zel": "盔甲強化",
+        "dai": "武器強化", "sosc": "變身效果", "identify": "鑑定",
+        "home": "祝瞬/回歸", "blank": "空白魔法卷軸", "ntele": "瞬間移動",
     }
 
     # 材質中文對照
@@ -78,18 +96,13 @@ def create_app() -> Flask:
 
     @app.template_filter("drop_chance")
     def fmt_drop_chance(n: object) -> str:
-        """將掉落機率從百萬分比轉為百分比字串。"""
+        """將掉落機率轉為百分比（1,000,000 = 100%）。"""
         try:
             v = int(n)
             if v <= 0:
                 return "—"
-            pct = v / 1_000_000 * 100
-            if pct >= 1:
-                return f"{pct:.1f}%"
-            elif pct >= 0.01:
-                return f"{pct:.3f}%"
-            else:
-                return f"{pct:.5f}%"
+            pct = v / 10_000  # 1000000 / 10000 = 100.00%
+            return f"{pct:.2f}%"
         except (ValueError, TypeError):
             return str(n) if n else "—"
 
@@ -111,6 +124,28 @@ def create_app() -> Flask:
         if not s:
             return "—"
         return MATERIAL_NAMES.get(str(s), str(s))
+
+    @app.template_filter("item_type_cn")
+    def fmt_item_type(s: object) -> str:
+        if not s:
+            return "—"
+        return ITEM_TYPE_NAMES.get(str(s), str(s))
+
+    @app.template_filter("use_type_cn")
+    def fmt_use_type(s: object) -> str:
+        if not s:
+            return "—"
+        return USE_TYPE_NAMES.get(str(s), str(s))
+
+    @app.template_filter("safe_name")
+    def fmt_safe_name(s: object) -> str:
+        """過濾未映射的 $xxx 字串，只顯示 name 欄位即可。"""
+        if not s:
+            return "—"
+        text = str(s)
+        if text.startswith("$"):
+            return "—"
+        return text
 
     # Lineage I class ID -> name mapping (common Taiwan server IDs)
     CLASS_NAMES: dict[int, str] = {
