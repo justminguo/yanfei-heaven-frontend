@@ -10,7 +10,7 @@
   </form>
   <div class="table-wrap">
     <table id="drops-table" data-sortable>
-      <thead><tr><th>怪物</th><th>等級</th><th>掉落物</th><th>類型</th><th>數量</th><th>機率</th><th>備註</th></tr></thead>
+      <thead><tr><th>怪物</th><th>等級</th><th>掉落物</th><th>類型</th><th>數量</th><th>機率</th></tr></thead>
       <tbody>
       {% for row in rows %}
         <tr>
@@ -19,11 +19,10 @@
           <td><a href="{{ url_for('item_detail', item_id=row.item_id) }}">{{ row.item_name }}</a></td>
           <td>{{ row.item_type }}</td>
           <td>{{ row.min_count }} ~ {{ row.max_count }}</td>
-          <td>{{ row.chance }}</td>
-          <td>{{ row.note or '' }}</td>
+          <td>{{ row.chance | drop_chance }}</td>
         </tr>
       {% else %}
-        <tr><td colspan="7">查無資料</td></tr>
+        <tr><td colspan="6">查無資料</td></tr>
       {% endfor %}
       </tbody>
     </table>

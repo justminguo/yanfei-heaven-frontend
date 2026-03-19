@@ -17,6 +17,43 @@ def create_app() -> Flask:
     app.config["DATABASE"] = os.environ.get("YANFEI_DB_PATH", str(DEFAULT_DB_PATH))
     app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "yanfei-dev")
 
+    # 弱點屬性對照
+    WEAK_ATTR_NAMES: dict[int, str] = {
+        0: "無",
+        1: "地",
+        2: "火",
+        4: "水",
+        8: "風",
+    }
+
+    # 家族中文對照
+    FAMILY_NAMES: dict[str, str] = {
+        "wolf": "狼族", "vampire": "吸血鬼", "ant": "螞蟻", "bat": "蝙蝠",
+        "bear": "熊族", "beast": "野獸", "brute": "蠻族", "dragon": "龍族",
+        "undead": "不死族", "devil": "惡魔", "insect": "昆蟲", "plant": "植物",
+        "humanoid": "人形", "animal": "動物", "orc": "獸人", "giant": "巨人",
+        "fairy": "精靈", "fish": "魚族", "bird": "鳥族", "slime": "史萊姆",
+        "lizard": "蜥蜴族", "snake": "蛇族", "frog": "青蛙族", "golem": "魔像",
+        "skeleton": "骷髏", "zombie": "殭屍", "ghost": "鬼魂", "elemental": "元素",
+        "demon": "惡魔", "kobold": "地精", "gnoll": "鬣狗人", "goblin": "哥布林",
+        "troll": "巨魔", "ogre": "食人魔", "bandit": "盜賊", "pirate": "海盜",
+        "knight": "騎士", "mage": "法師", "assassin": "刺客",
+        "alligator": "鱷魚", "angler": "釣魚人", "antiking": "叛王",
+        "asitagio": "阿西塔基歐", "balbados": "巴爾巴多斯", "basilisk": "蛇怪",
+        "beastsummoner": "召獸師", "blackwizard": "黑魔法師",
+        "bombflower": "爆炸花", "Ifrit": "伊芙利特", "PIQUEST": "試煉",
+    }
+
+    # 材質中文對照
+    MATERIAL_NAMES: dict[str, str] = {
+        "iron": "鐵", "steel": "鋼", "mithril": "秘銀", "oriharukon": "奧裡哈魯根",
+        "silver": "銀", "gold": "黃金", "platinum": "白金", "blackmithril": "暗黑秘銀",
+        "bone": "骨頭", "wood": "木頭", "leather": "皮革", "cloth": "布料",
+        "glass": "玻璃", "gemstone": "寶石", "mineral": "礦物", "copper": "銅",
+        "vegetation": "植物", "web": "蜘蛛網", "animalmatter": "獸材",
+        "dragonscale": "龍鱗", "paper": "紙", "none": "無",
+    }
+
     # Doll type -> human-readable label
     DOLL_NAMES: dict[str, str] = {
         "Doll_Ac":  "防禦 (AC)",
@@ -38,6 +75,42 @@ def create_app() -> Flask:
             return f"{int(n):,}"
         except (ValueError, TypeError):
             return str(n) if n else "—"
+
+    @app.template_filter("drop_chance")
+    def fmt_drop_chance(n: object) -> str:
+        """將掉落機率從百萬分比轉為百分比字串。"""
+        try:
+            v = int(n)
+            if v <= 0:
+                return "—"
+            pct = v / 1_000_000 * 100
+            if pct >= 1:
+                return f"{pct:.1f}%"
+            elif pct >= 0.01:
+                return f"{pct:.3f}%"
+            else:
+                return f"{pct:.5f}%"
+        except (ValueError, TypeError):
+            return str(n) if n else "—"
+
+    @app.template_filter("weak_attr")
+    def fmt_weak_attr(n: object) -> str:
+        try:
+            return WEAK_ATTR_NAMES.get(int(n), str(n))
+        except (ValueError, TypeError):
+            return str(n) if n else "—"
+
+    @app.template_filter("family_cn")
+    def fmt_family(s: object) -> str:
+        if not s:
+            return "—"
+        return FAMILY_NAMES.get(str(s), str(s))
+
+    @app.template_filter("material_cn")
+    def fmt_material(s: object) -> str:
+        if not s:
+            return "—"
+        return MATERIAL_NAMES.get(str(s), str(s))
 
     # Lineage I class ID -> name mapping (common Taiwan server IDs)
     CLASS_NAMES: dict[int, str] = {
@@ -121,7 +194,7 @@ def create_app() -> Flask:
         sql = """
             SELECT id, name, nameid, level, hp, mp, ac, exp, family, note, gfxid
             FROM monsters
-            WHERE 1=1
+            WHERE level < 500 AND hp < 5000000
         """
         params: list[Any] = []
         if q:

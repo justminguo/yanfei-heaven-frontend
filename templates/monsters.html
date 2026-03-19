@@ -26,7 +26,7 @@
           <td>{{ row.mp | commas }}</td>
           <td>{{ row.ac }}</td>
           <td>{{ row.exp | commas }}</td>
-          <td>{{ row.family }}</td>
+          <td>{{ row.family | family_cn }}</td>
         </tr>
       {% else %}
         <tr><td colspan="9">查無資料</td></tr>

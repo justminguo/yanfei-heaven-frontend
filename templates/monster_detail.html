@@ -8,8 +8,8 @@
   </div>
   <p class="muted">名稱ID：{{ monster.nameid }}｜等級：{{ monster.level }}｜HP：{{ monster.hp | commas }}｜MP：{{ monster.mp | commas }}｜EXP：{{ monster.exp | commas }}</p>
   <div class="detail-grid">
-    <div><strong>家族</strong><span>{{ monster.family }}</span></div>
-    <div><strong>弱點屬性</strong><span>{{ monster.weak_attr }}</span></div>
+    <div><strong>家族</strong><span>{{ monster.family | family_cn }}</span></div>
+    <div><strong>弱點屬性</strong><span>{{ monster.weak_attr | weak_attr }}</span></div>
     <div><strong>攻擊模式</strong><span>{{ '遠程' if monster.ranged else '近戰' }}</span></div>
     <div><strong>備註</strong><span>{{ monster.note or '—' }}</span></div>
   </div>
@@ -26,7 +26,7 @@
         <td>{{ row.name_id }}</td>
         <td>{{ row.item_type }}</td>
         <td>{{ row.min_count }} ~ {{ row.max_count }}</td>
-        <td>{{ row.chance }}</td>
+        <td>{{ row.chance | drop_chance }}</td>
       </tr>
       {% else %}
       <tr><td colspan="5">這隻怪目前沒有掉落資料</td></tr>

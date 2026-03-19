@@ -25,8 +25,8 @@
           <td>{{ row.name_id }}</td>
           <td>{{ row.item_type }}</td>
           <td>{{ row.use_type }}</td>
-          <td>{{ row.material }}</td>
-          <td>{{ row.weight }}</td>
+          <td>{{ row.material | material_cn }}</td>
+          <td>{{ row.weight | commas }}</td>
           <td>{{ '是' if row.stackable else '否' }}</td>
         </tr>
       {% else %}
