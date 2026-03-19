@@ -2,8 +2,11 @@
 {% block title %}{{ monster.name }}{% endblock %}
 {% block content %}
 <section class="card">
-  <h1>{{ monster.name }}</h1>
-  <p class="muted">名稱ID：{{ monster.nameid }}｜等級：{{ monster.level }}｜HP：{{ monster.hp }}｜MP：{{ monster.mp }}｜EXP：{{ monster.exp }}</p>
+  <div style="display:flex;align-items:center;gap:1rem;">
+    <img src="/static/npc_icons/{{ monster.gfxid }}.png" width="48" height="64" onerror="this.style.display='none'">
+    <h1 style="margin:0">{{ monster.name }}</h1>
+  </div>
+  <p class="muted">名稱ID：{{ monster.nameid }}｜等級：{{ monster.level }}｜HP：{{ monster.hp | commas }}｜MP：{{ monster.mp | commas }}｜EXP：{{ monster.exp | commas }}</p>
   <div class="detail-grid">
     <div><strong>家族</strong><span>{{ monster.family }}</span></div>
     <div><strong>弱點屬性</strong><span>{{ monster.weak_attr }}</span></div>
@@ -14,7 +17,7 @@
 <section class="card">
   <h2>掉落列表</h2>
   <div class="table-wrap">
-    <table>
+    <table data-sortable>
       <thead><tr><th>物品</th><th>名稱ID</th><th>類型</th><th>數量</th><th>機率</th></tr></thead>
       <tbody>
       {% for row in drops %}

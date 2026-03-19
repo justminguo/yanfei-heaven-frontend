@@ -1,304 +1,50 @@
 {% extends 'base.html' %}
-{% block title %}{{ site_cfg.get('brand_name', '妍菲天堂') }} — {{ site_cfg.get('site_subtitle', '天堂1 私服官方網站') }}{% endblock %}
-{% block main_class %}{% endblock %}
 {% block content %}
-
-<!-- ===== Hero ===== -->
-<section class="hero-full">
-  <div class="hero-bg"></div>
-  <div class="container hero-content">
-    <div class="server-status">
-      <span class="status-dot"></span>
-      {{ site_cfg.get('server_status_text', '伺服器運行中') }}
-      &nbsp;｜&nbsp; 在線人數：{{ online_count }}
-    </div>
-    <h1 class="hero-title">{{ site_cfg.get('hero_title', '妍菲天堂') }}</h1>
-    <p class="hero-sub">
-      {{ site_cfg.get('hero_subtitle', '重返榮耀，再創傳奇。') }}<br>
-      <span class="hero-tags">
-        {% for tag in site_cfg.get('hero_tags', '').split(',') %}
-          {% if tag.strip() %}<span class="tag">{{ tag.strip() }}</span>{% endif %}
-        {% endfor %}
-      </span>
-    </p>
-    <div class="hero-actions">
-      <a href="{{ url_for('download_page') }}" class="btn-primary">
-        {{ site_cfg.get('hero_cta_primary', '立即加入冒險') }}
-      </a>
-      <a href="{{ url_for('items') }}" class="btn-outline">
-        {{ site_cfg.get('hero_cta_secondary', '進入資料庫') }}
-      </a>
-    </div>
+<section class="hero card">
+  <h1>妍菲天堂</h1>
+  <p>天堂 II 私服 · 資料查詢站</p>
+  <div class="stats">
+    <div><strong>{{ stats['items'] }}</strong><span>物品</span></div>
+    <div><strong>{{ stats['monsters'] }}</strong><span>怪物</span></div>
+    <div><strong>{{ stats['drops'] }}</strong><span>掉落關聯</span></div>
+    <div><strong>{{ stats['characters'] }}</strong><span>排行角色</span></div>
   </div>
 </section>
-
-<!-- ===== Stat bar ===== -->
-<section class="stat-bar">
-  <div class="container stat-bar-inner">
-    <div class="stat-item">
-      <strong>{{ stats['items'] }}</strong>
-      <span>物品收錄</span>
-    </div>
-    <div class="stat-item">
-      <strong>{{ stats['monsters'] }}</strong>
-      <span>怪物收錄</span>
-    </div>
-    <div class="stat-item">
-      <strong>{{ stats['drops'] }}</strong>
-      <span>掉落關聯</span>
-    </div>
-    <div class="stat-item">
-      <strong>{{ site_cfg.get('exp_rate', '1×') }}</strong>
-      <span>經驗倍率</span>
-    </div>
-    <div class="stat-item">
-      <strong>100%</strong>
-      <span>{{ site_cfg.get('no_p2w_label', '無付費優勢') }}</span>
-    </div>
-  </div>
-</section>
-
-<!-- ===== Quick entry ===== -->
-<section class="container section-block">
-  <h2 class="section-title">快速開始</h2>
-  <div class="quick-grid">
-    <a href="{{ url_for('download_page') }}" class="quick-card">
-      <div class="quick-icon">⬇</div>
-      <strong>下載遊戲</strong>
-      <p>取得最新版本客戶端、登入器與必要補丁，立刻踏上征途</p>
-    </a>
-    <a href="{{ url_for('guide_page') }}" class="quick-card">
-      <div class="quick-icon">📖</div>
-      <strong>新手上路</strong>
-      <p>職業選擇、升級路線、基礎操作，從零到一的完整教學</p>
-    </a>
-    <a href="{{ url_for('home') }}#announcements" class="quick-card">
-      <div class="quick-icon">📢</div>
-      <strong>最新活動</strong>
-      <p>週末經驗加倍、節日副本、限時掉寶活動，精彩不斷</p>
-    </a>
-  </div>
-</section>
-
-<!-- ===== Server features ===== -->
-<section class="features-section">
-  <div class="container section-block">
-    <h2 class="section-title text-center">為何選擇{{ site_cfg.get('brand_name', '妍菲天堂') }}？</h2>
-    <div class="features-grid">
-      <div class="feature-card">
-        <div class="feature-icon">👑</div>
-        <strong>經典仿正　懷舊體驗</strong>
-        <p>重現最初的感動，經驗值與掉寶率精心調校，體驗最平衡的遊戲環境。</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🎁</div>
-        <strong>獨家內容　定期更新</strong>
-        <p>除了經典玩法，我們更帶來獨家副本與自製裝備，讓你的冒險絕不無聊。</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">🛡</div>
-        <strong>專業團隊　公平至上</strong>
-        <p>GM 團隊 24 小時在線，嚴格取締不法外掛，致力維護遊戲的純淨與公平。</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ===== Announcements + Latest data ===== -->
-{% set badge_map = {'活動': 'badge-green', '維護': 'badge-warn', '更新': 'badge-blue', '開服': 'badge-gold'} %}
-<section class="container section-block two-col-layout" id="announcements">
-
-  <!-- Announcements -->
-  <div>
-    <h2 class="section-title">最新消息與活動</h2>
-    <div class="card announce-card">
-      <ul class="announce-list">
-        {% if announcements %}
-          {% for ann in announcements %}
-          <li>
-            <span class="badge {{ badge_map.get(ann.category, 'badge-blue') }}">{{ ann.category }}</span>
-            <div>
-              <a href="{{ ann.url or '#' }}">{{ ann.title }}</a>
-              <time>{{ ann.published_at }}</time>
-            </div>
-          </li>
-          {% endfor %}
+<section class="grid two">
+  <div class="card">
+    <h2>公告</h2>
+    {% if announcements %}
+    <ul class="simple-list">
+      {% for a in announcements %}
+      <li>
+        {% if a.url and a.url != '#' %}
+        <a href="{{ a.url }}" target="_blank" rel="noopener">{{ a.title }}</a>
         {% else %}
-          <li><span class="badge badge-blue">公告</span><div><a href="#">暫無公告，敬請期待</a></div></li>
+        <span>{{ a.title }}</span>
         {% endif %}
-      </ul>
-    </div>
-    <div style="margin-top:12px">
-      <a href="#announcements" class="btn-outline btn-block">查看所有公告</a>
-    </div>
-
-    <!-- Latest items -->
-    <h2 class="section-title" style="margin-top:28px">最新物品</h2>
-    <div class="card">
-      <ul class="simple-list">
-        {% for row in latest_items %}
-        <li>
-          <a href="{{ url_for('item_detail', item_id=row.id) }}">{{ row.name }}</a>
-          <small class="badge badge-type">{{ row.item_type or '未分類' }}</small>
-        </li>
+        <small>{{ a.category }} · {{ a.published_at }}</small>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="empty">目前沒有公告。</p>
+    {% endif %}
+  </div>
+  <div class="card">
+    <h2>等級排行 <a href="{{ url_for('ranking') }}" style="font-size:0.75rem;font-weight:normal;margin-left:8px;">查看全榜 →</a></h2>
+    <table class="simple-table">
+      <thead><tr><th>#</th><th>角色</th><th>職業</th><th>等級</th></tr></thead>
+      <tbody>
+        {% for row in top_chars %}
+        <tr>
+          <td>{{ loop.index }}</td>
+          <td>{{ row.char_name }}</td>
+          <td>{{ class_names.get(row['class'], '未知') }}</td>
+          <td>{{ row.level }}</td>
+        </tr>
         {% endfor %}
-      </ul>
-    </div>
-  </div>
-
-  <!-- Guide + Latest monsters -->
-  <div>
-    <h2 class="section-title">新手入口</h2>
-    <div class="entrance-grid" id="download">
-      <div class="entrance-card">
-        <div class="entrance-icon">⬇</div>
-        <strong>下載遊戲</strong>
-        <p>取得最新版本客戶端與補丁</p>
-        <a href="{{ url_for('download_page') }}" class="btn-sm">前往下載</a>
-      </div>
-      <div class="entrance-card">
-        <div class="entrance-icon">📖</div>
-        <strong>新手教學</strong>
-        <p>職業選擇、升級路線與基礎操作指南</p>
-        <a href="{{ url_for('guide_page') }}" class="btn-sm">查看教學</a>
-      </div>
-      <div class="entrance-card">
-        <div class="entrance-icon">❓</div>
-        <strong>常見問題</strong>
-        <p>連線問題、帳號設定、遊戲規則解答</p>
-        <a href="{{ url_for('guide_page') }}#faq" class="btn-sm">查看 FAQ</a>
-      </div>
-    </div>
-
-    <h2 class="section-title" style="margin-top:28px">最新怪物</h2>
-    <div class="card">
-      <ul class="simple-list">
-        {% for row in latest_monsters %}
-        <li>
-          <a href="{{ url_for('monster_detail', monster_id=row.id) }}">{{ row.name }}</a>
-          <small class="badge badge-lv">Lv.{{ row.level }}</small>
-        </li>
-        {% endfor %}
-      </ul>
-    </div>
-  </div>
-
-</section>
-
-<!-- ===== 本週熱門 ===== -->
-<section class="featured-section">
-  <div class="container section-block">
-    <h2 class="section-title text-center">本週熱門</h2>
-    <div class="featured-grid">
-      <div class="featured-card">
-        <div class="featured-badge">🔥 熱門怪物</div>
-        <div class="featured-icon-wrap">💀</div>
-        <h3>死亡騎士</h3>
-        <p>出沒於高階地城深處，騎士們的終極噩夢，據說他身上藏有稀有裝備與傳說物品...</p>
-        <a href="{{ url_for('monsters') }}" class="btn-sm">查看掉落</a>
-      </div>
-      <div class="featured-card">
-        <div class="featured-badge featured-badge-gold">⚡ 傳說神武</div>
-        <div class="featured-icon-wrap">🗡</div>
-        <h3>冥皇之劍</h3>
-        <p>一把充滿詛咒力量的稀有武器，需達到指定等級方可裝備，是頂尖玩家夢寐以求的神器。</p>
-        <a href="{{ url_for('items') }}" class="btn-sm">查看詳情</a>
-      </div>
-    </div>
+      </tbody>
+    </table>
   </div>
 </section>
-
-<!-- ===== Data query entry ===== -->
-<section class="container section-block">
-  <h2 class="section-title">資料查詢入口</h2>
-  <div class="quick-grid">
-    <a href="{{ url_for('items') }}" class="quick-card">
-      <div class="quick-icon">🗡</div>
-      <strong>物品大全</strong>
-      <p>查詢武器、防具、消耗品屬性與素材資訊</p>
-    </a>
-    <a href="{{ url_for('monsters') }}" class="quick-card">
-      <div class="quick-icon">👾</div>
-      <strong>怪物圖鑑</strong>
-      <p>查詢怪物等級、HP、弱屬性與家族分類</p>
-    </a>
-    <a href="{{ url_for('drops') }}" class="quick-card">
-      <div class="quick-icon">💎</div>
-      <strong>掉落查詢</strong>
-      <p>搜尋物品掉落來源或怪物完整掉落清單</p>
-    </a>
-    <a href="{{ url_for('forms_page') }}" class="quick-card">
-      <div class="quick-icon">🐾</div>
-      <strong>變身查詢</strong>
-      <p>查閱各種變身效果、屬性加成與使用條件</p>
-    </a>
-    <a href="{{ url_for('dolls_page') }}" class="quick-card">
-      <div class="quick-icon">🎎</div>
-      <strong>魔法娃娃</strong>
-      <p>查閱魔法娃娃類型、被動效果與取得方式</p>
-    </a>
-  </div>
-</section>
-
-<!-- ===== FAQ ===== -->
-<section class="container section-block" id="faq">
-  <h2 class="section-title">常見問答</h2>
-  <div class="faq-list">
-    <div class="faq-item">
-      <button class="faq-q" onclick="toggleFaq(this)">
-        遊戲需要贊助嗎？
-        <span class="faq-arrow">▶</span>
-      </button>
-      <div class="faq-a">
-        本服為免費伺服器，我們承諾無 P2W（Pay to Win）道具，所有神裝皆可從遊戲中獲取。
-      </div>
-    </div>
-    <div class="faq-item">
-      <button class="faq-q" onclick="toggleFaq(this)">
-        我從來沒玩過，該如何開始？
-        <span class="faq-arrow">▶</span>
-      </button>
-      <div class="faq-a">
-        請先前往「遊戲下載」區下載主程式與登入器，並參考我們的「新手教學」，內有詳細的步驟引導。
-      </div>
-    </div>
-    <div class="faq-item">
-      <button class="faq-q" onclick="toggleFaq(this)">
-        遊戲中角色卡點、或遇到 Bug 怎麼辦？
-        <span class="faq-arrow">▶</span>
-      </button>
-      <div class="faq-a">
-        請立即透過遊戲內 GM 指令或加入我們的 LINE 群組回報，管理員會盡快為您處理。
-      </div>
-    </div>
-    <div class="faq-item">
-      <button class="faq-q" onclick="toggleFaq(this)">
-        伺服器對外掛的處理方式？
-        <span class="faq-arrow">▶</span>
-      </button>
-      <div class="faq-a">
-        我們對外掛採取零容忍政策，一經查證屬實，將永久凍結帳號，絕不寬貸。
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ===== Final CTA ===== -->
-<section class="final-cta">
-  <div class="container final-cta-inner">
-    <h2>{{ site_cfg.get('final_cta_title', '還在等什麼？') }}</h2>
-    <p>{{ site_cfg.get('final_cta_body', '你的戰友正在亞丁大陸集結，立即下載遊戲，開啟屬於你的傳奇篇章！') }}</p>
-    <a href="{{ url_for('download_page') }}" class="btn-primary">立即加入下載</a>
-  </div>
-</section>
-
-<script>
-function toggleFaq(btn) {
-  const item = btn.parentElement;
-  const isOpen = item.classList.contains('faq-open');
-  document.querySelectorAll('.faq-item').forEach(el => el.classList.remove('faq-open'));
-  if (!isOpen) item.classList.add('faq-open');
-}
-</script>
-
 {% endblock %}

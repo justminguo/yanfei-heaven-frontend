@@ -17,12 +17,46 @@ def create_app() -> Flask:
     app.config["DATABASE"] = os.environ.get("YANFEI_DB_PATH", str(DEFAULT_DB_PATH))
     app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "yanfei-dev")
 
-    @app.context_processor
-    def inject_site_cfg() -> dict:
+    # Doll type -> human-readable label
+    DOLL_NAMES: dict[str, str] = {
+        "Doll_Ac":  "防禦 (AC)",
+        "Doll_Hp":  "血量 (HP)",
+        "Doll_Mp":  "魔力 (MP)",
+        "Doll_Str": "力量 (STR)",
+        "Doll_Dex": "敏捷 (DEX)",
+        "Doll_Int": "智力 (INT)",
+        "Doll_Wis": "精神 (WIS)",
+        "Doll_Con": "體質 (CON)",
+        "Doll_Cha": "魅力 (CHA)",
+    }
+
+    @app.template_filter("commas")
+    def fmt_commas(n: object) -> str:
+        if n is None:
+            return "—"
         try:
-            return {"site_cfg": get_site_config()}
-        except Exception:
-            return {"site_cfg": {}}
+            return f"{int(n):,}"
+        except (ValueError, TypeError):
+            return str(n) if n else "—"
+
+    # Lineage I class ID -> name mapping (common Taiwan server IDs)
+    CLASS_NAMES: dict[int, str] = {
+        0: "君主",
+        1: "騎士",
+        2: "妖精",
+        3: "法師",
+        4: "黑暗妖精",
+        5: "龍騎士",
+        6: "幻術師",
+        7: "忍者",
+        8: "君主(暗)",
+        61: "騎士",
+        138: "妖精",
+        734: "法師",
+        2786: "黑暗妖精",
+        4096: "妖精",
+        6658: "龍騎士",
+    }
 
     def stats_payload() -> dict[str, int]:
         db = get_db()
@@ -32,40 +66,28 @@ def create_app() -> Flask:
             "drops": db.execute("SELECT COUNT(*) AS c FROM monster_drops").fetchone()["c"],
             "weapons": db.execute("SELECT COUNT(*) AS c FROM weapons").fetchone()["c"],
             "armors": db.execute("SELECT COUNT(*) AS c FROM armors").fetchone()["c"],
+            "characters": db.execute("SELECT COUNT(*) AS c FROM characters").fetchone()["c"],
         }
 
     @app.route("/")
     def home():
         db = get_db()
         stats = stats_payload()
-        # 查詢角色在線人數；若 characters 資料表不存在（尚未同步）則回退至設定值
-        try:
-            row = db.execute(
-                "SELECT COUNT(*) AS c FROM characters WHERE OnlineStatus = 1"
-            ).fetchone()
-            online_count = str(row["c"])
-        except Exception:
-            online_count = get_site_config().get("server_online_count", "—")
-        latest_items = db.execute(
-            "SELECT id, name, item_type, note FROM items ORDER BY id DESC LIMIT 8"
-        ).fetchall()
-        latest_monsters = db.execute(
-            "SELECT id, name, level, note FROM monsters ORDER BY id DESC LIMIT 8"
-        ).fetchall()
         announcements = db.execute(
-            """SELECT id, title, category, url, published_at
-               FROM announcements
-               ORDER BY pinned DESC, published_at DESC
-               LIMIT 8"""
+            "SELECT id, title, body, category, url, pinned, published_at FROM announcements ORDER BY pinned DESC, published_at DESC LIMIT 5"
         ).fetchall()
-        return render_template(
-            "home.html",
-            stats=stats,
-            online_count=online_count,
-            latest_items=latest_items,
-            latest_monsters=latest_monsters,
-            announcements=announcements,
-        )
+        top_chars = db.execute(
+            "SELECT char_name, level, class, OnlineStatus FROM characters ORDER BY level DESC LIMIT 10"
+        ).fetchall()
+        return render_template("home.html", stats=stats, announcements=announcements, top_chars=top_chars, class_names=CLASS_NAMES)
+
+    @app.route("/ranking")
+    def ranking():
+        db = get_db()
+        rows = db.execute(
+            "SELECT char_name, level, class, OnlineStatus FROM characters ORDER BY level DESC, char_name ASC"
+        ).fetchall()
+        return render_template("ranking.html", rows=rows, class_names=CLASS_NAMES)
 
     @app.route("/items")
     def items():
@@ -97,7 +119,7 @@ def create_app() -> Flask:
         min_level = request.args.get("min_level", "").strip()
         max_level = request.args.get("max_level", "").strip()
         sql = """
-            SELECT id, name, nameid, level, hp, mp, ac, exp, family, note
+            SELECT id, name, nameid, level, hp, mp, ac, exp, family, note, gfxid
             FROM monsters
             WHERE 1=1
         """
@@ -150,6 +172,34 @@ def create_app() -> Flask:
         sql += " ORDER BY md.chance DESC, m.level DESC LIMIT 300"
         rows = get_db().execute(sql, params).fetchall()
         return render_template("drops.html", rows=rows, q=q)
+
+    @app.route("/dolls")
+    def dolls():
+        doll_type = request.args.get("doll_type", "").strip()
+        sql = "SELECT id, doll_type, bonus_value, note FROM dolls WHERE 1=1"
+        params: list[Any] = []
+        if doll_type:
+            sql += " AND doll_type = ?"
+            params.append(doll_type)
+        sql += " ORDER BY doll_type, bonus_value"
+        rows = get_db().execute(sql, params).fetchall()
+        types = get_db().execute(
+            "SELECT DISTINCT doll_type FROM dolls ORDER BY doll_type"
+        ).fetchall()
+        return render_template("dolls.html", rows=rows, doll_type=doll_type, types=types, doll_names=DOLL_NAMES)
+
+    @app.route("/polymorphs")
+    def polymorphs():
+        q = request.args.get("q", "").strip()
+        sql = "SELECT id, name, polyid, note FROM polymorphs WHERE 1=1"
+        params: list[Any] = []
+        if q:
+            sql += " AND (name LIKE ? OR note LIKE ?)"
+            like = f"%{q}%"
+            params.extend([like, like])
+        sql += " ORDER BY id LIMIT 200"
+        rows = get_db().execute(sql, params).fetchall()
+        return render_template("polymorphs.html", rows=rows, q=q)
 
     @app.route("/monster/<int:monster_id>")
     def monster_detail(monster_id: int):
@@ -309,6 +359,46 @@ def create_app() -> Flask:
         rows = get_db().execute(sql, params).fetchall()
         return jsonify({"ok": True, "count": len(rows), "rows": rows_to_dicts(rows)})
 
+    @app.route("/weapons")
+    def weapons():
+        q = request.args.get("q", "").strip()
+        w_type = request.args.get("type", "").strip()
+        sql = "SELECT id, name, type, dmg_small, dmg_large, safenchant, material, note FROM weapons WHERE 1=1"
+        params: list[Any] = []
+        if q:
+            sql += " AND (name LIKE ? OR name_id LIKE ? OR classname LIKE ?)"
+            like = f"%{q}%"
+            params.extend([like, like, like])
+        if w_type:
+            sql += " AND type = ?"
+            params.append(w_type)
+        sql += " ORDER BY id LIMIT 500"
+        rows = get_db().execute(sql, params).fetchall()
+        types = get_db().execute(
+            "SELECT DISTINCT type FROM weapons WHERE type <> '' ORDER BY type"
+        ).fetchall()
+        return render_template("weapons.html", rows=rows, q=q, w_type=w_type, types=types)
+
+    @app.route("/armors")
+    def armors():
+        q = request.args.get("q", "").strip()
+        a_type = request.args.get("type", "").strip()
+        sql = "SELECT id, name, type, ac, safenchant, material, note FROM armors WHERE 1=1"
+        params: list[Any] = []
+        if q:
+            sql += " AND (name LIKE ? OR name_id LIKE ? OR classname LIKE ?)"
+            like = f"%{q}%"
+            params.extend([like, like, like])
+        if a_type:
+            sql += " AND type = ?"
+            params.append(a_type)
+        sql += " ORDER BY id LIMIT 500"
+        rows = get_db().execute(sql, params).fetchall()
+        types = get_db().execute(
+            "SELECT DISTINCT type FROM armors WHERE type <> '' ORDER BY type"
+        ).fetchall()
+        return render_template("armors.html", rows=rows, q=q, a_type=a_type, types=types)
+
     @app.route("/api/weapons")
     def api_weapons():
         q = request.args.get("q", "").strip()
@@ -353,95 +443,6 @@ def create_app() -> Flask:
             return jsonify({"ok": False, "error": "armor_not_found"}), 404
         return jsonify({"ok": True, "armor": row_to_dict(row)})
 
-    @app.route("/download")
-    def download_page():
-        return render_template("download.html")
-
-    @app.route("/guide")
-    def guide_page():
-        return render_template("guide.html")
-
-    @app.route("/forms")
-    def forms_page():
-        q = request.args.get("q", "").strip()
-        cause = request.args.get("cause", "").strip()
-        skill_use = request.args.get("skill_use", "").strip()
-        sql = """
-            SELECT id, name, polyid, minlevel, weaponequip, armorequip, isSkillUse, cause, note
-            FROM polymorphs
-            WHERE 1=1
-        """
-        params: list[Any] = []
-        if q:
-            like = f"%{q}%"
-            sql += " AND (name LIKE ? OR note LIKE ?)"
-            params.extend([like, like])
-        if cause in ("0", "1"):
-            sql += " AND cause = ?"
-            params.append(int(cause))
-        if skill_use in ("0", "1"):
-            sql += " AND isSkillUse = ?"
-            params.append(int(skill_use))
-        sql += " ORDER BY minlevel ASC, id ASC LIMIT 200"
-        db = get_db()
-        rows = db.execute(sql, params).fetchall()
-        try:
-            total = db.execute("SELECT COUNT(*) AS c FROM polymorphs").fetchone()["c"]
-        except Exception:
-            total = 0
-        return render_template(
-            "forms.html",
-            rows=rows,
-            q=q,
-            cause=cause,
-            skill_use=skill_use,
-            total=total,
-        )
-
-    @app.route("/dolls")
-    def dolls_page():
-        q = request.args.get("q", "").strip()
-        mode = request.args.get("mode", "").strip()
-        power_class = request.args.get("power_class", "").strip()
-        sql = """
-            SELECT t.itemid, t.nameid, t.powers, t.note AS doll_note,
-                   t.time, t.mode,
-                   p.classname, p.type1, p.note AS power_note
-            FROM etcitem_doll_type t
-            LEFT JOIN etcitem_doll_power p ON p.id = t.powers
-            WHERE 1=1
-        """
-        params: list[Any] = []
-        if q:
-            like = f"%{q}%"
-            sql += " AND (t.nameid LIKE ? OR t.note LIKE ? OR p.classname LIKE ? OR p.note LIKE ?)"
-            params.extend([like, like, like, like])
-        if mode in ("1", "2"):
-            sql += " AND t.mode = ?"
-            params.append(int(mode))
-        if power_class:
-            sql += " AND p.classname = ?"
-            params.append(power_class)
-        sql += " ORDER BY t.mode ASC, t.itemid ASC LIMIT 200"
-        db = get_db()
-        rows = db.execute(sql, params).fetchall()
-        power_classes = db.execute(
-            "SELECT DISTINCT classname FROM etcitem_doll_power ORDER BY classname"
-        ).fetchall()
-        try:
-            total = db.execute("SELECT COUNT(*) AS c FROM etcitem_doll_type").fetchone()["c"]
-        except Exception:
-            total = 0
-        return render_template(
-            "dolls.html",
-            rows=rows,
-            q=q,
-            mode=mode,
-            power_class=power_class,
-            power_classes=power_classes,
-            total=total,
-        )
-
     @app.route("/healthz")
     def healthz():
         return {"ok": True, "stats": stats_payload()}
@@ -454,12 +455,6 @@ def create_app() -> Flask:
 
     init_db(app)
     return app
-
-
-def get_site_config() -> dict[str, str]:
-    """Return all site_config rows as a plain dict."""
-    rows = get_db().execute("SELECT key, value FROM site_config").fetchall()
-    return {row["key"]: row["value"] for row in rows}
 
 
 def row_to_dict(row: sqlite3.Row) -> dict[str, Any]:
@@ -487,14 +482,10 @@ def current_app() -> Flask:
 
 
 def init_db(app: Flask) -> None:
-    """Apply schema.sql to the database.
-
-    Uses CREATE TABLE IF NOT EXISTS / INSERT OR IGNORE throughout, so it is
-    safe to run on every startup — new tables and seed rows are added without
-    touching existing data.
-    """
     db_path = Path(app.config["DATABASE"])
     db_path.parent.mkdir(parents=True, exist_ok=True)
+    if db_path.exists():
+        return
     conn = sqlite3.connect(db_path)
     try:
         conn.executescript(SCHEMA_PATH.read_text(encoding="utf-8"))

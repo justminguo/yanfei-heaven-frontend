@@ -3,29 +3,33 @@
 {% block content %}
 <section class="card">
   <h1>怪物查詢</h1>
-  <form class="filters" method="get">
-    <input type="text" name="q" placeholder="輸入怪物名稱 / 名稱ID / 備註" value="{{ q }}">
+  <form class="filters" method="get" id="monster-form">
+    <input type="text" name="q" id="monster-search"
+           placeholder="輸入怪物名稱 / 名稱ID / 備註"
+           value="{{ q }}"
+           data-live-search="#monster-table">
     <input type="number" name="min_level" placeholder="最低等級" value="{{ min_level }}">
     <input type="number" name="max_level" placeholder="最高等級" value="{{ max_level }}">
     <button type="submit">查詢</button>
   </form>
   <div class="table-wrap">
-    <table>
-      <thead><tr><th>ID</th><th>名稱</th><th>等級</th><th>HP</th><th>MP</th><th>AC</th><th>EXP</th><th>家族</th></tr></thead>
+    <table id="monster-table" data-sortable>
+      <thead><tr><th>圖標</th><th>ID</th><th>名稱</th><th>等級</th><th>HP</th><th>MP</th><th>AC</th><th>EXP</th><th>家族</th></tr></thead>
       <tbody>
       {% for row in rows %}
         <tr>
+          <td><img src="/static/npc_icons/{{ row.gfxid }}.png" width="48" height="64" onerror="this.style.display='none'"></td>
           <td>{{ row.id }}</td>
           <td><a href="{{ url_for('monster_detail', monster_id=row.id) }}">{{ row.name }}</a></td>
           <td>{{ row.level }}</td>
-          <td>{{ row.hp }}</td>
-          <td>{{ row.mp }}</td>
+          <td>{{ row.hp | commas }}</td>
+          <td>{{ row.mp | commas }}</td>
           <td>{{ row.ac }}</td>
-          <td>{{ row.exp }}</td>
+          <td>{{ row.exp | commas }}</td>
           <td>{{ row.family }}</td>
         </tr>
       {% else %}
-        <tr><td colspan="8">查無資料</td></tr>
+        <tr><td colspan="9">查無資料</td></tr>
       {% endfor %}
       </tbody>
     </table>

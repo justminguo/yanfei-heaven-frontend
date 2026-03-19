@@ -1,110 +1,104 @@
-{% extends 'base.html' %}
-{% block title %}魔法娃娃查詢 — {{ site_cfg.get('brand_name', '妍菲天堂') }}{% endblock %}
+{% extends "base.html" %}
+{% block title %}娃娃能力 — 妍菲天堂資料查詢{% endblock %}
 {% block content %}
-<section class="card">
-  <h1>魔法娃娃查詢</h1>
-  <p class="section-desc">
-    天堂1 魔法娃娃系統完整資料，來源：381.etcitem_doll_type × etcitem_doll_power（共 {{ total }} 筆）。<br>
-    魔法娃娃裝備後可持續提供加成效果，效果類型與強度由娃娃種類決定。
-  </p>
+<section class="hero">
+  <h1>娃娃能力 (etcitem_doll_power)</h1>
+  <p>共 {{ rows|length }} 筆</p>
+</section>
 
-  <!-- Effect family legend -->
-  <div class="doll-legend" style="margin-bottom:16px;padding:12px 16px;background:var(--card-bg,#1a1a2e);border-radius:6px;border:1px solid var(--border,#2a2a3e)">
-    <p style="margin:0 0 8px;font-size:13px;font-weight:600;color:var(--fg,#e0e0e0)">效果族群說明</p>
-    <div style="display:flex;flex-wrap:wrap;gap:8px 24px;font-size:12px;color:var(--muted,#888)">
-      <span><code>Doll_Ac</code> — 防禦等級（AC）降低 1～4 點（數值越低越好）</span>
-      <span><code>Doll_Hp</code> — 最大 HP 增加 10～50 點</span>
-      <span><code>Doll_Mp</code> — 最大 MP 增加 10～50 點</span>
-      <span><code>Doll_HpTR</code> — 每 32 或 64 秒自動回復 HP</span>
+{# ── 新手推薦 ──────────────────────────────────────────── #}
+<section class="card">
+  <h2 style="margin-top:0">新手推薦（依職業）</h2>
+  <div class="detail-grid" style="grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px">
+    <div>
+      <strong>妖精</strong>
+      <span class="muted">敏捷 (DEX)、智力 (INT)、魔力 (MP)</span>
+    </div>
+    <div>
+      <strong>騎士</strong>
+      <span class="muted">防禦 (AC)、血量 (HP)、體質 (CON)</span>
+    </div>
+    <div>
+      <strong>法師</strong>
+      <span class="muted">智力 (INT)、精神 (WIS)、魔力 (MP)</span>
+    </div>
+    <div>
+      <strong>黑暗妖精</strong>
+      <span class="muted">力量 (STR)、敏捷 (DEX)、血量 (HP)</span>
+    </div>
+    <div>
+      <strong>龍騎士</strong>
+      <span class="muted">力量 (STR)、體質 (CON)、血量 (HP)</span>
     </div>
   </div>
+  <p class="muted" style="margin:10px 0 0;font-size:13px">※ 以上為新手期通用建議，實際依打法及裝備調整。</p>
+</section>
 
-  <form class="filters" method="get">
-    <input type="text" name="q" placeholder="輸入娃娃名稱 / 效果類型關鍵字" value="{{ q }}">
-    <select name="mode">
+{# ── 篩選 ──────────────────────────────────────────────── #}
+<section class="filters">
+  <form method="get" action="{{ url_for('dolls') }}">
+    <select name="doll_type" onchange="this.form.submit()">
       <option value="">全部類型</option>
-      <option value="1" {% if mode == '1' %}selected{% endif %}>基礎型（mode=1：AC / HP / MP）</option>
-      <option value="2" {% if mode == '2' %}selected{% endif %}>屬性型（mode=2：STR / CON / DEX 等）</option>
-    </select>
-    <select name="power_class">
-      <option value="">全部效果族群</option>
-      {% for pc in power_classes %}
-      <option value="{{ pc['classname'] }}" {% if power_class == pc['classname'] %}selected{% endif %}>{{ pc['classname'] }}</option>
+      {% for t in types %}
+      <option value="{{ t.doll_type }}" {% if doll_type == t.doll_type %}selected{% endif %}>
+        {{ doll_names.get(t.doll_type, t.doll_type) }}
+      </option>
       {% endfor %}
     </select>
-    <button type="submit">查詢</button>
   </form>
+</section>
 
+{# ── 資料表 ────────────────────────────────────────────── #}
+<section class="card">
+  {% if rows %}
   <div class="table-wrap">
-    <table>
+    <table data-sortable>
       <thead>
         <tr>
-          <th>娃娃名稱</th>
-          <th title="對應 etcitem_doll_power.classname">效果族群</th>
-          <th title="主效果數值（type1）">效果值</th>
-          <th title="效果說明（power note）">效果說明</th>
-          <th title="娃娃持續生效時間（秒）">持續時間</th>
-          <th title="1=基礎型（AC/HP/MP），2=屬性型">類型</th>
-          <th>備註</th>
+          <th>ID</th>
+          <th>類型</th>
+          <th>加成效果</th>
+          <th>說明</th>
         </tr>
       </thead>
       <tbody>
-      {% for row in rows %}
+        {% for r in rows %}
         <tr>
-          <td><strong>{{ row['nameid'] }}</strong></td>
+          <td>{{ r.id }}</td>
           <td>
-            {% if row['classname'] %}
-              <code style="font-size:11px;background:rgba(255,255,255,0.05);padding:1px 4px;border-radius:3px">{{ row['classname'] }}</code>
+            {% if r.doll_type == 'Doll_Ac' %}
+              <span style="color:var(--accent)">防禦 (AC)</span>
+            {% elif r.doll_type == 'Doll_Hp' %}
+              <span style="color:#4caf50">血量 (HP)</span>
+            {% elif r.doll_type == 'Doll_Mp' %}
+              <span style="color:#2196f3">魔力 (MP)</span>
+            {% elif r.doll_type == 'Doll_Str' %}
+              <span style="color:#ff7043">力量 (STR)</span>
+            {% elif r.doll_type == 'Doll_Dex' %}
+              <span style="color:#ab47bc">敏捷 (DEX)</span>
+            {% elif r.doll_type == 'Doll_Int' %}
+              <span style="color:#26c6da">智力 (INT)</span>
+            {% elif r.doll_type == 'Doll_Wis' %}
+              <span style="color:#ffca28">精神 (WIS)</span>
+            {% elif r.doll_type == 'Doll_Con' %}
+              <span style="color:#66bb6a">體質 (CON)</span>
+            {% elif r.doll_type == 'Doll_Cha' %}
+              <span style="color:#f06292">魅力 (CHA)</span>
             {% else %}
-              <span style="color:var(--muted)">—</span>
+              {{ r.doll_type }}
             {% endif %}
           </td>
           <td>
-            {% if row['classname'] %}
-              <strong>{{ row['type1'] }}</strong>
-            {% else %}
-              <span style="color:var(--muted)">—</span>
-            {% endif %}
+            {% if r.bonus_value > 0 %}+{{ r.bonus_value }}{% else %}{{ r.bonus_value }}{% endif %}
           </td>
-          <td style="font-size:12px">{{ row['power_note'] or '—' }}</td>
-          <td>
-            {% if row['time'] %}
-              {% set mins = (row['time'] // 60) %}
-              {% if mins > 0 %}
-                {{ mins }} 分（{{ row['time'] }}秒）
-              {% else %}
-                {{ row['time'] }} 秒
-              {% endif %}
-            {% else %}
-              <span style="color:var(--muted)">—</span>
-            {% endif %}
-          </td>
-          <td>
-            {% if row['mode'] == 1 %}
-              <span class="badge badge-basic">基礎</span>
-            {% elif row['mode'] == 2 %}
-              <span class="badge badge-attr">屬性</span>
-            {% else %}
-              <span style="color:var(--muted)">{{ row['mode'] }}</span>
-            {% endif %}
-          </td>
-          <td style="font-size:12px;color:var(--muted)">{{ row['doll_note'] or '' }}</td>
+          <td>{{ r.note or '' }}</td>
         </tr>
-      {% else %}
-        <tr><td colspan="7" style="text-align:center;color:var(--muted);padding:24px">查無符合條件的魔法娃娃資料</td></tr>
-      {% endfor %}
+        {% endfor %}
       </tbody>
     </table>
   </div>
-
-  <p style="margin-top:12px;color:var(--muted);font-size:13px">
-    ※ 顯示最多 200 筆，依類型與 itemid 排序。效果強度由 type1～type3 決定，此表僅顯示主效果（type1）。
-  </p>
+  {% else %}
+  <p>沒有符合條件的資料。</p>
+  {% endif %}
 </section>
-
-<style>
-.badge { display:inline-block; padding:1px 6px; border-radius:3px; font-size:11px; font-weight:600; }
-.badge-basic { background:rgba(var(--accent-rgb,100,180,255),0.15); color:var(--accent,#64b4ff); }
-.badge-attr  { background:rgba(255,160,80,0.15); color:#f5a442; }
-</style>
 {% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}武器查詢{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>武器查詢</h1>
+  <form class="filters" method="get">
+    <input type="text" name="q" placeholder="輸入武器名稱 / 名稱 ID"
+           value="{{ q }}" data-live-search="#weapons-table">
+    <select name="type">
+      <option value="">全部類型</option>
+      {% for t in types %}
+      <option value="{{ t.type }}" {% if w_type == t.type %}selected{% endif %}>{{ t.type }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit">查詢</button>
+  </form>
+  <div class="table-wrap">
+    <table id="weapons-table" data-sortable>
+      <thead><tr><th>ID</th><th>名稱</th><th>類型</th><th>攻擊(小)</th><th>攻擊(大)</th><th>安全強化</th><th>材質</th><th>備註</th></tr></thead>
+      <tbody>
+      {% for row in rows %}
+        <tr>
+          <td>{{ row.id }}</td>
+          <td>{{ row.name }}</td>
+          <td>{{ row.type }}</td>
+          <td>{{ row.dmg_small }}</td>
+          <td>{{ row.dmg_large }}</td>
+          <td>{{ row.safenchant }}</td>
+          <td>{{ row.material }}</td>
+          <td>{{ row.note or '' }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="8">查無資料</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

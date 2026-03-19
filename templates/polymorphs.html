@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}變身列表 — 妍菲天堂資料查詢{% endblock %}
+{% block content %}
+<section class="hero">
+  <h1>變身 (polymorphs)</h1>
+  <p>共 {{ rows|length }} 筆</p>
+</section>
+
+<section class="filters">
+  <form method="get" action="{{ url_for('polymorphs') }}">
+    <input type="text" name="q" value="{{ q }}" placeholder="搜尋名稱或中文名…">
+    <button type="submit">搜尋</button>
+    {% if q %}<a href="{{ url_for('polymorphs') }}">清除</a>{% endif %}
+  </form>
+</section>
+
+<section class="card">
+  {% if rows %}
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>英文名稱</th>
+        <th>Poly ID (NPC)</th>
+        <th>中文名稱</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in rows %}
+      <tr>
+        <td>{{ r.id }}</td>
+        <td>{{ r.name }}</td>
+        <td>{{ r.polyid }}</td>
+        <td>{{ r.note or '' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p>沒有符合條件的資料。</p>
+  {% endif %}
+</section>
+{% endblock %}

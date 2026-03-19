@@ -3,79 +3,65 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}{{ site_cfg.get('brand_name', '妍菲天堂') }} — {{ site_cfg.get('site_subtitle', '天堂1 私服') }}{% endblock %}</title>
+  <title>{% block title %}妍菲天堂資料查詢{% endblock %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
   <header class="topbar">
     <div class="container topbar-inner">
-      <a class="brand" href="{{ url_for('home') }}">
-        <span class="brand-icon">⚔</span>
-        <span class="brand-text">{{ site_cfg.get('brand_name', '妍菲天堂') }}</span>
-        <span class="brand-tag">私服</span>
-      </a>
+      <a class="brand" href="{{ url_for('home') }}">妍菲天堂資料查詢</a>
       <nav class="nav">
-        <a href="{{ url_for('home') }}#announcements">最新公告</a>
-        <a href="{{ url_for('download_page') }}">遊戲下載</a>
-        <a href="{{ url_for('guide_page') }}">新手教學</a>
-        <div class="nav-dropdown">
-          <span class="nav-dropdown-label">遊戲資料 ▾</span>
-          <div class="nav-dropdown-menu">
-            <a href="{{ url_for('monsters') }}">怪物圖鑑</a>
-            <a href="{{ url_for('items') }}">物品大全</a>
-            <a href="{{ url_for('drops') }}">掉落查詢</a>
-            <a href="{{ url_for('forms_page') }}">變身查詢</a>
-            <a href="{{ url_for('dolls_page') }}">魔法娃娃</a>
-          </div>
-        </div>
-        <a href="{{ site_cfg.get('line_group_url', '#line') }}">LINE 群組</a>
-        <a href="{{ url_for('download_page') }}" class="nav-cta">立即下載</a>
+        <a href="{{ url_for('ranking') }}">排行</a>
+        <a href="{{ url_for('items') }}">物品</a>
+        <a href="{{ url_for('monsters') }}">怪物</a>
+        <a href="{{ url_for('drops') }}">掉落</a>
+        <a href="{{ url_for('weapons') }}">武器</a>
+        <a href="{{ url_for('armors') }}">防具</a>
+        <a href="{{ url_for('dolls') }}">娃娃</a>
+        <a href="{{ url_for('polymorphs') }}">變身</a>
       </nav>
     </div>
   </header>
-  <main class="{% block main_class %}container page{% endblock %}">
+  <main class="container page">
     {% block content %}{% endblock %}
   </main>
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <div class="footer-brand">
-        <span class="brand-icon">⚔</span>
-        <strong>{{ site_cfg.get('brand_name', '妍菲天堂') }}</strong>
-        <p>{{ site_cfg.get('brand_slogan', '精心打造的天堂1 私服，還原經典、追求平衡。') }}</p>
-        <div class="footer-social">
-          <a href="{{ site_cfg.get('line_group_url', '#line') }}" class="social-btn">LINE 群組</a>
-          <a href="{{ site_cfg.get('forum_url', '#forum') }}" class="social-btn">官方論壇</a>
-        </div>
-      </div>
-      <div class="footer-links">
-        <div>
-          <strong>遊戲資料庫</strong>
-          <a href="{{ url_for('items') }}">物品查詢</a>
-          <a href="{{ url_for('monsters') }}">怪物查詢</a>
-          <a href="{{ url_for('drops') }}">掉落查詢</a>
-          <a href="{{ url_for('forms_page') }}">變身查詢</a>
-          <a href="{{ url_for('dolls_page') }}">魔法娃娃</a>
-        </div>
-        <div>
-          <strong>新手入門</strong>
-          <a href="{{ url_for('download_page') }}">下載遊戲</a>
-          <a href="{{ url_for('guide_page') }}">新手教學</a>
-          <a href="{{ url_for('guide_page') }}#faq">常見問題</a>
-        </div>
-        <div>
-          <strong>社群與支援</strong>
-          <a href="{{ site_cfg.get('line_group_url', '#line') }}">LINE 群組</a>
-          <a href="{{ site_cfg.get('forum_url', '#forum') }}">論壇</a>
-          <a href="{{ site_cfg.get('line_group_url', '#line') }}">客服支援</a>
-        </div>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <div class="container footer-bottom-inner">
-        <span>© 2026 {{ site_cfg.get('brand_name', '妍菲天堂') }} · 本站為私人架設，與 NCSoft 無關</span>
-        <span>為玩家、由玩家打造</span>
-      </div>
-    </div>
-  </footer>
+<script>
+(function(){
+  // ── Sortable tables ──────────────────────────────────────────────
+  document.querySelectorAll('table[data-sortable]').forEach(function(table){
+    table.querySelectorAll('thead th').forEach(function(th, colIdx){
+      th.setAttribute('data-sort','');
+      th.addEventListener('click', function(){
+        var tbody = table.querySelector('tbody');
+        var rows  = Array.from(tbody.querySelectorAll('tr'));
+        var asc   = !th.classList.contains('sort-asc');
+        table.querySelectorAll('thead th').forEach(function(h){ h.classList.remove('sort-asc','sort-desc'); });
+        rows.sort(function(a,b){
+          var at = (a.cells[colIdx]||{}).textContent||'';
+          var bt = (b.cells[colIdx]||{}).textContent||'';
+          var an = parseFloat(at.replace(/,/g,''));
+          var bn = parseFloat(bt.replace(/,/g,''));
+          if(!isNaN(an)&&!isNaN(bn)) return asc ? an-bn : bn-an;
+          return asc ? at.localeCompare(bt,'zh') : bt.localeCompare(at,'zh');
+        });
+        th.classList.add(asc ? 'sort-asc' : 'sort-desc');
+        rows.forEach(function(r){ tbody.appendChild(r); });
+      });
+    });
+  });
+
+  // ── Live search ──────────────────────────────────────────────────
+  document.querySelectorAll('input[data-live-search]').forEach(function(input){
+    var table = document.querySelector(input.getAttribute('data-live-search'));
+    if(!table) return;
+    input.addEventListener('input', function(){
+      var q = input.value.toLowerCase();
+      table.querySelectorAll('tbody tr').forEach(function(row){
+        row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+      });
+    });
+  });
+})();
+</script>
 </body>
 </html>
