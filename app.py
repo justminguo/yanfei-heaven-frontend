@@ -44,6 +44,17 @@ def create_app() -> Flask:
         "bombflower": "爆炸花", "Ifrit": "伊芙利特", "PIQUEST": "試煉",
     }
 
+    # 武器類型中文對照
+    WEAPON_TYPE_NAMES: dict[str, str] = {
+        "sword": "單手劍", "tohandsword": "雙手劍", "dagger": "匕首",
+        "bow": "弓箭(雙手)", "singlebow": "弩槍(單手)",
+        "blunt": "鈍器(單手)", "tohandblunt": "鈍器(雙手)",
+        "staff": "魔杖", "tohandstaff": "魔杖(雙手)",
+        "spear": "長槍(雙手)", "singlespear": "矛(單手)",
+        "edoryu": "雙刀", "claw": "鋼爪",
+        "chainsword": "鎖鏈劍", "kiringku": "奇古獸", "gauntlet": "鐵手甲",
+    }
+
     # 物品類型中文對照
     ITEM_TYPE_NAMES: dict[str, str] = {
         "arrow": "箭矢", "potion": "藥水", "scroll": "卷軸", "food": "食物",
@@ -146,6 +157,35 @@ def create_app() -> Flask:
         if text.startswith("$"):
             return "—"
         return text
+
+    @app.template_filter("clean_name")
+    def fmt_clean_name(s: object) -> str:
+        """移除天堂名稱中的顏色/格式代碼，如 \\aH、\\f3 等。"""
+        import re
+        if not s:
+            return "—"
+        text = str(s)
+        text = re.sub(r'(\\+a[A-Za-z])|(\\+f[A-Za-z0-9=@<>])', '', text)
+        return text.strip() or "—"
+
+    @app.template_filter("safe_enchant")
+    def fmt_safe_enchant(n: object) -> str:
+        """格式化安全強化值。"""
+        try:
+            v = int(n)
+            if v == -1:
+                return "不可強化"
+            if v == 0:
+                return "⚠️ 0"
+            return f"+{v}"
+        except (ValueError, TypeError):
+            return str(n) if n else "—"
+
+    @app.template_filter("weapon_type_cn")
+    def fmt_weapon_type(s: object) -> str:
+        if not s:
+            return "—"
+        return WEAPON_TYPE_NAMES.get(str(s), str(s))
 
     # Lineage I class ID -> name mapping (common Taiwan server IDs)
     CLASS_NAMES: dict[int, str] = {

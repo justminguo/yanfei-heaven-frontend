@@ -21,10 +21,10 @@
       {% for row in rows %}
         <tr>
           <td>{{ row.id }}</td>
-          <td>{{ row.name }}</td>
+          <td>{{ row.name | clean_name }}</td>
           <td>{{ row.type }}</td>
           <td>{{ row.ac }}</td>
-          <td>{{ row.safenchant }}</td>
+          <td>{{ row.safenchant | safe_enchant }}</td>
           <td>{{ row.material | material_cn }}</td>
 
         </tr>

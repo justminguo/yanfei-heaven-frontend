@@ -21,7 +21,7 @@
       {% for row in rows %}
         <tr>
           <td>{{ row.id }}</td>
-          <td><a href="{{ url_for('item_detail', item_id=row.id) }}">{{ row.name }}</a></td>
+          <td><a href="{{ url_for('item_detail', item_id=row.id) }}">{{ row.name | clean_name }}</a></td>
           <td>{{ row.name_id | safe_name }}</td>
           <td>{{ row.item_type | item_type_cn }}</td>
           <td>{{ row.use_type | use_type_cn }}</td>

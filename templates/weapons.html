@@ -21,11 +21,11 @@
       {% for row in rows %}
         <tr>
           <td>{{ row.id }}</td>
-          <td>{{ row.name }}</td>
-          <td>{{ row.type }}</td>
+          <td>{{ row.name | clean_name }}</td>
+          <td>{{ row.type | weapon_type_cn }}</td>
           <td>{{ row.dmg_small }}</td>
           <td>{{ row.dmg_large }}</td>
-          <td>{{ row.safenchant }}</td>
+          <td>{{ row.safenchant | safe_enchant }}</td>
           <td>{{ row.material | material_cn }}</td>
           
         </tr>
