@@ -283,31 +283,88 @@ def create_app() -> Flask:
 
     @app.route("/dolls")
     def dolls():
-        doll_type = request.args.get("doll_type", "").strip()
-        sql = "SELECT id, doll_type, bonus_value, note FROM dolls WHERE 1=1"
+        q = request.args.get("q", "").strip()
+        grade = request.args.get("grade", "").strip()
+        db = get_db()
+
+        DOLL_GRADES = ["神話", "傳說", "英雄", "稀有", "一般"]
+
+        sql = """
+            SELECT id, name,
+              CASE
+                WHEN name LIKE '神話娃娃%' THEN '神話'
+                WHEN name LIKE '傳說娃娃%' THEN '傳說'
+                WHEN name LIKE '英雄娃娃%' THEN '英雄'
+                WHEN name LIKE '稀有娃娃%' THEN '稀有'
+                WHEN name LIKE '魔法娃娃%' THEN '一般'
+                ELSE '一般'
+              END AS grade
+            FROM items
+            WHERE (name LIKE '%娃娃%' OR name LIKE '%魔法娃娃%')
+              AND name NOT LIKE '%袋子%'
+              AND name NOT LIKE '%幣%'
+              AND name NOT LIKE '%藥劑%'
+              AND name NOT LIKE '%能量石%'
+        """
         params: list[Any] = []
-        if doll_type:
-            sql += " AND doll_type = ?"
-            params.append(doll_type)
-        sql += " ORDER BY doll_type, bonus_value"
-        rows = get_db().execute(sql, params).fetchall()
-        types = get_db().execute(
-            "SELECT DISTINCT doll_type FROM dolls ORDER BY doll_type"
-        ).fetchall()
-        return render_template("dolls.html", rows=rows, doll_type=doll_type, types=types, doll_names=DOLL_NAMES)
+        if q:
+            sql += " AND name LIKE ?"
+            params.append(f"%{q}%")
+        if grade:
+            grade_prefix = {
+                "神話": "神話娃娃%",
+                "傳說": "傳說娃娃%",
+                "英雄": "英雄娃娃%",
+                "稀有": "稀有娃娃%",
+                "一般": "魔法娃娃%",
+            }.get(grade, "%")
+            sql += " AND name LIKE ?"
+            params.append(grade_prefix)
+        sql += " ORDER BY grade, id LIMIT 500"
+        rows = db.execute(sql, params).fetchall()
+        return render_template("dolls.html", rows=rows, q=q, grade=grade, doll_grades=DOLL_GRADES)
 
     @app.route("/polymorphs")
     def polymorphs():
         q = request.args.get("q", "").strip()
-        sql = "SELECT id, name, polyid, note FROM polymorphs WHERE 1=1"
+        grade = request.args.get("grade", "").strip()
+        db = get_db()
+
+        # 從 items 拉出各等級變身物品
+        POLY_GRADES = [
+            ("神話", "神話變身"),
+            ("傳說", "傳說變身"),
+            ("英雄", "英雄變身"),
+            ("稀有", "稀有變身"),
+            ("一般", "一般變身"),
+        ]
+        grade_sql = """
+            SELECT id, name,
+              CASE
+                WHEN name LIKE '【神話變身】%' THEN '神話'
+                WHEN name LIKE '【傳說變身】%' THEN '傳說'
+                WHEN name LIKE '【英雄變身】%' THEN '英雄'
+                WHEN name LIKE '【稀有變身】%' THEN '稀有'
+                ELSE '一般'
+              END AS grade,
+              'item' AS source
+            FROM items
+            WHERE name LIKE '%變身%'
+              AND name NOT LIKE '%藥水%'
+              AND name NOT LIKE '%抽卡%'
+              AND name NOT LIKE '%禮盒%'
+              AND name NOT LIKE '%卡禮%'
+        """
         params: list[Any] = []
         if q:
-            sql += " AND (name LIKE ? OR note LIKE ?)"
-            like = f"%{q}%"
-            params.extend([like, like])
-        sql += " ORDER BY id LIMIT 200"
-        rows = get_db().execute(sql, params).fetchall()
-        return render_template("polymorphs.html", rows=rows, q=q)
+            grade_sql += " AND name LIKE ?"
+            params.append(f"%{q}%")
+        if grade:
+            grade_sql += " AND name LIKE ?"
+            params.append(f"【{grade}變身】%")
+        grade_sql += " ORDER BY grade, id LIMIT 500"
+        rows = db.execute(grade_sql, params).fetchall()
+        return render_template("polymorphs.html", rows=rows, q=q, grade=grade, poly_grades=POLY_GRADES)
 
     @app.route("/monster/<int:monster_id>")
     def monster_detail(monster_id: int):

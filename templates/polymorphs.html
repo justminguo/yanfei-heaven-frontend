@@ -1,43 +1,57 @@
 {% extends "base.html" %}
-{% block title %}變身列表 — 妍菲天堂資料查詢{% endblock %}
+{% block title %}變身查詢 — 妍菲天堂資料查詢{% endblock %}
 {% block content %}
-<section class="hero">
-  <h1>變身 (polymorphs)</h1>
-  <p>共 {{ rows|length }} 筆</p>
-</section>
-
-<section class="filters">
-  <form method="get" action="{{ url_for('polymorphs') }}">
-    <input type="text" name="q" value="{{ q }}" placeholder="搜尋名稱或中文名…">
-    <button type="submit">搜尋</button>
-    {% if q %}<a href="{{ url_for('polymorphs') }}">清除</a>{% endif %}
-  </form>
-</section>
-
 <section class="card">
-  {% if rows %}
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>英文名稱</th>
-        <th>Poly ID (NPC)</th>
-        <th>中文名稱</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for r in rows %}
-      <tr>
-        <td>{{ r.id }}</td>
-        <td>{{ r.name }}</td>
-        <td>{{ r.polyid }}</td>
-        <td>{{ r.note or '' }}</td>
-      </tr>
+  <h1>變身查詢</h1>
+  <form class="filters" method="get" action="{{ url_for('polymorphs') }}">
+    <input type="text" name="q" value="{{ q }}" placeholder="搜尋變身名稱…">
+    <select name="grade">
+      <option value="">全部等級</option>
+      {% for g, label in poly_grades %}
+      <option value="{{ g }}" {% if grade == g %}selected{% endif %}>{{ label }}</option>
       {% endfor %}
-    </tbody>
-  </table>
-  {% else %}
-  <p>沒有符合條件的資料。</p>
-  {% endif %}
+    </select>
+    <button type="submit">查詢</button>
+    {% if q or grade %}<a href="{{ url_for('polymorphs') }}">清除</a>{% endif %}
+  </form>
+
+  <div class="grade-tabs">
+    <a href="{{ url_for('polymorphs') }}" class="tab {% if not grade %}active{% endif %}">全部</a>
+    {% for g, label in poly_grades %}
+    <a href="{{ url_for('polymorphs', grade=g) }}" class="tab {% if grade == g %}active{% endif %}">{{ label }}</a>
+    {% endfor %}
+  </div>
+
+  <p class="muted">共 {{ rows|length }} 筆</p>
+
+  <div class="table-wrap">
+    <table data-sortable>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>名稱</th>
+          <th>等級</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in rows %}
+        <tr>
+          <td>{{ r.id }}</td>
+          <td>{{ r.name }}</td>
+          <td>
+            {% if r.grade == '神話' %}<span class="badge badge-myth">神話</span>
+            {% elif r.grade == '傳說' %}<span class="badge badge-legend">傳說</span>
+            {% elif r.grade == '英雄' %}<span class="badge badge-hero">英雄</span>
+            {% elif r.grade == '稀有' %}<span class="badge badge-rare">稀有</span>
+            {% else %}<span class="badge badge-normal">一般</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="3">查無資料</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </section>
 {% endblock %}
