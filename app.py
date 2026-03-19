@@ -233,7 +233,7 @@ def create_app() -> Flask:
     def ranking():
         db = get_db()
         rows = db.execute(
-            "SELECT char_name, level, class, OnlineStatus FROM characters ORDER BY level DESC, char_name ASC"
+            "SELECT char_name, level, class, OnlineStatus FROM characters ORDER BY level DESC, char_name ASC LIMIT 200"
         ).fetchall()
         return render_template("ranking.html", rows=rows, class_names=CLASS_NAMES)
 
@@ -330,7 +330,7 @@ def create_app() -> Flask:
         DOLL_GRADES = ["神話", "傳說", "英雄", "稀有", "一般"]
 
         sql = """
-            SELECT id, name,
+            SELECT id, name, doll_effects,
               CASE
                 WHEN name LIKE '神話娃娃%' THEN '神話'
                 WHEN name LIKE '傳說娃娃%' THEN '傳說'

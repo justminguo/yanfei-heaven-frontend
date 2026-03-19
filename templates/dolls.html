@@ -31,6 +31,7 @@
           <th>ID</th>
           <th>名稱</th>
           <th>等級</th>
+          <th>特效</th>
         </tr>
       </thead>
       <tbody>
@@ -46,9 +47,10 @@
             {% else %}<span class="badge badge-normal">一般</span>
             {% endif %}
           </td>
+          <td class="muted" style="font-size:13px">{{ r.doll_effects or '—' }}</td>
         </tr>
         {% else %}
-        <tr><td colspan="3">查無資料</td></tr>
+        <tr><td colspan="4">查無資料</td></tr>
         {% endfor %}
       </tbody>
     </table>
