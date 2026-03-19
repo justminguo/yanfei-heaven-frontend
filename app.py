@@ -363,7 +363,7 @@ def create_app() -> Flask:
     def weapons():
         q = request.args.get("q", "").strip()
         w_type = request.args.get("type", "").strip()
-        sql = "SELECT id, name, type, dmg_small, dmg_large, safenchant, material, note FROM weapons WHERE 1=1"
+        sql = "SELECT id, name, type, dmg_small, dmg_large, safenchant, material FROM weapons WHERE 1=1"
         params: list[Any] = []
         if q:
             sql += " AND (name LIKE ? OR name_id LIKE ? OR classname LIKE ?)"
@@ -383,7 +383,7 @@ def create_app() -> Flask:
     def armors():
         q = request.args.get("q", "").strip()
         a_type = request.args.get("type", "").strip()
-        sql = "SELECT id, name, type, ac, safenchant, material, note FROM armors WHERE 1=1"
+        sql = "SELECT id, name, type, ac, safenchant, material FROM armors WHERE 1=1"
         params: list[Any] = []
         if q:
             sql += " AND (name LIKE ? OR name_id LIKE ? OR classname LIKE ?)"

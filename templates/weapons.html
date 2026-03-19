@@ -16,7 +16,7 @@
   </form>
   <div class="table-wrap">
     <table id="weapons-table" data-sortable>
-      <thead><tr><th>ID</th><th>名稱</th><th>類型</th><th>攻擊(小)</th><th>攻擊(大)</th><th>安全強化</th><th>材質</th><th>備註</th></tr></thead>
+      <thead><tr><th>ID</th><th>名稱</th><th>類型</th><th>攻擊(小)</th><th>攻擊(大)</th><th>安全強化</th><th>材質</th></tr></thead>
       <tbody>
       {% for row in rows %}
         <tr>
@@ -27,10 +27,10 @@
           <td>{{ row.dmg_large }}</td>
           <td>{{ row.safenchant }}</td>
           <td>{{ row.material }}</td>
-          <td>{{ row.note or '' }}</td>
+          
         </tr>
       {% else %}
-        <tr><td colspan="8">查無資料</td></tr>
+        <tr><td colspan="7">查無資料</td></tr>
       {% endfor %}
       </tbody>
     </table>
