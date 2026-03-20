@@ -3,7 +3,7 @@
 {% block content %}
 <section class="card">
   <h1>變身查詢</h1>
-  <p class="muted">攻速/移速提升%越高越強。⚡ 攻速提升 &gt;50% 為頂級。</p>
+  <p class="muted">攻速/移速提升%越高越強（基準：攻速960ms、移速600ms）。⚡ 提升 &gt;30% 為頂級。</p>
   <form class="filters" method="get" action="{{ url_for('polymorphs') }}">
     <input type="text" name="q" value="{{ q }}" placeholder="搜尋變身名稱（英文或中文）…">
     <select name="grade">
@@ -53,18 +53,20 @@
           </td>
           <td>
             {% if r.atkspeed and r.atkspeed > 0 %}
-              {% set boost = ((1500 / r.atkspeed) - 1) * 100 %}
-              {% if boost > 50 %}<span style="color:#4caf50;font-weight:700">+{{ "%.1f"|format(boost) }}% ⚡</span>
-              {% elif boost > 20 %}<span style="color:#ffca28">+{{ "%.1f"|format(boost) }}%</span>
-              {% else %}<span class="muted">+{{ "%.1f"|format(boost) }}%</span>{% endif %}
+              {% set boost = ((960 / r.atkspeed) - 1) * 100 %}
+              {% if boost > 30 %}<span style="color:#4caf50;font-weight:700">+{{ "%.1f"|format(boost) }}% ⚡</span>
+              {% elif boost > 10 %}<span style="color:#ffca28">+{{ "%.1f"|format(boost) }}%</span>
+              {% elif boost >= 0 %}<span class="muted">+{{ "%.1f"|format(boost) }}%</span>
+              {% else %}<span class="muted">{{ "%.1f"|format(boost) }}%</span>{% endif %}
             {% else %}—{% endif %}
           </td>
           <td>
             {% if r.movespeed and r.movespeed > 0 %}
-              {% set boost = ((1000 / r.movespeed) - 1) * 100 %}
+              {% set boost = ((600 / r.movespeed) - 1) * 100 %}
               {% if boost > 30 %}<span style="color:#4caf50;font-weight:700">+{{ "%.1f"|format(boost) }}% ⚡</span>
               {% elif boost > 10 %}<span style="color:#ffca28">+{{ "%.1f"|format(boost) }}%</span>
-              {% else %}<span class="muted">+{{ "%.1f"|format(boost) }}%</span>{% endif %}
+              {% elif boost >= 0 %}<span class="muted">+{{ "%.1f"|format(boost) }}%</span>
+              {% else %}<span class="muted">{{ "%.1f"|format(boost) }}%</span>{% endif %}
             {% else %}—{% endif %}
           </td>
         </tr>
