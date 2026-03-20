@@ -207,16 +207,17 @@ def create_app() -> Flask:
         if not s:
             return "—"
         text = str(s)
-        # 抽出經驗值百分比（狩獵經驗值 / 經驗值 / exp 統一處理）
-        exp_match = re.search(r'(?:狩獵)?經驗值\+(\d+)%|(?i)exp\+(\d+)%', text)
-        if exp_match:
-            pct = exp_match.group(1) or exp_match.group(2)
-            # 從特效字串裡移除經驗值項目（不重複顯示）
-            text = re.sub(r',?(?:狩獵)?經驗值\+\d+%', '', text)
-            text = re.sub(r',?(?i)exp\+\d+%', '', text)
-            text = text.strip(',').strip()
-            return f"📈 EXP+{pct}% | {text}" if text else f"📈 EXP+{pct}%"
-        return text
+        # 統一 exp+X% 為 狩獵經驗值+X%
+        text = re.sub(r'(?i)exp\+(\d+)%', r'狩獵經驗值+\1%', text)
+        # 去重
+        parts = [p.strip() for p in text.split(',')]
+        seen, deduped = set(), []
+        for p in parts:
+            key = re.sub(r'\s+', '', p).lower()
+            if key not in seen:
+                seen.add(key)
+                deduped.append(p)
+        return ','.join(deduped)
 
     # Lineage I class ID -> name mapping (common Taiwan server IDs)
     CLASS_NAMES: dict[int, str] = {
