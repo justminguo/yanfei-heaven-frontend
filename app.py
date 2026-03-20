@@ -416,7 +416,7 @@ def create_app() -> Flask:
                 ELSE '一般'
               END AS grade
             FROM polymorphs
-            WHERE note NOT LIKE '%圖鑑%'
+            WHERE note NOT LIKE '%圖鑑%' AND id >= 600000000
         """
         params: list[Any] = []
         if q:
