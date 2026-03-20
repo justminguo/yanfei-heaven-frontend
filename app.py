@@ -458,6 +458,31 @@ def create_app() -> Flask:
         rows = get_db().execute(sql, params).fetchall()
         return render_template("poly_speed.html", rows=rows, q=q)
 
+    @app.route("/card-album")
+    def card_album():
+        import json as _json
+        q = request.args.get("q", "").strip()
+        db = get_db()
+        sql = "SELECT seq, name, attrs FROM card_album WHERE 1=1"
+        params: list[Any] = []
+        if q:
+            sql += " AND name LIKE ?"
+            params.append(f"%{q}%")
+        sql += " ORDER BY seq"
+        raw_cards = db.execute(sql, params).fetchall()
+
+        def fmt_attrs(attrs_json):
+            if not attrs_json: return None
+            try:
+                d = _json.loads(attrs_json)
+                return ', '.join(f"{k}+{v}" if v > 0 else f"{k}{v}" for k, v in d.items())
+            except: return attrs_json
+
+        cards = [{"seq": r["seq"], "name": r["name"], "attrs": fmt_attrs(r["attrs"])} for r in raw_cards]
+        raw_suits = db.execute("SELECT seq, name, attrs FROM card_suit ORDER BY seq").fetchall()
+        suits = [{"seq": r["seq"], "name": r["name"], "attrs": fmt_attrs(r["attrs"])} for r in raw_suits]
+        return render_template("card_album.html", cards=cards, suits=suits, q=q)
+
     @app.route("/monster/<int:monster_id>")
     def monster_detail(monster_id: int):
         db = get_db()
