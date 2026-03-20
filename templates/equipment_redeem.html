@@ -1,30 +1,25 @@
-{% extends 'base.html' %}
-{% block title %}裝備贖回{% endblock %}
+{% extends "base.html" %}
+{% block title %}裝備贖回 — 妍菲天堂資料查詢{% endblock %}
 {% block content %}
 <section class="card">
-  <h1>裝備贖回</h1>
-  <form class="filters" method="get">
-    <input type="text" name="q" placeholder="搜尋裝備名稱 / 角色名稱"
-           value="{{ q }}" data-live-search="#redeem-table">
-    <button type="submit">查詢</button>
-  </form>
+  <h1>裝備贖回設定</h1>
+  <p class="muted">強化過的裝備掉落或死亡後可至特定NPC用贊助幣贖回。強化等級越高，所需贊助幣越多。</p>
   <div class="table-wrap">
-    <table id="redeem-table" data-sortable>
-      <thead><tr><th>物品ID</th><th>物品名稱</th><th>強化等級</th><th>屬性類型</th><th>屬性等級</th><th>祝福</th><th>角色名稱</th></tr></thead>
+    <table>
+      <thead>
+        <tr><th>強化等級</th><th>所需道具</th><th>所需數量</th></tr>
+      </thead>
       <tbody>
-      {% for row in rows %}
+        {% for r in rows %}
         <tr>
-          <td>{{ row.item_id }}</td>
-          <td>{{ row.item_name }}</td>
-          <td>{{ ('+' ~ row.enchant_lvl) if row.enchant_lvl else '—' }}</td>
-          <td>{{ row.attr_type if row.attr_type else '—' }}</td>
-          <td>{{ row.attr_level if row.attr_level else '—' }}</td>
-          <td>{{ '是' if row.bless == 1 else '否' }}</td>
-          <td>{{ row.char_name }}</td>
+          <td>
+            {% if r.enchant_level == 0 %}未強化
+            {% else %}+{{ r.enchant_level }}{% endif %}
+          </td>
+          <td>{{ r.need_item }}</td>
+          <td><strong>{{ r.need_count }}</strong></td>
         </tr>
-      {% else %}
-        <tr><td colspan="7">查無資料</td></tr>
-      {% endfor %}
+        {% endfor %}
       </tbody>
     </table>
   </div>

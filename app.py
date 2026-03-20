@@ -560,16 +560,8 @@ def create_app() -> Flask:
     # ── 裝備贖回 ──────────────────────────────────────────────
     @app.route("/equipment-redeem")
     def equipment_redeem():
-        q = request.args.get("q", "").strip()
-        sql = "SELECT * FROM equipment_redeem WHERE 1=1"
-        params: list[Any] = []
-        if q:
-            sql += " AND (item_name LIKE ? OR char_name LIKE ?)"
-            like = f"%{q}%"
-            params.extend([like, like])
-        sql += " ORDER BY item_id"
-        rows = get_db().execute(sql, params).fetchall()
-        return render_template("equipment_redeem.html", rows=rows, q=q)
+        rows = get_db().execute("SELECT enchant_level, need_item, need_count FROM equipment_redeem ORDER BY enchant_level").fetchall()
+        return render_template("equipment_redeem.html", rows=rows)
 
     # ── 抽獎系統 ──────────────────────────────────────────────
     @app.route("/lottery")
