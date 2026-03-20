@@ -52,20 +52,19 @@
             {% endif %}
           </td>
           <td>
-            {% if r.atk_boost is not none %}
+          <td>
+            {% if r.atk_boost is not none and r.atk_boost > 0 %}
               {% if r.atk_boost > 100 %}<span style="color:#ff6b6b;font-weight:700">+{{ "%.1f"|format(r.atk_boost) }}% ⚡</span>
               {% elif r.atk_boost > 50 %}<span style="color:#4caf50;font-weight:700">+{{ "%.1f"|format(r.atk_boost) }}%</span>
               {% elif r.atk_boost > 20 %}<span style="color:#ffca28">+{{ "%.1f"|format(r.atk_boost) }}%</span>
-              {% elif r.atk_boost > 0 %}<span class="muted">+{{ "%.1f"|format(r.atk_boost) }}%</span>
-              {% else %}<span class="muted">{{ "%.1f"|format(r.atk_boost) }}%</span>{% endif %}
+              {% else %}<span class="muted">+{{ "%.1f"|format(r.atk_boost) }}%</span>{% endif %}
             {% else %}—{% endif %}
           </td>
           <td>
-            {% if r.mov_boost is not none %}
+            {% if r.mov_boost is not none and r.mov_boost > 0 %}
               {% if r.mov_boost > 50 %}<span style="color:#4caf50;font-weight:700">+{{ "%.1f"|format(r.mov_boost) }}% ⚡</span>
               {% elif r.mov_boost > 20 %}<span style="color:#ffca28">+{{ "%.1f"|format(r.mov_boost) }}%</span>
-              {% elif r.mov_boost > 0 %}<span class="muted">+{{ "%.1f"|format(r.mov_boost) }}%</span>
-              {% else %}<span class="muted">{{ "%.1f"|format(r.mov_boost) }}%</span>{% endif %}
+              {% else %}<span class="muted">+{{ "%.1f"|format(r.mov_boost) }}%</span>{% endif %}
             {% else %}—{% endif %}
           </td>
         </tr>
