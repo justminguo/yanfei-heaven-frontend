@@ -393,56 +393,20 @@ def create_app() -> Flask:
     @app.route("/polymorphs")
     def polymorphs():
         q = request.args.get("q", "").strip()
-        grade = request.args.get("grade", "").strip()
         db = get_db()
 
-        # 從 items 拉出各等級變身物品
-        POLY_GRADES = [
-            ("神話", "神話變身"),
-            ("傳說", "傳說變身"),
-            ("英雄", "英雄變身"),
-            ("稀有", "稀有變身"),
-            ("一般", "一般變身"),
-        ]
-        grade_sql = """
-            SELECT id, name,
-              CASE
-                WHEN name LIKE '【神話變身】%' THEN '神話'
-                WHEN name LIKE '【傳說變身】%' THEN '傳說'
-                WHEN name LIKE '【英雄變身】%' THEN '英雄'
-                WHEN name LIKE '【稀有變身】%' THEN '稀有'
-                ELSE '一般'
-              END AS grade,
-              'item' AS source
-            FROM items
-            WHERE name LIKE '%變身%'
-              AND name NOT LIKE '%藥水%'
-              AND name NOT LIKE '%抽卡%'
-              AND name NOT LIKE '%禮盒%'
-              AND name NOT LIKE '%卡禮%'
+        sql = """
+            SELECT id, name, note, polyid, atkspeed, movespeed, magic_speed
+            FROM polymorphs
+            WHERE 1=1
         """
         params: list[Any] = []
         if q:
-            grade_sql += " AND name LIKE ?"
-            params.append(f"%{q}%")
-        if grade:
-            grade_sql += " AND name LIKE ?"
-            params.append(f"【{grade}變身】%")
-        grade_sql += " ORDER BY grade, id LIMIT 500"
-        rows = db.execute(grade_sql, params).fetchall()
-
-        # 從 polymorphs 表建立 note(中文名) → 速度 的對應
-        speed_rows = db.execute(
-            "SELECT name, note, atkspeed, movespeed, magic_speed FROM polymorphs WHERE atkspeed IS NOT NULL OR movespeed IS NOT NULL"
-        ).fetchall()
-        speed_map: dict[str, dict] = {}
-        for sr in speed_rows:
-            if sr["note"]:
-                speed_map[sr["note"]] = {"atkspeed": sr["atkspeed"], "movespeed": sr["movespeed"], "magic_speed": sr["magic_speed"]}
-            if sr["name"]:
-                speed_map[sr["name"]] = {"atkspeed": sr["atkspeed"], "movespeed": sr["movespeed"], "magic_speed": sr["magic_speed"]}
-
-        return render_template("polymorphs.html", rows=rows, q=q, grade=grade, poly_grades=POLY_GRADES, speed_map=speed_map)
+            sql += " AND (name LIKE ? OR note LIKE ?)"
+            params.extend([f"%{q}%", f"%{q}%"])
+        sql += " ORDER BY id LIMIT 500"
+        rows = db.execute(sql, params).fetchall()
+        return render_template("polymorphs.html", rows=rows, q=q)
 
     @app.route("/poly-speed")
     def poly_speed():
