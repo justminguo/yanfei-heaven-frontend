@@ -406,6 +406,22 @@ def create_app() -> Flask:
         rows = db.execute(grade_sql, params).fetchall()
         return render_template("polymorphs.html", rows=rows, q=q, grade=grade, poly_grades=POLY_GRADES)
 
+    @app.route("/poly-speed")
+    def poly_speed():
+        q = request.args.get("q", "").strip()
+        sql = """
+            SELECT id, name, note, atkspeed, movespeed, magic_speed
+            FROM polymorphs
+            WHERE atkspeed IS NOT NULL OR movespeed IS NOT NULL
+        """
+        params: list[Any] = []
+        if q:
+            sql += " AND (name LIKE ? OR note LIKE ?)"
+            params.extend([f"%{q}%", f"%{q}%"])
+        sql += " ORDER BY atkspeed ASC LIMIT 200"
+        rows = get_db().execute(sql, params).fetchall()
+        return render_template("poly_speed.html", rows=rows, q=q)
+
     @app.route("/monster/<int:monster_id>")
     def monster_detail(monster_id: int):
         db = get_db()
