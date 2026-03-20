@@ -207,6 +207,19 @@ def create_app() -> Flask:
         if not s:
             return "—"
         text = str(s)
+        # 統一 exp+X% 與 經驗值+X% 為 經驗值+X%
+        text = re.sub(r'(?i)exp\+(\d+)%', r'經驗值+\1%', text)
+        # 移除重複的經驗值欄位（同一字串出現兩次）
+        parts = [p.strip() for p in text.split(',')]
+        seen = set()
+        deduped = []
+        for p in parts:
+            key = re.sub(r'\s+', '', p).lower()
+            if key not in seen:
+                seen.add(key)
+                deduped.append(p)
+        text = ','.join(deduped)
+        # 高亮 EXP
         exp_match = re.search(r'經驗值\+(\d+)%', text)
         if exp_match:
             pct = exp_match.group(1)
@@ -371,6 +384,7 @@ def create_app() -> Flask:
               AND name NOT LIKE '%幣%'
               AND name NOT LIKE '%藥劑%'
               AND name NOT LIKE '%能量石%'
+              AND doll_effects IS NOT NULL AND doll_effects != ''
         """
         params: list[Any] = []
         if q:
