@@ -83,6 +83,14 @@ def create_app() -> Flask:
         "dragonscale": "龍鱗", "paper": "紙", "none": "無",
     }
 
+    # 防具類型中文對照
+    ARMOR_TYPE_NAMES: dict[str, str] = {
+        "helm": "頭盔", "armor": "鎧甲", "boots": "靴子",
+        "gloves": "手套", "cloak": "披風", "shield": "盾牌",
+        "ring": "戒指", "amulet": "項鍊", "belt": "腰帶",
+        "underwear": "內衣", "light_armor": "輕甲", "heavy_armor": "重甲",
+    }
+
     # Doll type -> human-readable label
     DOLL_NAMES: dict[str, str] = {
         "Doll_Ac":  "防禦 (AC)",
@@ -186,6 +194,24 @@ def create_app() -> Flask:
         if not s:
             return "—"
         return WEAPON_TYPE_NAMES.get(str(s), str(s))
+
+    @app.template_filter("armor_type_cn")
+    def fmt_armor_type(s: object) -> str:
+        if not s:
+            return "—"
+        return ARMOR_TYPE_NAMES.get(str(s), str(s))
+
+    @app.template_filter("exp_highlight")
+    def fmt_exp_highlight(s: object) -> str:
+        import re
+        if not s:
+            return "—"
+        text = str(s)
+        exp_match = re.search(r'經驗值\+(\d+)%', text)
+        if exp_match:
+            pct = exp_match.group(1)
+            return f"📈 EXP+{pct}% | {text}"
+        return text
 
     # Lineage I class ID -> name mapping (common Taiwan server IDs)
     CLASS_NAMES: dict[int, str] = {
@@ -404,7 +430,19 @@ def create_app() -> Flask:
             params.append(f"【{grade}變身】%")
         grade_sql += " ORDER BY grade, id LIMIT 500"
         rows = db.execute(grade_sql, params).fetchall()
-        return render_template("polymorphs.html", rows=rows, q=q, grade=grade, poly_grades=POLY_GRADES)
+
+        # 從 polymorphs 表建立 note(中文名) → 速度 的對應
+        speed_rows = db.execute(
+            "SELECT name, note, atkspeed, movespeed, magic_speed FROM polymorphs WHERE atkspeed IS NOT NULL OR movespeed IS NOT NULL"
+        ).fetchall()
+        speed_map: dict[str, dict] = {}
+        for sr in speed_rows:
+            if sr["note"]:
+                speed_map[sr["note"]] = {"atkspeed": sr["atkspeed"], "movespeed": sr["movespeed"], "magic_speed": sr["magic_speed"]}
+            if sr["name"]:
+                speed_map[sr["name"]] = {"atkspeed": sr["atkspeed"], "movespeed": sr["movespeed"], "magic_speed": sr["magic_speed"]}
+
+        return render_template("polymorphs.html", rows=rows, q=q, grade=grade, poly_grades=POLY_GRADES, speed_map=speed_map)
 
     @app.route("/poly-speed")
     def poly_speed():

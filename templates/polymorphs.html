@@ -31,24 +31,49 @@
           <th>ID</th>
           <th>名稱</th>
           <th>等級</th>
+          <th data-sort>攻速</th>
+          <th data-sort>移速</th>
+          <th data-sort>魔速</th>
         </tr>
       </thead>
       <tbody>
         {% for r in rows %}
+        {% set spd = speed_map.get(r.name, {}) %}
         <tr>
           <td>{{ r.id }}</td>
           <td>{{ r.name }}</td>
           <td>
-            {% if r.grade == '神話' %}<span class="badge badge-myth">神話</span>
-            {% elif r.grade == '傳說' %}<span class="badge badge-legend">傳說</span>
-            {% elif r.grade == '英雄' %}<span class="badge badge-hero">英雄</span>
-            {% elif r.grade == '稀有' %}<span class="badge badge-rare">稀有</span>
+            {% if r.grade == '神話' %}<span class="badge badge-myth"><span class="grade-myth">神話</span></span>
+            {% elif r.grade == '傳說' %}<span class="badge badge-legend"><span class="grade-legend">傳說</span></span>
+            {% elif r.grade == '英雄' %}<span class="badge badge-hero"><span class="grade-hero">英雄</span></span>
+            {% elif r.grade == '稀有' %}<span class="badge badge-rare"><span class="grade-rare">稀有</span></span>
             {% else %}<span class="badge badge-normal">一般</span>
             {% endif %}
           </td>
+          <td>
+            {% if spd.get('atkspeed') is not none and spd.get('atkspeed') is not none %}
+              {% if spd['atkspeed'] < 600 %}<span style="color:#4caf50;font-weight:700">{{ spd['atkspeed'] }} ⚡極速</span>
+              {% elif spd['atkspeed'] <= 900 %}<span style="color:#ffca28">{{ spd['atkspeed'] }} 高速</span>
+              {% else %}<span class="muted">{{ spd['atkspeed'] }} 一般</span>{% endif %}
+            {% else %}—{% endif %}
+          </td>
+          <td>
+            {% if spd.get('movespeed') is not none and spd.get('movespeed') is not none %}
+              {% if spd['movespeed'] < 600 %}<span style="color:#4caf50;font-weight:700">{{ spd['movespeed'] }} ⚡極速</span>
+              {% elif spd['movespeed'] <= 900 %}<span style="color:#ffca28">{{ spd['movespeed'] }} 高速</span>
+              {% else %}<span class="muted">{{ spd['movespeed'] }} 一般</span>{% endif %}
+            {% else %}—{% endif %}
+          </td>
+          <td>
+            {% if spd.get('magic_speed') is not none and spd.get('magic_speed') is not none %}
+              {% if spd['magic_speed'] < 600 %}<span style="color:#4caf50;font-weight:700">{{ spd['magic_speed'] }} ⚡極速</span>
+              {% elif spd['magic_speed'] <= 900 %}<span style="color:#ffca28">{{ spd['magic_speed'] }} 高速</span>
+              {% else %}<span class="muted">{{ spd['magic_speed'] }} 一般</span>{% endif %}
+            {% else %}—{% endif %}
+          </td>
         </tr>
         {% else %}
-        <tr><td colspan="3">查無資料</td></tr>
+        <tr><td colspan="6">查無資料</td></tr>
         {% endfor %}
       </tbody>
     </table>

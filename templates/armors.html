@@ -9,7 +9,7 @@
     <select name="type">
       <option value="">全部類型</option>
       {% for t in types %}
-      <option value="{{ t.type }}" {% if a_type == t.type %}selected{% endif %}>{{ t.type }}</option>
+      <option value="{{ t.type }}" {% if a_type == t.type %}selected{% endif %}>{{ t.type | armor_type_cn }}</option>
       {% endfor %}
     </select>
     <button type="submit">查詢</button>
@@ -22,7 +22,7 @@
         <tr>
           <td>{{ row.id }}</td>
           <td>{{ row.name | clean_name }}</td>
-          <td>{{ row.type }}</td>
+          <td>{{ row.type | armor_type_cn }}</td>
           <td>{{ row.ac }}</td>
           <td>{{ row.safenchant | safe_enchant }}</td>
           <td>{{ row.material | material_cn }}</td>
