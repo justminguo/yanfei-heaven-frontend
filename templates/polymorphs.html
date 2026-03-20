@@ -52,21 +52,20 @@
             {% endif %}
           </td>
           <td>
-            {% if r.atkspeed and r.atkspeed > 0 %}
-              {% set boost = ((960 / r.atkspeed) - 1) * 100 %}
-              {% if boost > 30 %}<span style="color:#4caf50;font-weight:700">+{{ "%.1f"|format(boost) }}% ⚡</span>
-              {% elif boost > 10 %}<span style="color:#ffca28">+{{ "%.1f"|format(boost) }}%</span>
-              {% elif boost >= 0 %}<span class="muted">+{{ "%.1f"|format(boost) }}%</span>
-              {% else %}<span class="muted">{{ "%.1f"|format(boost) }}%</span>{% endif %}
+            {% if r.atk_boost is not none %}
+              {% if r.atk_boost > 100 %}<span style="color:#ff6b6b;font-weight:700">+{{ "%.1f"|format(r.atk_boost) }}% ⚡</span>
+              {% elif r.atk_boost > 50 %}<span style="color:#4caf50;font-weight:700">+{{ "%.1f"|format(r.atk_boost) }}%</span>
+              {% elif r.atk_boost > 20 %}<span style="color:#ffca28">+{{ "%.1f"|format(r.atk_boost) }}%</span>
+              {% elif r.atk_boost > 0 %}<span class="muted">+{{ "%.1f"|format(r.atk_boost) }}%</span>
+              {% else %}<span class="muted">{{ "%.1f"|format(r.atk_boost) }}%</span>{% endif %}
             {% else %}—{% endif %}
           </td>
           <td>
-            {% if r.movespeed and r.movespeed > 0 %}
-              {% set boost = ((600 / r.movespeed) - 1) * 100 %}
-              {% if boost > 30 %}<span style="color:#4caf50;font-weight:700">+{{ "%.1f"|format(boost) }}% ⚡</span>
-              {% elif boost > 10 %}<span style="color:#ffca28">+{{ "%.1f"|format(boost) }}%</span>
-              {% elif boost >= 0 %}<span class="muted">+{{ "%.1f"|format(boost) }}%</span>
-              {% else %}<span class="muted">{{ "%.1f"|format(boost) }}%</span>{% endif %}
+            {% if r.mov_boost is not none %}
+              {% if r.mov_boost > 50 %}<span style="color:#4caf50;font-weight:700">+{{ "%.1f"|format(r.mov_boost) }}% ⚡</span>
+              {% elif r.mov_boost > 20 %}<span style="color:#ffca28">+{{ "%.1f"|format(r.mov_boost) }}%</span>
+              {% elif r.mov_boost > 0 %}<span class="muted">+{{ "%.1f"|format(r.mov_boost) }}%</span>
+              {% else %}<span class="muted">{{ "%.1f"|format(r.mov_boost) }}%</span>{% endif %}
             {% else %}—{% endif %}
           </td>
         </tr>
