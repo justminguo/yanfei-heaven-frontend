@@ -2,14 +2,13 @@
 {% block title %}變身卡冊 — 妍菲天堂資料查詢{% endblock %}
 {% block content %}
 <section class="card">
-  <h1>變身卡冊</h1>
-  <p class="muted">收集變身卡可獲得屬性加成，集齊套卡可獲得額外加成。共 {{ cards|length }} 張卡片。</p>
+  <h1>變身卡片</h1>
+  <p class="muted">收集變身卡可獲得屬性加成。共 {{ cards|length }} 張有效卡片。</p>
   <form class="filters" method="get">
     <input type="text" name="q" value="{{ q }}" placeholder="搜尋卡片名稱…">
     <button type="submit">查詢</button>
     {% if q %}<a href="{{ url_for('card_album') }}">清除</a>{% endif %}
   </form>
-
   <div class="table-wrap">
     <table data-sortable>
       <thead>
@@ -20,7 +19,7 @@
         <tr>
           <td>{{ r.seq }}</td>
           <td>{{ r.name }}</td>
-          <td class="muted" style="font-size:13px">{{ r.attrs or '—' }}</td>
+          <td class="muted" style="font-size:13px">{{ r.attrs }}</td>
         </tr>
         {% else %}
         <tr><td colspan="3">查無資料</td></tr>
@@ -32,21 +31,28 @@
 
 <section class="card">
   <h2>套卡組合</h2>
-  <p class="muted">集齊指定卡片可激活套卡加成。共 {{ suits|length }} 個套卡。</p>
+  <p class="muted">集齊指定卡片可激活套卡額外加成。共 {{ suits|length }} 個套卡。</p>
   <div class="table-wrap">
     <table data-sortable>
       <thead>
-        <tr><th>#</th><th>套卡名稱</th><th>套卡加成</th></tr>
+        <tr><th>#</th><th>套卡名稱</th><th>需求變身卡</th><th>套卡加成</th></tr>
       </thead>
       <tbody>
         {% for r in suits %}
         <tr>
           <td>{{ r.seq }}</td>
           <td><strong>{{ r.name }}</strong></td>
+          <td style="font-size:13px">
+            {% if r.required_cards %}
+              {% for c in r.required_cards %}
+                <span class="badge badge-normal">{{ c }}</span>
+              {% endfor %}
+            {% else %}—{% endif %}
+          </td>
           <td class="muted" style="font-size:13px">{{ r.attrs or '—' }}</td>
         </tr>
         {% else %}
-        <tr><td colspan="3">查無資料</td></tr>
+        <tr><td colspan="4">查無資料</td></tr>
         {% endfor %}
       </tbody>
     </table>

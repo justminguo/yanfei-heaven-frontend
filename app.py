@@ -478,9 +478,25 @@ def create_app() -> Flask:
                 return ', '.join(f"{k}+{v}" if v > 0 else f"{k}{v}" for k, v in d.items())
             except: return attrs_json
 
-        cards = [{"seq": r["seq"], "name": r["name"], "attrs": fmt_attrs(r["attrs"])} for r in raw_cards]
-        raw_suits = db.execute("SELECT seq, name, attrs FROM card_suit ORDER BY seq").fetchall()
-        suits = [{"seq": r["seq"], "name": r["name"], "attrs": fmt_attrs(r["attrs"])} for r in raw_suits]
+        # 只顯示有屬性加成的卡
+        cards = [{"seq": r["seq"], "name": r["name"], "attrs": fmt_attrs(r["attrs"])} 
+                 for r in raw_cards if r["attrs"] and r["attrs"] != '{}']
+        raw_suits = db.execute("SELECT seq, name, required_cards, attrs FROM card_suit ORDER BY seq").fetchall()
+
+        def fmt_req_cards(req_json):
+            if not req_json: return []
+            try:
+                items = _json.loads(req_json)
+                # 找包含中文名稱的那個（最後一個通常是名稱列表）
+                for item in reversed(items):
+                    if ',' in item and not item.replace(',','').isdigit():
+                        return item.split(',')
+                return []
+            except: return []
+
+        suits = [{"seq": r["seq"], "name": r["name"], 
+                  "required_cards": fmt_req_cards(r["required_cards"]),
+                  "attrs": fmt_attrs(r["attrs"])} for r in raw_suits]
         return render_template("card_album.html", cards=cards, suits=suits, q=q)
 
     @app.route("/monster/<int:monster_id>")
