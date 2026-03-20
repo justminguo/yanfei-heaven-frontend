@@ -38,7 +38,7 @@
         {% for r in rows %}
         <tr>
           <td>{{ r.id }}</td>
-          <td><a href="{{ url_for('item_detail', item_id=r.id) }}">{{ r.name }}</a></td>
+          <td>{{ r.name }}</td>
           <td>
             {% if r.grade == '神話' %}<span class="badge badge-myth"><span class="grade-myth">神話</span></span>
             {% elif r.grade == '傳說' %}<span class="badge badge-legend"><span class="grade-legend">傳說</span></span>
