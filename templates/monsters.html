@@ -20,13 +20,18 @@
         <tr>
           <td><img src="/static/npc_icons/{{ row.gfxid }}.png" width="48" height="64" onerror="this.style.display='none'"></td>
           <td>{{ row.id }}</td>
-          <td><a href="{{ url_for('monster_detail', monster_id=row.id) }}">{{ row.name }}</a></td>
+          <td><a class="monster-toggle" href="#" data-id="{{ row.id }}">{{ row.name | clean_name }}</a></td>
           <td>{{ row.level }}</td>
           <td>{{ row.hp | commas }}</td>
           <td>{{ row.mp | commas }}</td>
           <td>{{ row.ac }}</td>
           <td>{{ row.exp | commas }}</td>
           <td>{{ row.family | family_cn }}</td>
+        </tr>
+        <tr class="drop-detail" id="drop-{{ row.id }}" style="display:none">
+          <td colspan="9">
+            <div class="drop-content">載入中…</div>
+          </td>
         </tr>
       {% else %}
         <tr><td colspan="9">查無資料</td></tr>
@@ -35,4 +40,42 @@
     </table>
   </div>
 </section>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  document.querySelectorAll('.monster-toggle').forEach(function(link){
+    link.addEventListener('click', function(e){
+      e.preventDefault();
+      var id = this.getAttribute('data-id');
+      var row = document.getElementById('drop-' + id);
+      if(!row) return;
+      if(row.style.display === 'none'){
+        row.style.display = '';
+        var content = row.querySelector('.drop-content');
+        if(content.getAttribute('data-loaded')) return;
+        fetch('/api/monster/' + id)
+          .then(function(r){ return r.json(); })
+          .then(function(data){
+            if(!data.ok || !data.drops || data.drops.length === 0){
+              content.innerHTML = '<span class="muted">無掉落資料</span>';
+            } else {
+              var html = '<table class="simple-table" style="min-width:auto"><thead><tr><th>物品</th><th>機率</th><th>數量</th></tr></thead><tbody>';
+              data.drops.forEach(function(d){
+                var chance = d.chance > 0 ? (d.chance / 10000).toFixed(2) + '%' : '—';
+                var cnt = d.min_count === d.max_count ? String(d.min_count) : d.min_count + '~' + d.max_count;
+                var name = (d.item_name || '').replace(/\\+[a-zA-Z0-9=@<>]+/g, '');
+                html += '<tr><td>' + name + '</td><td>' + chance + '</td><td>' + cnt + '</td></tr>';
+              });
+              html += '</tbody></table>';
+              content.innerHTML = html;
+            }
+            content.setAttribute('data-loaded', '1');
+          })
+          .catch(function(){ content.innerHTML = '<span class="muted">載入失敗</span>'; });
+      } else {
+        row.style.display = 'none';
+      }
+    });
+  });
+});
+</script>
 {% endblock %}

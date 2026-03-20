@@ -30,7 +30,6 @@
       <thead>
         <tr>
           <th>ID</th>
-          <th>英文名稱</th>
           <th>中文名稱</th>
           <th>等級</th>
           <th>最低等級</th>
@@ -42,8 +41,7 @@
         {% for r in rows %}
         <tr>
           <td>{{ r.id }}</td>
-          <td>{{ r.name }}</td>
-          <td>{{ r.note or '—' }}</td>
+          <td>{{ (r.note or '—') | clean_name }}</td>
           <td>
             {% if r.grade == '神話' %}<span class="badge badge-myth grade-myth">神話</span>
             {% elif r.grade == '傳說' %}<span class="badge badge-legend grade-legend">傳說</span>
@@ -52,7 +50,6 @@
             {% else %}<span class="badge badge-normal">一般</span>
             {% endif %}
           </td>
-          <td>
           <td>
             {% if r.minlevel and r.minlevel > 1 %}
               <span class="muted">Lv.{{ r.minlevel }}</span>
@@ -77,7 +74,7 @@
           </td>
         </tr>
         {% else %}
-        <tr><td colspan="7">查無資料</td></tr>
+        <tr><td colspan="6">查無資料</td></tr>
         {% endfor %}
       </tbody>
     </table>

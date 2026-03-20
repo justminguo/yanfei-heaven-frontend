@@ -11,21 +11,46 @@
     <div class="container topbar-inner">
       <a class="brand" href="{{ url_for('home') }}">妍菲天堂資料查詢</a>
       <nav class="nav">
-        <a href="{{ url_for('ranking') }}">排行</a>
-        <a href="{{ url_for('items') }}">物品</a>
-        <a href="{{ url_for('monsters') }}">怪物</a>
-        <a href="{{ url_for('drops') }}">掉落</a>
-        <a href="{{ url_for('weapons') }}">武器</a>
-        <a href="{{ url_for('armors') }}">防具</a>
-        <a href="{{ url_for('dolls') }}">娃娃</a>
-        <a href="{{ url_for('polymorphs') }}">變身</a>
-        <a href="{{ url_for('card_album') }}">卡冊</a>
-        <a href="{{ url_for('synthesis') }}">合成</a>
-        <a href="{{ url_for('daily_hunt') }}">狩獵</a>
-        <a href="{{ url_for('equipment_redeem') }}">贖回</a>
-        <a href="{{ url_for('lottery') }}">抽獎</a>
-        <a href="{{ url_for('rebirth') }}">轉生</a>
-        <a href="{{ url_for('tattoo') }}">紋樣</a>
+        <div class="dropdown">
+          <span class="dropdown-toggle">榮耀榜</span>
+          <div class="dropdown-menu">
+            <a href="{{ url_for('ranking') }}">排行</a>
+            <a href="{{ url_for('rebirth') }}">轉生</a>
+          </div>
+        </div>
+        <div class="dropdown">
+          <span class="dropdown-toggle">遊戲百科</span>
+          <div class="dropdown-menu">
+            <a href="{{ url_for('items') }}">物品</a>
+            <a href="{{ url_for('weapons') }}">武器</a>
+            <a href="{{ url_for('armors') }}">防具</a>
+            <a href="{{ url_for('monsters') }}">怪物</a>
+            <a href="{{ url_for('drops') }}">掉落</a>
+          </div>
+        </div>
+        <div class="dropdown">
+          <span class="dropdown-toggle">幻化系統</span>
+          <div class="dropdown-menu">
+            <a href="{{ url_for('polymorphs') }}">變身</a>
+            <a href="{{ url_for('dolls') }}">娃娃</a>
+            <a href="{{ url_for('card_album') }}">卡冊</a>
+            <a href="{{ url_for('synthesis') }}">合成</a>
+          </div>
+        </div>
+        <div class="dropdown">
+          <span class="dropdown-toggle">活動系統</span>
+          <div class="dropdown-menu">
+            <a href="{{ url_for('lottery') }}">抽獎</a>
+            <a href="{{ url_for('equipment_redeem') }}">裝備贖回</a>
+            <a href="{{ url_for('daily_hunt') }}">每日狩獵</a>
+          </div>
+        </div>
+        <div class="dropdown">
+          <span class="dropdown-toggle">成長系統</span>
+          <div class="dropdown-menu">
+            <a href="{{ url_for('tattoo') }}">紋樣</a>
+          </div>
+        </div>
       </nav>
     </div>
   </header>
@@ -34,6 +59,17 @@
   </main>
 <script>
 (function(){
+  // ── Mobile dropdown toggle ─────────────────────────────────────
+  document.querySelectorAll('.dropdown-toggle').forEach(function(toggle){
+    toggle.addEventListener('click', function(e){
+      if(window.innerWidth <= 768){
+        e.preventDefault();
+        var dd = toggle.closest('.dropdown');
+        dd.classList.toggle('open');
+      }
+    });
+  });
+
   // ── Sortable tables ──────────────────────────────────────────────
   document.querySelectorAll('table[data-sortable]').forEach(function(table){
     table.querySelectorAll('thead th').forEach(function(th, colIdx){

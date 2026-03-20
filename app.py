@@ -168,12 +168,12 @@ def create_app() -> Flask:
 
     @app.template_filter("clean_name")
     def fmt_clean_name(s: object) -> str:
-        """移除天堂名稱中的顏色/格式代碼，如 \\aH、\\f3 等。"""
+        """移除天堂名稱中的顏色/格式代碼，如 \\f=f1、\\f4、\\aH 等。"""
         import re
         if not s:
             return "—"
         text = str(s)
-        text = re.sub(r'(\\+a[A-Za-z])|(\\+f[A-Za-z0-9=@<>])', '', text)
+        text = re.sub(r'\\+[a-zA-Z0-9=@<>]+', '', text)
         return text.strip() or "—"
 
     @app.template_filter("safe_enchant")
@@ -265,7 +265,7 @@ def create_app() -> Flask:
     def ranking():
         db = get_db()
         rows = db.execute(
-            "SELECT char_name, level, class, OnlineStatus FROM characters ORDER BY level DESC, char_name ASC LIMIT 200"
+            "SELECT char_name, level, class FROM characters ORDER BY level DESC, char_name ASC LIMIT 200"
         ).fetchall()
         return render_template("ranking.html", rows=rows, class_names=CLASS_NAMES)
 
