@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}裝備贖回{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>裝備贖回</h1>
+  <form class="filters" method="get">
+    <input type="text" name="q" placeholder="搜尋裝備名稱 / 角色名稱"
+           value="{{ q }}" data-live-search="#redeem-table">
+    <button type="submit">查詢</button>
+  </form>
+  <div class="table-wrap">
+    <table id="redeem-table" data-sortable>
+      <thead><tr><th>物品ID</th><th>物品名稱</th><th>強化等級</th><th>屬性類型</th><th>屬性等級</th><th>祝福</th><th>角色名稱</th></tr></thead>
+      <tbody>
+      {% for row in rows %}
+        <tr>
+          <td>{{ row.item_id }}</td>
+          <td>{{ row.item_name }}</td>
+          <td>{{ ('+' ~ row.enchant_lvl) if row.enchant_lvl else '—' }}</td>
+          <td>{{ row.attr_type if row.attr_type else '—' }}</td>
+          <td>{{ row.attr_level if row.attr_level else '—' }}</td>
+          <td>{{ '是' if row.bless == 1 else '否' }}</td>
+          <td>{{ row.char_name }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="7">查無資料</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

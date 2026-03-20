@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% block title %}轉生系統{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>轉生系統</h1>
+
+  <h2>轉生數值設定</h2>
+  <p class="muted">每次轉生可獲得的屬性加成（依職業不同）</p>
+  <div class="table-wrap">
+    <table data-sortable>
+      <thead>
+        <tr>
+          <th>轉生</th><th>職業</th><th>稱號</th>
+          <th>AC</th><th>HP</th><th>MP</th><th>STR</th><th>CON</th><th>DEX</th><th>WIS</th><th>INT</th>
+          <th>近傷</th><th>近命</th><th>遠傷</th><th>遠命</th><th>魔傷</th><th>魔減</th><th>MR</th>
+          <th>物減</th><th>水</th><th>風</th><th>火</th><th>地</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for row in stats %}
+        <tr>
+          <td>{{ row.mete_level }}</td>
+          <td>{{ row.note }}</td>
+          <td>{{ row.title | clean_name }}</td>
+          <td>{{ row.ac }}</td>
+          <td>{{ row.hp | commas }}</td>
+          <td>{{ row.mp | commas }}</td>
+          <td>{{ row.str }}</td>
+          <td>{{ row.con }}</td>
+          <td>{{ row.dex }}</td>
+          <td>{{ row.wis }}</td>
+          <td>{{ row.intel }}</td>
+          <td>{{ row.dmg_modifier }}</td>
+          <td>{{ row.hit_modifier }}</td>
+          <td>{{ row.bow_dmg_modifier }}</td>
+          <td>{{ row.bow_hit_modifier }}</td>
+          <td>{{ row.magic_dmg_modifier }}</td>
+          <td>{{ row.magic_dmg_reduction }}</td>
+          <td>{{ row.mr }}</td>
+          <td>{{ row.reduction_dmg }}</td>
+          <td>{{ row.defense_water }}</td>
+          <td>{{ row.defense_wind }}</td>
+          <td>{{ row.defense_fire }}</td>
+          <td>{{ row.defense_earth }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="23">查無資料</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if items %}
+  <h2 style="margin-top:28px">轉生給予道具</h2>
+  <div class="table-wrap">
+    <table data-sortable>
+      <thead><tr><th>ID</th><th>說明</th><th>轉生等級</th><th>道具ID</th><th>數量</th></tr></thead>
+      <tbody>
+      {% for row in items %}
+        <tr>
+          <td>{{ row.id }}</td>
+          <td>{{ row.note }}</td>
+          <td>{{ row.logpcpower }}</td>
+          <td>{{ row.item_id }}</td>
+          <td>{{ row.count }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block title %}合成系統{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>合成系統</h1>
+
+  <h2>娃娃合成設置</h2>
+  <div class="table-wrap">
+    <table data-sortable>
+      <thead><tr><th>ID</th><th>配方名稱</th><th>類型</th><th>2合成功率%</th><th>3合成功率%</th><th>4合成功率%</th><th>材料物品IDs</th><th>是否產出</th></tr></thead>
+      <tbody>
+      {% for row in doll_rows %}
+        <tr>
+          <td>{{ row.id }}</td>
+          <td>{{ row.note }}</td>
+          <td>{{ row.type }}</td>
+          <td>{{ row.rate_2 }}</td>
+          <td>{{ row.rate_3 }}</td>
+          <td>{{ row.rate_4 }}</td>
+          <td style="word-break:break-all;max-width:250px">{{ row.item_ids }}</td>
+          <td>{{ '是' if row.is_out == 1 else '否' }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="8">查無資料</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <h2 style="margin-top:28px">變身卡合成設置</h2>
+  <div class="table-wrap">
+    <table data-sortable>
+      <thead><tr><th>ID</th><th>配方名稱</th><th>類型</th><th>2合成功率%</th><th>3合成功率%</th><th>4合成功率%</th><th>材料物品IDs</th><th>是否產出</th></tr></thead>
+      <tbody>
+      {% for row in poly_rows %}
+        <tr>
+          <td>{{ row.id }}</td>
+          <td>{{ row.note }}</td>
+          <td>{{ row.type }}</td>
+          <td>{{ row.rate_2 }}</td>
+          <td>{{ row.rate_3 }}</td>
+          <td>{{ row.rate_4 }}</td>
+          <td style="word-break:break-all;max-width:250px">{{ row.item_ids }}</td>
+          <td>{{ '是' if row.is_out == 1 else '否' }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="8">查無資料</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <h2 style="margin-top:28px">變身/娃娃/天M合成系統</h2>
+  <div class="table-wrap">
+    <table data-sortable>
+      <thead><tr><th>ID</th><th>NPC</th><th>說明</th><th>動作</th><th>機率%</th><th>合成數量</th><th>失敗退還</th><th>保底次數</th></tr></thead>
+      <tbody>
+      {% for row in system_rows %}
+        <tr>
+          <td>{{ row.id }}</td>
+          <td>{{ row.npcid }}</td>
+          <td>{{ row.note }}</td>
+          <td>{{ row.action }}</td>
+          <td>{{ row.chance }}</td>
+          <td>{{ row.combine_count }}</td>
+          <td>{{ '是' if row.fail_return == 1 else '否' }}</td>
+          <td>{{ row.guarantee_count if row.guarantee_count else '—' }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="8">查無資料</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

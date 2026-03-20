@@ -519,6 +519,76 @@ def create_app() -> Flask:
         ).fetchall()
         return render_template("item_detail.html", item=item, drop_sources=drop_sources)
 
+    # ── 合成系統 ────────────────────────────────────────────────
+    @app.route("/synthesis")
+    def synthesis():
+        db = get_db()
+        doll_rows = db.execute("SELECT * FROM synthesis_doll ORDER BY id").fetchall()
+        poly_rows = db.execute("SELECT * FROM synthesis_polymorph ORDER BY id").fetchall()
+        system_rows = db.execute("SELECT * FROM synthesis_system ORDER BY id").fetchall()
+        return render_template(
+            "synthesis.html",
+            doll_rows=doll_rows,
+            poly_rows=poly_rows,
+            system_rows=system_rows,
+        )
+
+    # ── 每日狩獵任務 ──────────────────────────────────────────
+    @app.route("/daily-hunt")
+    def daily_hunt():
+        db = get_db()
+        hunts = db.execute("SELECT * FROM daily_hunt ORDER BY quest_id, quest_step").fetchall()
+        maps = db.execute("SELECT * FROM daily_hunt_map ORDER BY id").fetchall()
+        return render_template("daily_hunt.html", hunts=hunts, maps=maps)
+
+    # ── 裝備贖回 ──────────────────────────────────────────────
+    @app.route("/equipment-redeem")
+    def equipment_redeem():
+        q = request.args.get("q", "").strip()
+        sql = "SELECT * FROM equipment_redeem WHERE 1=1"
+        params: list[Any] = []
+        if q:
+            sql += " AND (item_name LIKE ? OR char_name LIKE ?)"
+            like = f"%{q}%"
+            params.extend([like, like])
+        sql += " ORDER BY item_id"
+        rows = get_db().execute(sql, params).fetchall()
+        return render_template("equipment_redeem.html", rows=rows, q=q)
+
+    # ── 抽獎系統 ──────────────────────────────────────────────
+    @app.route("/lottery")
+    def lottery():
+        db = get_db()
+        slots = db.execute("SELECT * FROM lottery_slot ORDER BY id").fetchall()
+        npcs = db.execute("SELECT * FROM lottery_npc ORDER BY id").fetchall()
+        return render_template("lottery.html", slots=slots, npcs=npcs)
+
+    # ── 轉生系統 ──────────────────────────────────────────────
+    @app.route("/rebirth")
+    def rebirth():
+        db = get_db()
+        stats = db.execute(
+            "SELECT * FROM rebirth_stats ORDER BY mete_level, type"
+        ).fetchall()
+        items = db.execute("SELECT * FROM rebirth_items ORDER BY id").fetchall()
+        return render_template("rebirth.html", stats=stats, items=items)
+
+    # ── 紋樣系統 ──────────────────────────────────────────────
+    @app.route("/tattoo")
+    def tattoo():
+        tab = request.args.get("tab", "eva").strip()
+        db = get_db()
+        table_map = {
+            "eva": "tattoo_eva",
+            "saha": "tattoo_saha",
+            "pagliuo": "tattoo_pagliuo",
+            "enhaisa": "tattoo_enhaisa",
+            "mapule": "tattoo_mapule",
+        }
+        tbl = table_map.get(tab, "tattoo_eva")
+        rows = db.execute(f"SELECT * FROM {tbl} ORDER BY level").fetchall()
+        return render_template("tattoo.html", rows=rows, tab=tab)
+
     @app.route("/api/stats")
     def api_stats():
         return jsonify({"ok": True, "stats": stats_payload()})

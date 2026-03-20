@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}每日狩獵任務{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>每日狩獵任務</h1>
+
+  <h2>狩獵地圖</h2>
+  <div class="table-wrap">
+    <table data-sortable>
+      <thead><tr><th>ID</th><th>地圖名稱</th><th>NPC</th><th>等級需求</th><th>擊殺數</th><th>獎勵道具ID</th><th>獎勵數量</th><th>接取訊息</th></tr></thead>
+      <tbody>
+      {% for row in maps %}
+        <tr>
+          <td>{{ row.id }}</td>
+          <td>{{ row.note }}</td>
+          <td>{{ row.npcid }}</td>
+          <td>{{ row.level }}</td>
+          <td>{{ row.kill_count }}</td>
+          <td>{{ row.reward_item_id }}</td>
+          <td>{{ row.reward_item_count }}</td>
+          <td>{{ row.accept_msg }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="8">查無資料</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <h2 style="margin-top:28px">狩獵怪物任務</h2>
+  <div class="table-wrap">
+    <table data-sortable>
+      <thead><tr><th>任務ID</th><th>步驟</th><th>任務名稱</th><th>等級</th><th>怪物IDs</th><th>數量</th><th>獎勵道具</th><th>獎勵數量</th><th>經驗</th></tr></thead>
+      <tbody>
+      {% for row in hunts %}
+        <tr>
+          <td>{{ row.quest_id }}</td>
+          <td>{{ row.quest_step }}</td>
+          <td>{{ row.note }}</td>
+          <td>{{ row.lv }}</td>
+          <td>{{ row.mob_ids }}</td>
+          <td>{{ row.mob_counts }}</td>
+          <td>{{ row.item_id }}</td>
+          <td>{{ row.item_count }}</td>
+          <td>{{ row.addexp | commas }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="9">查無資料</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

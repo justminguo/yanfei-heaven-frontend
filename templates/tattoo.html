@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block title %}紋樣系統{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>紋樣系統</h1>
+
+  <div class="grade-tabs">
+    <a class="tab {{ 'active' if tab == 'eva' }}" href="{{ url_for('tattoo', tab='eva') }}">伊娃</a>
+    <a class="tab {{ 'active' if tab == 'saha' }}" href="{{ url_for('tattoo', tab='saha') }}">沙哈</a>
+    <a class="tab {{ 'active' if tab == 'pagliuo' }}" href="{{ url_for('tattoo', tab='pagliuo') }}">帕格里奧</a>
+    <a class="tab {{ 'active' if tab == 'enhaisa' }}" href="{{ url_for('tattoo', tab='enhaisa') }}">殷海薩</a>
+    <a class="tab {{ 'active' if tab == 'mapule' }}" href="{{ url_for('tattoo', tab='mapule') }}">馬普勒</a>
+  </div>
+
+  <div class="table-wrap">
+    <table data-sortable>
+      <thead>
+        <tr>
+          <th>等級</th><th>力量</th><th>敏捷</th><th>體質</th><th>智力</th><th>精神</th><th>魅力</th>
+          <th>防禦</th><th>HP</th><th>MP</th><th>回血</th><th>回魔</th>
+          <th>近傷</th><th>近命</th><th>遠傷</th><th>遠命</th>
+          <th>物減</th><th>魔減</th><th>魔防</th><th>魔攻</th>
+          <th>火</th><th>風</th><th>地</th><th>水</th>
+          <th>暈</th><th>石</th><th>眠</th><th>冰</th><th>撐</th><th>暗</th>
+          <th>經驗%</th>
+          {% if tab == 'pagliuo' %}<th>雙倍</th><th>負重</th><th>PvP傷</th><th>PvP減</th>{% endif %}
+        </tr>
+      </thead>
+      <tbody>
+      {% for row in rows %}
+        <tr>
+          <td>{{ row.level }}</td>
+          <td>{{ row.str }}</td>
+          <td>{{ row.dex }}</td>
+          <td>{{ row.con }}</td>
+          <td>{{ row.intel }}</td>
+          <td>{{ row.spirit }}</td>
+          <td>{{ row.cha }}</td>
+          <td>{{ row.defense }}</td>
+          <td>{{ row.hp | commas }}</td>
+          <td>{{ row.mp | commas }}</td>
+          <td>{{ row.hpr }}</td>
+          <td>{{ row.mpr }}</td>
+          <td>{{ row.melee_dmg }}</td>
+          <td>{{ row.melee_hit }}</td>
+          <td>{{ row.ranged_dmg }}</td>
+          <td>{{ row.ranged_hit }}</td>
+          <td>{{ row.phys_reduction }}</td>
+          <td>{{ row.magic_reduction }}</td>
+          <td>{{ row.mr }}</td>
+          <td>{{ row.magic_atk }}</td>
+          <td>{{ row.fire }}</td>
+          <td>{{ row.wind }}</td>
+          <td>{{ row.earth }}</td>
+          <td>{{ row.water }}</td>
+          <td>{{ row.stun_resist }}</td>
+          <td>{{ row.stone_resist }}</td>
+          <td>{{ row.sleep_resist }}</td>
+          <td>{{ row.freeze_resist }}</td>
+          <td>{{ row.sustain_resist }}</td>
+          <td>{{ row.blind_resist }}</td>
+          <td>{{ row.exp_pct }}</td>
+          {% if tab == 'pagliuo' %}
+          <td>{{ row.double_dmg }}</td>
+          <td>{{ row.weight }}</td>
+          <td>{{ row.pvp_dmg }}</td>
+          <td>{{ row.pvp_reduction }}</td>
+          {% endif %}
+        </tr>
+      {% else %}
+        <tr><td colspan="31">查無資料</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}抽獎系統{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>抽獎系統</h1>
+
+  <h2>NPC 抽獎</h2>
+  <div class="table-wrap">
+    <table data-sortable>
+      <thead><tr><th>ID</th><th>名稱</th><th>NPC</th><th>消耗道具</th><th>消耗數量</th><th>獎品數量</th><th>是否廣播</th><th>顯示文字</th></tr></thead>
+      <tbody>
+      {% for row in npcs %}
+        <tr>
+          <td>{{ row.id }}</td>
+          <td>{{ row.note }}</td>
+          <td>{{ row.npcid }}</td>
+          <td>{{ row.confirm_item }}</td>
+          <td>{{ row.confirm_count | commas }}</td>
+          <td>{{ row.prize_count }}</td>
+          <td>{{ '是' if row.broadcast == 1 else '否' }}</td>
+          <td>{{ row.display_text | clean_name }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="8">查無資料</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <h2 style="margin-top:28px">拉霸系統</h2>
+  <div class="table-wrap">
+    <table data-sortable>
+      <thead><tr><th>ID</th><th>名稱</th><th>NPC</th><th>獎品物品IDs</th><th>獎品數量</th><th>強化等級</th><th>消耗道具</th><th>消耗數量</th><th>機率權重</th></tr></thead>
+      <tbody>
+      {% for row in slots %}
+        <tr>
+          <td>{{ row.id }}</td>
+          <td>{{ row.note }}</td>
+          <td>{{ row.npcid }}</td>
+          <td style="word-break:break-all;max-width:200px">{{ row.give_items }}</td>
+          <td>{{ row.give_counts }}</td>
+          <td>{{ row.give_enchants }}</td>
+          <td>{{ row.cost_item }}</td>
+          <td>{{ row.cost_count | commas }}</td>
+          <td>{{ row.random_weight }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="9">查無資料</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}
