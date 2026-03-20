@@ -33,6 +33,7 @@
           <th>英文名稱</th>
           <th>中文名稱</th>
           <th>等級</th>
+          <th>最低等級</th>
           <th>攻速提升</th>
           <th>移速提升</th>
         </tr>
@@ -53,6 +54,13 @@
           </td>
           <td>
           <td>
+            {% if r.minlevel and r.minlevel > 1 %}
+              <span class="muted">Lv.{{ r.minlevel }}</span>
+            {% else %}
+              <span style="color:#4caf50">Lv.1</span>
+            {% endif %}
+          </td>
+          <td>
             {% if r.atk_boost is not none and r.atk_boost > 0 %}
               {% if r.atk_boost > 100 %}<span style="color:#ff6b6b;font-weight:700">+{{ "%.1f"|format(r.atk_boost) }}% ⚡</span>
               {% elif r.atk_boost > 50 %}<span style="color:#4caf50;font-weight:700">+{{ "%.1f"|format(r.atk_boost) }}%</span>
@@ -69,7 +77,7 @@
           </td>
         </tr>
         {% else %}
-        <tr><td colspan="6">查無資料</td></tr>
+        <tr><td colspan="7">查無資料</td></tr>
         {% endfor %}
       </tbody>
     </table>

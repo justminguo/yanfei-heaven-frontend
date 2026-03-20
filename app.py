@@ -414,7 +414,7 @@ def create_app() -> Flask:
         # 直接查 polymorphs 表，有速度資料
         # 等級判斷：優先用 \f 色彩代碼，再用中文關鍵字
         sql = """
-            SELECT id, name, note, polyid, atkspeed, movespeed, magic_speed, atk_boost, mov_boost,
+            SELECT id, name, note, polyid, atkspeed, movespeed, magic_speed, atk_boost, mov_boost, minlevel,
               CASE
                 WHEN note LIKE '%神話%' OR name LIKE '%神話%' THEN '神話'
                 WHEN note LIKE '%傳說%' OR name LIKE '%傳說%' THEN '傳說'
