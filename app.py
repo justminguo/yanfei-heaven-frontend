@@ -393,10 +393,27 @@ def create_app() -> Flask:
     @app.route("/polymorphs")
     def polymorphs():
         q = request.args.get("q", "").strip()
+        grade = request.args.get("grade", "").strip()
         db = get_db()
 
+        POLY_GRADES = [
+            ("神話", "神話變身"),
+            ("傳說", "傳說變身"),
+            ("英雄", "英雄變身"),
+            ("稀有", "稀有變身"),
+            ("一般", "一般變身"),
+        ]
+
+        # 直接查 polymorphs 表，有速度資料
         sql = """
-            SELECT id, name, note, polyid, atkspeed, movespeed, magic_speed
+            SELECT id, name, note, polyid, atkspeed, movespeed, magic_speed,
+              CASE
+                WHEN note LIKE '%神話%' OR name LIKE '%神話%' THEN '神話'
+                WHEN note LIKE '%傳說%' OR name LIKE '%傳說%' THEN '傳說'
+                WHEN note LIKE '%英雄%' OR name LIKE '%英雄%' THEN '英雄'
+                WHEN note LIKE '%稀有%' OR name LIKE '%稀有%' THEN '稀有'
+                ELSE '一般'
+              END AS grade
             FROM polymorphs
             WHERE 1=1
         """
@@ -404,9 +421,18 @@ def create_app() -> Flask:
         if q:
             sql += " AND (name LIKE ? OR note LIKE ?)"
             params.extend([f"%{q}%", f"%{q}%"])
+        if grade:
+            if grade == "一般":
+                sql += """ AND note NOT LIKE '%神話%' AND name NOT LIKE '%神話%'
+                           AND note NOT LIKE '%傳說%' AND name NOT LIKE '%傳說%'
+                           AND note NOT LIKE '%英雄%' AND name NOT LIKE '%英雄%'
+                           AND note NOT LIKE '%稀有%' AND name NOT LIKE '%稀有%'"""
+            else:
+                sql += " AND (note LIKE ? OR name LIKE ?)"
+                params.extend([f"%{grade}%", f"%{grade}%"])
         sql += " ORDER BY id LIMIT 500"
         rows = db.execute(sql, params).fetchall()
-        return render_template("polymorphs.html", rows=rows, q=q)
+        return render_template("polymorphs.html", rows=rows, q=q, grade=grade, poly_grades=POLY_GRADES)
 
     @app.route("/poly-speed")
     def poly_speed():
