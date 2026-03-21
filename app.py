@@ -276,7 +276,9 @@ def create_app() -> Flask:
         sql = """
             SELECT id, name, name_id, item_type, use_type, material, weight, stackable, note
             FROM items
-            WHERE 1=1
+            WHERE name NOT LIKE '%娃娃%'
+              AND name NOT LIKE '%變身%'
+              AND name NOT LIKE '%魔法娃娃%'
         """
         params: list[Any] = []
         if q:
