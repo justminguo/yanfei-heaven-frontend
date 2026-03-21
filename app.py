@@ -824,6 +824,42 @@ def create_app() -> Flask:
         if db is not None:
             db.close()
 
+    # ── 私服蝦推送 API ──────────────────────────────────────────
+    PUSH_TOKEN = os.environ.get("PUSH_TOKEN", "yanfei-push-secret")
+
+    @app.route("/api/push/characters", methods=["POST"])
+    def api_push_characters():
+        """私服蝦定期 POST 玩家等級資料來更新。
+        Body: { "token": "...", "characters": [{"char_id":1,"char_name":"xx","level":50,"class":1,"OnlineStatus":0}, ...] }
+        """
+        data = request.get_json(silent=True)
+        if not data or data.get("token") != PUSH_TOKEN:
+            return jsonify({"ok": False, "error": "unauthorized"}), 401
+        chars = data.get("characters", [])
+        if not chars:
+            return jsonify({"ok": False, "error": "no data"}), 400
+        db = get_db()
+        updated = 0
+        for c in chars:
+            char_id = c.get("char_id")
+            char_name = c.get("char_name", "")
+            level = c.get("level", 1)
+            cls = c.get("class", 0)
+            online = c.get("OnlineStatus", 0)
+            account = c.get("account_name", "")
+            existing = db.execute("SELECT char_id FROM characters WHERE char_id=?", (char_id,)).fetchone()
+            if existing:
+                db.execute("""UPDATE characters SET char_name=?, level=?, class=?, OnlineStatus=?,
+                               account_name=?, synced_at=datetime('now') WHERE char_id=?""",
+                           (char_name, level, cls, online, account, char_id))
+            else:
+                db.execute("""INSERT INTO characters (char_id, account_name, char_name, level, class, OnlineStatus, synced_at)
+                               VALUES (?,?,?,?,?,?,datetime('now'))""",
+                           (char_id, account, char_name, level, cls, online))
+            updated += 1
+        db.commit()
+        return jsonify({"ok": True, "updated": updated})
+
     init_db(app)
     return app
 
