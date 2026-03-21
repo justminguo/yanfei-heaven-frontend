@@ -58,18 +58,22 @@
             {% endif %}
           </td>
           <td>
-            {% if r.atk_boost is not none and r.atk_boost > 0 %}
-              {% if r.atk_boost > 100 %}<span style="color:#ff6b6b;font-weight:700">+{{ "%.1f"|format(r.atk_boost) }}% ⚡</span>
-              {% elif r.atk_boost > 50 %}<span style="color:#4caf50;font-weight:700">+{{ "%.1f"|format(r.atk_boost) }}%</span>
-              {% elif r.atk_boost > 20 %}<span style="color:#ffca28">+{{ "%.1f"|format(r.atk_boost) }}%</span>
-              {% else %}<span class="muted">+{{ "%.1f"|format(r.atk_boost) }}%</span>{% endif %}
+            {% set atk = r.atk_boost|string %}
+            {% if atk and atk != '—' and atk != 'None' %}
+              {% set atk_val = atk | replace('+','') | replace('%','') | float(0) %}
+              {% if atk_val > 100 %}<span style="color:#ff6b6b;font-weight:700">{{ atk }} ⚡</span>
+              {% elif atk_val > 50 %}<span style="color:#4caf50;font-weight:700">{{ atk }}</span>
+              {% elif atk_val > 20 %}<span style="color:#ffca28">{{ atk }}</span>
+              {% else %}<span class="muted">{{ atk }}</span>{% endif %}
             {% else %}—{% endif %}
           </td>
           <td>
-            {% if r.mov_boost is not none and r.mov_boost > 0 %}
-              {% if r.mov_boost > 50 %}<span style="color:#4caf50;font-weight:700">+{{ "%.1f"|format(r.mov_boost) }}% ⚡</span>
-              {% elif r.mov_boost > 20 %}<span style="color:#ffca28">+{{ "%.1f"|format(r.mov_boost) }}%</span>
-              {% else %}<span class="muted">+{{ "%.1f"|format(r.mov_boost) }}%</span>{% endif %}
+            {% set mov = r.mov_boost|string %}
+            {% if mov and mov != '—' and mov != 'None' %}
+              {% set mov_val = mov | replace('+','') | replace('%','') | float(0) %}
+              {% if mov_val > 50 %}<span style="color:#4caf50;font-weight:700">{{ mov }} ⚡</span>
+              {% elif mov_val > 20 %}<span style="color:#ffca28">{{ mov }}</span>
+              {% else %}<span class="muted">{{ mov }}</span>{% endif %}
             {% else %}—{% endif %}
           </td>
         </tr>
