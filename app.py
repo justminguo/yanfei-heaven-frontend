@@ -406,22 +406,25 @@ def create_app() -> Flask:
         db = get_db()
 
         POLY_GRADES = [
+            ("覺醒", "覺醒/支配者"),
             ("神話", "神話變身"),
             ("傳說", "傳說變身"),
             ("英雄", "英雄變身"),
             ("稀有", "稀有變身"),
+            ("高級", "高級變身"),
             ("一般", "一般變身"),
         ]
 
         # 直接查 polymorphs 表，有速度資料
-        # 等級判斷：優先用 \f 色彩代碼，再用中文關鍵字
         sql = """
-            SELECT id, name, note, polyid, atkspeed, movespeed, magic_speed, atk_boost, mov_boost, minlevel,
+            SELECT id, name, note, polyid, atkspeed, movespeed, magic_speed, atk_boost, mov_boost, mag_boost, minlevel,
               CASE
+                WHEN name LIKE '%覺醒%' OR name LIKE '%支配者%' THEN '覺醒'
                 WHEN note LIKE '%神話%' OR name LIKE '%神話%' THEN '神話'
                 WHEN note LIKE '%傳說%' OR name LIKE '%傳說%' THEN '傳說'
                 WHEN note LIKE '%英雄%' OR name LIKE '%英雄%' THEN '英雄'
                 WHEN note LIKE '%稀有%' OR name LIKE '%稀有%' THEN '稀有'
+                WHEN note LIKE '%高級%' OR name LIKE '%高級%' THEN '高級'
                 ELSE '一般'
               END AS grade
             FROM polymorphs
@@ -432,11 +435,17 @@ def create_app() -> Flask:
             sql += " AND (name LIKE ? OR note LIKE ?)"
             params.extend([f"%{q}%", f"%{q}%"])
         if grade:
-            if grade == "一般":
-                sql += """ AND note NOT LIKE '%神話%' AND name NOT LIKE '%神話%'
+            if grade == "覺醒":
+                sql += " AND (name LIKE '%覺醒%' OR name LIKE '%支配者%')"
+            elif grade == "高級":
+                sql += " AND (note LIKE '%高級%' OR name LIKE '%高級%')"
+            elif grade == "一般":
+                sql += """ AND name NOT LIKE '%覺醒%' AND name NOT LIKE '%支配者%'
+                           AND note NOT LIKE '%神話%' AND name NOT LIKE '%神話%'
                            AND note NOT LIKE '%傳說%' AND name NOT LIKE '%傳說%'
                            AND note NOT LIKE '%英雄%' AND name NOT LIKE '%英雄%'
-                           AND note NOT LIKE '%稀有%' AND name NOT LIKE '%稀有%'"""
+                           AND note NOT LIKE '%稀有%' AND name NOT LIKE '%稀有%'
+                           AND note NOT LIKE '%高級%' AND name NOT LIKE '%高級%'"""
             else:
                 sql += " AND (note LIKE ? OR name LIKE ?)"
                 params.extend([f"%{grade}%", f"%{grade}%"])

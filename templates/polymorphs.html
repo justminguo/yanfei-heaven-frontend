@@ -1,11 +1,39 @@
 {% extends "base.html" %}
 {% block title %}變身查詢 — 妍菲天堂資料查詢{% endblock %}
 {% block content %}
+<style>
+  .grade-tabs { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px; }
+  .grade-tabs .tab { padding:5px 14px; border-radius:20px; font-size:.85rem; text-decoration:none; border:1px solid #444; color:#ccc; background:#1e1e2e; }
+  .grade-tabs .tab:hover { background:#2a2a3e; }
+  .grade-tabs .tab.active { font-weight:700; border-color:currentColor; }
+  .tab-awaken  { color:#00e5ff; border-color:#00e5ff !important; }
+  .tab-awaken.active { background:#00e5ff22; }
+  .tab-myth    { color:#f1c40f; border-color:#f1c40f !important; }
+  .tab-myth.active { background:#f1c40f22; }
+  .tab-legend  { color:#9b59b6; border-color:#9b59b6 !important; }
+  .tab-legend.active { background:#9b59b622; }
+  .tab-hero    { color:#e67e22; border-color:#e67e22 !important; }
+  .tab-hero.active { background:#e67e2222; }
+  .tab-rare    { color:#2ecc71; border-color:#2ecc71 !important; }
+  .tab-rare.active { background:#2ecc7122; }
+  .tab-high    { color:#27ae60; border-color:#27ae60 !important; }
+  .tab-high.active { background:#27ae6022; }
+  .tab-normal  { color:#bbb; }
+
+  .grade-awaken { color:#00e5ff; font-weight:700; }
+  .grade-myth   { color:#f1c40f; font-weight:700; }
+  .grade-legend { color:#9b59b6; font-weight:700; }
+  .grade-hero   { color:#e67e22; font-weight:700; }
+  .grade-rare   { color:#2ecc71; }
+  .grade-high   { color:#27ae60; }
+  .grade-normal { color:#aaa; }
+</style>
+
 <section class="card">
   <h1>變身查詢</h1>
-  <p class="muted">攻速/移速提升%越高越強（基準：攻速960ms、移速600ms）。⚡ 提升 &gt;30% 為頂級。</p>
+  <p class="muted">攻速/移速/法速提升%越高越強。⚡ 提升 &gt;100% 為超頂級。</p>
   <form class="filters" method="get" action="{{ url_for('polymorphs') }}">
-    <input type="text" name="q" value="{{ q }}" placeholder="搜尋變身名稱（英文或中文）…">
+    <input type="text" name="q" value="{{ q }}" placeholder="搜尋變身名稱…">
     <select name="grade">
       <option value="">全部等級</option>
       {% for g, label in poly_grades %}
@@ -19,7 +47,21 @@
   <div class="grade-tabs">
     <a href="{{ url_for('polymorphs') }}" class="tab {% if not grade %}active{% endif %}">全部</a>
     {% for g, label in poly_grades %}
-    <a href="{{ url_for('polymorphs', grade=g) }}" class="tab {% if grade == g %}active{% endif %}">{{ label }}</a>
+      {% if g == '覺醒' %}
+        <a href="{{ url_for('polymorphs', grade=g) }}" class="tab tab-awaken {% if grade == g %}active{% endif %}">✦ {{ label }}</a>
+      {% elif g == '神話' %}
+        <a href="{{ url_for('polymorphs', grade=g) }}" class="tab tab-myth {% if grade == g %}active{% endif %}">{{ label }}</a>
+      {% elif g == '傳說' %}
+        <a href="{{ url_for('polymorphs', grade=g) }}" class="tab tab-legend {% if grade == g %}active{% endif %}">{{ label }}</a>
+      {% elif g == '英雄' %}
+        <a href="{{ url_for('polymorphs', grade=g) }}" class="tab tab-hero {% if grade == g %}active{% endif %}">{{ label }}</a>
+      {% elif g == '稀有' %}
+        <a href="{{ url_for('polymorphs', grade=g) }}" class="tab tab-rare {% if grade == g %}active{% endif %}">{{ label }}</a>
+      {% elif g == '高級' %}
+        <a href="{{ url_for('polymorphs', grade=g) }}" class="tab tab-high {% if grade == g %}active{% endif %}">{{ label }}</a>
+      {% else %}
+        <a href="{{ url_for('polymorphs', grade=g) }}" class="tab tab-normal {% if grade == g %}active{% endif %}">{{ label }}</a>
+      {% endif %}
     {% endfor %}
   </div>
 
@@ -29,25 +71,32 @@
     <table data-sortable>
       <thead>
         <tr>
-          <th>ID</th>
           <th>中文名稱</th>
           <th>等級</th>
           <th>最低等級</th>
           <th>攻速提升</th>
           <th>移速提升</th>
+          <th>法速提升</th>
         </tr>
       </thead>
       <tbody>
         {% for r in rows %}
         <tr>
-          <td>{{ r.id }}</td>
-          <td>{{ (r.note or '—') | clean_name }}</td>
           <td>
-            {% if r.grade == '神話' %}<span class="badge badge-myth grade-myth">神話</span>
-            {% elif r.grade == '傳說' %}<span class="badge badge-legend grade-legend">傳說</span>
-            {% elif r.grade == '英雄' %}<span class="badge badge-hero grade-hero">英雄</span>
-            {% elif r.grade == '稀有' %}<span class="badge badge-rare grade-rare">稀有</span>
-            {% else %}<span class="badge badge-normal">一般</span>
+            {% if r.grade == '覺醒' %}
+              <span class="grade-awaken">{{ (r.note or '—') | clean_name }}</span>
+            {% else %}
+              {{ (r.note or '—') | clean_name }}
+            {% endif %}
+          </td>
+          <td>
+            {% if r.grade == '覺醒' %}<span class="grade-awaken">✦ 覺醒</span>
+            {% elif r.grade == '神話' %}<span class="grade-myth">神話</span>
+            {% elif r.grade == '傳說' %}<span class="grade-legend">傳說</span>
+            {% elif r.grade == '英雄' %}<span class="grade-hero">英雄</span>
+            {% elif r.grade == '稀有' %}<span class="grade-rare">稀有</span>
+            {% elif r.grade == '高級' %}<span class="grade-high">高級</span>
+            {% else %}<span class="grade-normal">一般</span>
             {% endif %}
           </td>
           <td>
@@ -65,7 +114,7 @@
               {% elif atk_val > 50 %}<span style="color:#4caf50;font-weight:700">{{ atk }}</span>
               {% elif atk_val > 20 %}<span style="color:#ffca28">{{ atk }}</span>
               {% else %}<span class="muted">{{ atk }}</span>{% endif %}
-            {% else %}—{% endif %}
+            {% else %}<span class="muted">—</span>{% endif %}
           </td>
           <td>
             {% set mov = r.mov_boost|string %}
@@ -74,7 +123,17 @@
               {% if mov_val > 50 %}<span style="color:#4caf50;font-weight:700">{{ mov }} ⚡</span>
               {% elif mov_val > 20 %}<span style="color:#ffca28">{{ mov }}</span>
               {% else %}<span class="muted">{{ mov }}</span>{% endif %}
-            {% else %}—{% endif %}
+            {% else %}<span class="muted">—</span>{% endif %}
+          </td>
+          <td>
+            {% set mag = r.mag_boost|string %}
+            {% if mag and mag != '—' and mag != 'None' %}
+              {% set mag_val = mag | replace('+','') | replace('%','') | float(0) %}
+              {% if mag_val > 100 %}<span style="color:#ff6b6b;font-weight:700">{{ mag }} ⚡</span>
+              {% elif mag_val > 50 %}<span style="color:#4caf50;font-weight:700">{{ mag }}</span>
+              {% elif mag_val > 20 %}<span style="color:#ffca28">{{ mag }}</span>
+              {% else %}<span class="muted">{{ mag }}</span>{% endif %}
+            {% else %}<span class="muted">—</span>{% endif %}
           </td>
         </tr>
         {% else %}
