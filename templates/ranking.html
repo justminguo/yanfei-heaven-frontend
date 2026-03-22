@@ -4,23 +4,48 @@
 <style>
   .top-rewards { margin-bottom: 28px; }
   .top-rewards h2 { font-size: 1.1rem; margin-bottom: 12px; color: #ffd700; }
-  .reward-table { width: 100%; border-collapse: collapse; font-size: .78rem; overflow-x: auto; display: block; }
-  .reward-table th { background: #1e1e2e; color: #aaa; padding: 6px 8px; white-space: nowrap; border-bottom: 1px solid #333; text-align: center; }
-  .reward-table td { padding: 6px 8px; text-align: center; border-bottom: 1px solid #2a2a3e; white-space: nowrap; }
-  .rank-1 td { color: #ffd700; font-weight: 700; }
-  .rank-2 td { color: #c0c0c0; font-weight: 700; }
-  .rank-3 td { color: #cd7f32; font-weight: 700; }
-  .rank-4 td { color: #7ec8e3; }
-  .rank-5 td { color: #aaa; }
+
+  /* 獎勵卡片（手機友善） */
+  .reward-cards { display: flex; flex-direction: column; gap: 10px; }
+  .reward-card { border-radius: 8px; padding: 10px 14px; border-left: 4px solid; }
+  .reward-card.r1 { border-color: #ffd700; background: #ffd70010; }
+  .reward-card.r2 { border-color: #c0c0c0; background: #c0c0c010; }
+  .reward-card.r3 { border-color: #cd7f32; background: #cd7f3210; }
+  .reward-card.r4 { border-color: #7ec8e3; background: #7ec8e310; }
+  .reward-card.r5 { border-color: #888;    background: #88888810; }
+  .reward-card-title { font-weight: 700; font-size: .95rem; margin-bottom: 8px; }
+  .r1 .reward-card-title { color: #ffd700; }
+  .r2 .reward-card-title { color: #c0c0c0; }
+  .r3 .reward-card-title { color: #cd7f32; }
+  .r4 .reward-card-title { color: #7ec8e3; }
+  .r5 .reward-card-title { color: #aaa; }
+  .reward-grid { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: .8rem; }
+  .reward-item { white-space: nowrap; }
+  .reward-item span { color: #4caf50; font-weight: 600; }
+  .r1 .reward-item span { color: #ffd700; }
+
+  /* 排行表 */
+  .rank-search { display:flex; gap:8px; margin-bottom:12px; }
+  .rank-search input { flex:1; padding:7px 12px; background:#1e1e2e; border:1px solid #444; border-radius:6px; color:#eee; font-size:.9rem; }
+  .rank-search input:focus { outline:none; border-color:#7c3aed; }
 
   .ranking-table { width: 100%; border-collapse: collapse; }
   .ranking-table th { background: #1e1e2e; color: #aaa; padding: 8px 12px; text-align: left; border-bottom: 1px solid #333; }
   .ranking-table td { padding: 8px 12px; border-bottom: 1px solid #2a2a3e; }
   .ranking-table tr:hover td { background: #1a1a2e; }
+  .ranking-table tr.hidden-row { display: none; }
+
   .rank-badge { display:inline-block; width:24px; height:24px; border-radius:50%; text-align:center; line-height:24px; font-weight:700; font-size:.85rem; }
   .rank-badge.r1 { background:#ffd700; color:#000; }
   .rank-badge.r2 { background:#c0c0c0; color:#000; }
   .rank-badge.r3 { background:#cd7f32; color:#fff; }
+
+  .buff-tag { font-size:.7rem; padding:1px 5px; border-radius:10px; margin-left:4px; vertical-align:middle; }
+  .buff-1 { background:#ffd70033; color:#ffd700; border:1px solid #ffd70066; }
+  .buff-2 { background:#c0c0c033; color:#c0c0c0; border:1px solid #c0c0c066; }
+  .buff-3 { background:#cd7f3233; color:#cd7f32; border:1px solid #cd7f3266; }
+  .buff-4 { background:#7ec8e333; color:#7ec8e3; border:1px solid #7ec8e366; }
+  .buff-5 { background:#88888833; color:#aaa;    border:1px solid #88888866; }
 </style>
 
 <section class="card">
@@ -29,83 +54,127 @@
 
   <div class="top-rewards">
     <h2>🏆 風雲榜獎勵 — 前5名專屬能力</h2>
-    <div style="overflow-x:auto">
-      <table class="reward-table">
-        <thead>
-          <tr>
-            <th>名次</th>
-            <th>HP</th><th>MP</th><th>AC</th>
-            <th>回HP</th><th>回MP</th><th>MR</th>
-            <th>STR~CHA</th>
-            <th>攻擊</th><th>命中</th>
-            <th>魔攻</th><th>魔命</th>
-            <th>物減</th><th>魔減</th>
-            <th>負重</th><th>PVP</th>
-            <th>魔武</th><th>技能</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="rank-1">
-            <td>🥇 第1名</td>
-            <td>+1000</td><td>+1000</td><td>-10</td>
-            <td>+50</td><td>+50</td><td>+3</td>
-            <td>+3~10</td>
-            <td>+10</td><td>+10</td>
-            <td>+10</td><td>+5</td>
-            <td>+15</td><td>+1000</td>
-            <td>+15</td><td>+5</td>
-            <td>+100</td><td>+1</td>
-          </tr>
-          <tr class="rank-2">
-            <td>🥈 第2名</td>
-            <td>+800</td><td>+800</td><td>-8</td>
-            <td>+40</td><td>+40</td><td>+2</td>
-            <td>+2~8</td>
-            <td>+8</td><td>+8</td>
-            <td>+8</td><td>+4</td>
-            <td>+12</td><td>+800</td>
-            <td>+12</td><td>+4</td>
-            <td>+80</td><td>+1</td>
-          </tr>
-          <tr class="rank-3">
-            <td>🥉 第3名</td>
-            <td>+600</td><td>+600</td><td>-6</td>
-            <td>+30</td><td>+30</td><td>+1</td>
-            <td>+1~6</td>
-            <td>+6</td><td>+6</td>
-            <td>+6</td><td>+3</td>
-            <td>+9</td><td>+600</td>
-            <td>+9</td><td>+3</td>
-            <td>+60</td><td>+1</td>
-          </tr>
-          <tr class="rank-4">
-            <td>第4名</td>
-            <td>+400</td><td>+400</td><td>-4</td>
-            <td>+20</td><td>+20</td><td>0</td>
-            <td>0~2</td>
-            <td>+2</td><td>+2</td>
-            <td>+2</td><td>+2</td>
-            <td>+6</td><td>+400</td>
-            <td>+6</td><td>+2</td>
-            <td>+40</td><td>+1</td>
-          </tr>
-          <tr class="rank-5">
-            <td>第5名</td>
-            <td>+200</td><td>+200</td><td>-2</td>
-            <td>+10</td><td>+10</td><td>0</td>
-            <td>0~1</td>
-            <td>+1</td><td>+1</td>
-            <td>+1</td><td>+1</td>
-            <td>+3</td><td>+200</td>
-            <td>+4</td><td>+1</td>
-            <td>+20</td><td>+1</td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="reward-cards">
+
+      <div class="reward-card r1">
+        <div class="reward-card-title">🥇 第1名</div>
+        <div class="reward-grid">
+          <div class="reward-item">HP <span>+1000</span></div>
+          <div class="reward-item">MP <span>+1000</span></div>
+          <div class="reward-item">AC <span>-10</span></div>
+          <div class="reward-item">回血/魔 <span>+50/50</span></div>
+          <div class="reward-item">MR <span>+3</span></div>
+          <div class="reward-item">基礎屬性 <span>+3~10</span></div>
+          <div class="reward-item">攻擊 <span>+10</span></div>
+          <div class="reward-item">命中 <span>+10</span></div>
+          <div class="reward-item">魔攻 <span>+10</span></div>
+          <div class="reward-item">魔命 <span>+5</span></div>
+          <div class="reward-item">物減 <span>+15</span></div>
+          <div class="reward-item">魔減 <span>+1000</span></div>
+          <div class="reward-item">負重 <span>+15</span></div>
+          <div class="reward-item">PVP <span>+5</span></div>
+          <div class="reward-item">魔武 <span>+100</span></div>
+          <div class="reward-item">技能 <span>+1</span></div>
+        </div>
+      </div>
+
+      <div class="reward-card r2">
+        <div class="reward-card-title">🥈 第2名</div>
+        <div class="reward-grid">
+          <div class="reward-item">HP <span>+800</span></div>
+          <div class="reward-item">MP <span>+800</span></div>
+          <div class="reward-item">AC <span>-8</span></div>
+          <div class="reward-item">回血/魔 <span>+40/40</span></div>
+          <div class="reward-item">MR <span>+2</span></div>
+          <div class="reward-item">基礎屬性 <span>+2~8</span></div>
+          <div class="reward-item">攻擊 <span>+8</span></div>
+          <div class="reward-item">命中 <span>+8</span></div>
+          <div class="reward-item">魔攻 <span>+8</span></div>
+          <div class="reward-item">魔命 <span>+4</span></div>
+          <div class="reward-item">物減 <span>+12</span></div>
+          <div class="reward-item">魔減 <span>+800</span></div>
+          <div class="reward-item">負重 <span>+12</span></div>
+          <div class="reward-item">PVP <span>+4</span></div>
+          <div class="reward-item">魔武 <span>+80</span></div>
+          <div class="reward-item">技能 <span>+1</span></div>
+        </div>
+      </div>
+
+      <div class="reward-card r3">
+        <div class="reward-card-title">🥉 第3名</div>
+        <div class="reward-grid">
+          <div class="reward-item">HP <span>+600</span></div>
+          <div class="reward-item">MP <span>+600</span></div>
+          <div class="reward-item">AC <span>-6</span></div>
+          <div class="reward-item">回血/魔 <span>+30/30</span></div>
+          <div class="reward-item">MR <span>+1</span></div>
+          <div class="reward-item">基礎屬性 <span>+1~6</span></div>
+          <div class="reward-item">攻擊 <span>+6</span></div>
+          <div class="reward-item">命中 <span>+6</span></div>
+          <div class="reward-item">魔攻 <span>+6</span></div>
+          <div class="reward-item">魔命 <span>+3</span></div>
+          <div class="reward-item">物減 <span>+9</span></div>
+          <div class="reward-item">魔減 <span>+600</span></div>
+          <div class="reward-item">負重 <span>+9</span></div>
+          <div class="reward-item">PVP <span>+3</span></div>
+          <div class="reward-item">魔武 <span>+60</span></div>
+          <div class="reward-item">技能 <span>+1</span></div>
+        </div>
+      </div>
+
+      <div class="reward-card r4">
+        <div class="reward-card-title">第4名</div>
+        <div class="reward-grid">
+          <div class="reward-item">HP <span>+400</span></div>
+          <div class="reward-item">MP <span>+400</span></div>
+          <div class="reward-item">AC <span>-4</span></div>
+          <div class="reward-item">回血/魔 <span>+20/20</span></div>
+          <div class="reward-item">基礎屬性 <span>0~2</span></div>
+          <div class="reward-item">攻擊 <span>+2</span></div>
+          <div class="reward-item">命中 <span>+2</span></div>
+          <div class="reward-item">魔攻 <span>+2</span></div>
+          <div class="reward-item">魔命 <span>+2</span></div>
+          <div class="reward-item">物減 <span>+6</span></div>
+          <div class="reward-item">魔減 <span>+400</span></div>
+          <div class="reward-item">負重 <span>+6</span></div>
+          <div class="reward-item">PVP <span>+2</span></div>
+          <div class="reward-item">魔武 <span>+40</span></div>
+          <div class="reward-item">技能 <span>+1</span></div>
+        </div>
+      </div>
+
+      <div class="reward-card r5">
+        <div class="reward-card-title">第5名</div>
+        <div class="reward-grid">
+          <div class="reward-item">HP <span>+200</span></div>
+          <div class="reward-item">MP <span>+200</span></div>
+          <div class="reward-item">AC <span>-2</span></div>
+          <div class="reward-item">回血/魔 <span>+10/10</span></div>
+          <div class="reward-item">基礎屬性 <span>0~1</span></div>
+          <div class="reward-item">攻擊 <span>+1</span></div>
+          <div class="reward-item">命中 <span>+1</span></div>
+          <div class="reward-item">魔攻 <span>+1</span></div>
+          <div class="reward-item">魔命 <span>+1</span></div>
+          <div class="reward-item">物減 <span>+3</span></div>
+          <div class="reward-item">魔減 <span>+200</span></div>
+          <div class="reward-item">負重 <span>+4</span></div>
+          <div class="reward-item">PVP <span>+1</span></div>
+          <div class="reward-item">魔武 <span>+20</span></div>
+          <div class="reward-item">技能 <span>+1</span></div>
+        </div>
+      </div>
+
     </div>
   </div>
 
-  <table class="ranking-table">
+  <!-- 搜尋框 -->
+  <div class="rank-search">
+    <input type="text" id="rankSearch" placeholder="🔍 搜尋角色名稱…" oninput="filterRanking(this.value)">
+  </div>
+
+  <p class="muted" id="rankCount">共 {{ rows|length }} 筆</p>
+
+  <table class="ranking-table" id="rankingTable">
     <thead>
       <tr>
         <th>#</th>
@@ -117,7 +186,7 @@
     </thead>
     <tbody>
       {% for row in rows %}
-      <tr>
+      <tr data-name="{{ row.char_name }}">
         <td>
           {% if loop.index == 1 %}<span class="rank-badge r1">1</span>
           {% elif loop.index == 2 %}<span class="rank-badge r2">2</span>
@@ -126,34 +195,55 @@
           {% endif %}
         </td>
         <td>
-          {% if loop.index <= 3 %}
-            <strong style="color:{% if loop.index==1 %}#ffd700{% elif loop.index==2 %}#c0c0c0{% else %}#cd7f32{% endif %}">
-              {{ row.char_name }}
-            </strong>
-          {% elif loop.index <= 5 %}
+          {% if loop.index == 1 %}
+            <strong style="color:#ffd700">{{ row.char_name }}</strong>
+            <span class="buff-tag buff-1">🥇 +1000HP Buff</span>
+          {% elif loop.index == 2 %}
+            <strong style="color:#c0c0c0">{{ row.char_name }}</strong>
+            <span class="buff-tag buff-2">🥈 +800HP Buff</span>
+          {% elif loop.index == 3 %}
+            <strong style="color:#cd7f32">{{ row.char_name }}</strong>
+            <span class="buff-tag buff-3">🥉 +600HP Buff</span>
+          {% elif loop.index == 4 %}
             <span style="color:#7ec8e3">{{ row.char_name }}</span>
+            <span class="buff-tag buff-4">4th +400HP</span>
+          {% elif loop.index == 5 %}
+            <span style="color:#7ec8e3">{{ row.char_name }}</span>
+            <span class="buff-tag buff-5">5th +200HP</span>
           {% else %}
             {{ row.char_name }}
           {% endif %}
         </td>
         <td>{{ class_names.get(row['class'], '未知') }}</td>
         <td>
-          {% if loop.index <= 5 %}
-            <strong>Lv.{{ row.level }}</strong>
-          {% else %}
-            Lv.{{ row.level }}
-          {% endif %}
+          {% if loop.index <= 5 %}<strong>Lv.{{ row.level }}</strong>
+          {% else %}Lv.{{ row.level }}{% endif %}
         </td>
         <td>
           {% if row.rebirth_count and row.rebirth_count > 0 %}
             <span style="color:#ff9800">{{ row.rebirth_count }}轉</span>
-          {% else %}
-            <span class="muted">—</span>
-          {% endif %}
+          {% else %}<span class="muted">—</span>{% endif %}
         </td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
 </section>
+
+<script>
+function filterRanking(q) {
+  q = q.toLowerCase();
+  let visible = 0;
+  document.querySelectorAll('#rankingTable tbody tr').forEach(tr => {
+    const name = tr.dataset.name ? tr.dataset.name.toLowerCase() : '';
+    if (!q || name.includes(q)) {
+      tr.classList.remove('hidden-row');
+      visible++;
+    } else {
+      tr.classList.add('hidden-row');
+    }
+  });
+  document.getElementById('rankCount').textContent = q ? `找到 ${visible} 筆` : `共 {{ rows|length }} 筆`;
+}
+</script>
 {% endblock %}
