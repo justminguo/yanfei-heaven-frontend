@@ -264,9 +264,15 @@ def create_app() -> Flask:
     @app.route("/ranking")
     def ranking():
         db = get_db()
-        rows = db.execute(
-            "SELECT char_name, level, class FROM characters ORDER BY level DESC, char_name ASC LIMIT 200"
-        ).fetchall()
+        rows = db.execute("""
+            SELECT char_name, class,
+                   MAX(level) as level,
+                   MAX(rebirth_count) as rebirth_count
+            FROM characters
+            GROUP BY char_name
+            ORDER BY level DESC, rebirth_count DESC
+            LIMIT 100
+        """).fetchall()
         return render_template("ranking.html", rows=rows, class_names=CLASS_NAMES)
 
     @app.route("/items")

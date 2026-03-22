@@ -112,6 +112,7 @@
         <th>角色名稱</th>
         <th>職業</th>
         <th>等級</th>
+        <th>轉生</th>
       </tr>
     </thead>
     <tbody>
@@ -141,6 +142,13 @@
             <strong>Lv.{{ row.level }}</strong>
           {% else %}
             Lv.{{ row.level }}
+          {% endif %}
+        </td>
+        <td>
+          {% if row.rebirth_count and row.rebirth_count > 0 %}
+            <span style="color:#ff9800">{{ row.rebirth_count }}轉</span>
+          {% else %}
+            <span class="muted">—</span>
           {% endif %}
         </td>
       </tr>
