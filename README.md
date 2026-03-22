@@ -46,11 +46,11 @@ export YANFEI_DB_PATH=/absolute/path/to/yanfei.db
 ## 直接從 Windows MySQL 381 同步
 ```bash
 python scripts/sync_from_windows_mysql.py \
-  --host 211.20.245.169 \
-  --ssh-user user \
+  --host <YOUR_SERVER_IP> \
+  --ssh-user <SSH_USER> \
   --ssh-key /path/to/key \
-  --mysql-user root \
-  --mysql-password root \
+  --mysql-user <MYSQL_USER> \
+  --mysql-password <MYSQL_PASSWORD> \
   --mysql-db 381
 ```
 
