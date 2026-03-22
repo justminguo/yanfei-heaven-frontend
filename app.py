@@ -416,15 +416,16 @@ def create_app() -> Flask:
         ]
 
         # 直接查 polymorphs 表，有速度資料
+        # 覺醒判斷：name 以「覺醒-」或「支配者-」開頭（排除「英雄變身-[覺醒xxx]」這類）
         sql = """
             SELECT id, name, note, polyid, atkspeed, movespeed, magic_speed, atk_boost, mov_boost, mag_boost, minlevel,
               CASE
-                WHEN name LIKE '%覺醒%' OR name LIKE '%支配者%' THEN '覺醒'
-                WHEN note LIKE '%神話%' OR name LIKE '%神話%' THEN '神話'
-                WHEN note LIKE '%傳說%' OR name LIKE '%傳說%' THEN '傳說'
-                WHEN note LIKE '%英雄%' OR name LIKE '%英雄%' THEN '英雄'
-                WHEN note LIKE '%稀有%' OR name LIKE '%稀有%' THEN '稀有'
-                WHEN note LIKE '%高級%' OR name LIKE '%高級%' THEN '高級'
+                WHEN name LIKE '覺醒-%' OR name LIKE '支配者-%' THEN '覺醒'
+                WHEN name LIKE '神話變身%' OR note LIKE '%神話%' THEN '神話'
+                WHEN name LIKE '傳說變身%' OR note LIKE '%傳說%' THEN '傳說'
+                WHEN name LIKE '英雄變身%' OR note LIKE '%英雄%' THEN '英雄'
+                WHEN name LIKE '稀有變身%' OR note LIKE '%稀有%' THEN '稀有'
+                WHEN name LIKE '高級變身%' OR note LIKE '%高級%' THEN '高級'
                 ELSE '一般'
               END AS grade
             FROM polymorphs
@@ -436,19 +437,24 @@ def create_app() -> Flask:
             params.extend([f"%{q}%", f"%{q}%"])
         if grade:
             if grade == "覺醒":
-                sql += " AND (name LIKE '%覺醒%' OR name LIKE '%支配者%')"
+                sql += " AND (name LIKE '覺醒-%' OR name LIKE '支配者-%')"
+            elif grade == "神話":
+                sql += " AND (name LIKE '神話變身%' OR note LIKE '%神話%') AND name NOT LIKE '覺醒-%'"
+            elif grade == "傳說":
+                sql += " AND (name LIKE '傳說變身%' OR note LIKE '%傳說%') AND name NOT LIKE '覺醒-%'"
+            elif grade == "英雄":
+                sql += " AND (name LIKE '英雄變身%' OR note LIKE '%英雄%') AND name NOT LIKE '覺醒-%'"
+            elif grade == "稀有":
+                sql += " AND (name LIKE '稀有變身%' OR note LIKE '%稀有%') AND name NOT LIKE '覺醒-%'"
             elif grade == "高級":
-                sql += " AND (note LIKE '%高級%' OR name LIKE '%高級%')"
+                sql += " AND (name LIKE '高級變身%' OR note LIKE '%高級%') AND name NOT LIKE '覺醒-%'"
             elif grade == "一般":
-                sql += """ AND name NOT LIKE '%覺醒%' AND name NOT LIKE '%支配者%'
-                           AND note NOT LIKE '%神話%' AND name NOT LIKE '%神話%'
-                           AND note NOT LIKE '%傳說%' AND name NOT LIKE '%傳說%'
-                           AND note NOT LIKE '%英雄%' AND name NOT LIKE '%英雄%'
-                           AND note NOT LIKE '%稀有%' AND name NOT LIKE '%稀有%'
-                           AND note NOT LIKE '%高級%' AND name NOT LIKE '%高級%'"""
-            else:
-                sql += " AND (note LIKE ? OR name LIKE ?)"
-                params.extend([f"%{grade}%", f"%{grade}%"])
+                sql += """ AND name NOT LIKE '覺醒-%' AND name NOT LIKE '支配者-%'
+                           AND name NOT LIKE '神話變身%' AND note NOT LIKE '%神話%'
+                           AND name NOT LIKE '傳說變身%' AND note NOT LIKE '%傳說%'
+                           AND name NOT LIKE '英雄變身%' AND note NOT LIKE '%英雄%'
+                           AND name NOT LIKE '稀有變身%' AND note NOT LIKE '%稀有%'
+                           AND name NOT LIKE '高級變身%' AND note NOT LIKE '%高級%'"""
         sql += " ORDER BY id LIMIT 500"
         rows = db.execute(sql, params).fetchall()
         return render_template("polymorphs.html", rows=rows, q=q, grade=grade, poly_grades=POLY_GRADES)
