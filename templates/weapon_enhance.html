@@ -4,9 +4,10 @@
 <section class="card">
   <h1>屬性武器強化</h1>
 
+  {% set emoji_map = {"地": "⛰️", "水": "💧", "火": "🔥", "風": "🌪️"} %}
   <div class="grade-tabs">
     {% for elem in elements %}
-    <a class="tab {{ 'active' if tab == elem }}" href="{{ url_for('weapon_enhance', tab=elem) }}">{{ elem }}</a>
+    <a class="tab {{ 'active' if tab == elem }}" href="{{ url_for('weapon_enhance', tab=elem) }}">{{ emoji_map.get(elem, '') }} {{ elem }}</a>
     {% endfor %}
   </div>
 
@@ -17,22 +18,26 @@
           <th>階段</th>
           <th>成功率</th>
           <th>所需卷軸</th>
-          <th>消耗數</th>
-          <th>獲得效果</th>
+          <th>消耗數量</th>
+          <th>累積效果</th>
         </tr>
       </thead>
       <tbody>
       {% for row in rows %}
         <tr>
           <td>Lv.{{ row.stage }}</td>
-          <td>{{ row.chance }}%</td>
+          {% if row.chance >= 100 %}
+          <td style="color:#2ecc71;font-weight:bold;">{{ row.chance }}%</td>
+          {% elif row.chance >= 70 %}
+          <td style="color:#f1c40f;font-weight:bold;">{{ row.chance }}%</td>
+          {% elif row.chance >= 30 %}
+          <td style="color:#e67e22;font-weight:bold;">{{ row.chance }}%</td>
+          {% else %}
+          <td style="color:#e74c3c;font-weight:bold;">{{ row.chance }}%</td>
+          {% endif %}
           <td>{{ row.scroll_name }}</td>
           <td>{{ row.scroll_count }}</td>
-          <td>
-            {% for ename, evalue in row.effects.items() %}
-              <span class="badge badge-effect">{{ ename }} +{{ evalue }}</span>
-            {% endfor %}
-          </td>
+          <td>{{ row.effect_text }}</td>
         </tr>
       {% else %}
         <tr><td colspan="5">查無資料</td></tr>

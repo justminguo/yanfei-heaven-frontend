@@ -3,10 +3,11 @@
 {% block content %}
 <section class="card">
   <h1>隨機炫色系統</h1>
+  <p style="margin-bottom:12px;">使用「洗煉(炫裝武色)」卷軸(item 92159) 或「使用炫色直上武/防」(item 92404/92405) 來強化裝備，隨機獲得能力。</p>
 
   <div class="grade-tabs">
-    <a class="tab {{ 'active' if tab == 'weapon' }}" href="{{ url_for('color_enhance', tab='weapon') }}">武器</a>
-    <a class="tab {{ 'active' if tab == 'armor' }}" href="{{ url_for('color_enhance', tab='armor') }}">防具</a>
+    <a class="tab {{ 'active' if tab == 'weapon' }}" href="{{ url_for('color_enhance', tab='weapon') }}">⚔️ 武器</a>
+    <a class="tab {{ 'active' if tab == 'armor' }}" href="{{ url_for('color_enhance', tab='armor') }}">🛡️ 防具</a>
   </div>
 
   <div class="table-wrap">
@@ -14,14 +15,14 @@
       <thead>
         <tr>
           <th>等級</th>
-          <th>機率權重</th>
+          <th>出現機率</th>
           {% if tab == 'weapon' %}
-          <th>攻擊</th><th>命中</th><th>Sp</th>
-          <th>力量</th><th>敏捷</th><th>智力</th><th>體質</th><th>魅力</th><th>精神</th>
-          <th>HP</th><th>MP</th><th>魔防</th><th>傷害減免</th>
+          <th>攻擊</th><th>命中</th><th>SP</th>
+          <th>STR</th><th>DEX</th><th>INT</th><th>CON</th><th>CHA</th><th>WIS</th>
+          <th>HP</th><th>MP</th><th>MR</th><th>物減</th>
           {% else %}
-          <th>力量</th><th>敏捷</th><th>智力</th><th>體質</th><th>魅力</th><th>精神</th>
-          <th>HP</th><th>MP</th><th>魔防</th><th>傷害減免</th><th>回血</th><th>回魔</th>
+          <th>STR</th><th>DEX</th><th>INT</th><th>CON</th><th>CHA</th><th>WIS</th>
+          <th>HP</th><th>MP</th><th>MR</th><th>物減</th><th>火防</th><th>風防</th>
           {% endif %}
         </tr>
       </thead>
@@ -30,7 +31,7 @@
         <tr>
           <td>
             <span class="badge" style="background:{{ row.css_color }};color:#fff;">
-              {{ row.type_name }} ({{ row.note }})
+              {{ row.note }}
             </span>
           </td>
           <td>{{ row.ran }}%</td>
@@ -59,8 +60,8 @@
           <td>{{ row.Mp or '—' }}</td>
           <td>{{ row.Mr or '—' }}</td>
           <td>{{ row.ReductionDmg or '—' }}</td>
-          <td>{{ row.Hpr or '—' }}</td>
-          <td>{{ row.Mpr or '—' }}</td>
+          <td>{{ row.FireDef or '—' }}</td>
+          <td>{{ row.WindDef or '—' }}</td>
           {% endif %}
         </tr>
       {% else %}
