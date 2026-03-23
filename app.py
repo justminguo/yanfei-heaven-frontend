@@ -257,7 +257,7 @@ def create_app() -> Flask:
             "SELECT id, title, body, category, url, pinned, published_at FROM announcements ORDER BY pinned DESC, published_at DESC LIMIT 5"
         ).fetchall()
         top_chars = db.execute(
-            "SELECT char_name, level, class, OnlineStatus FROM characters ORDER BY level DESC LIMIT 10"
+            "SELECT char_name, MAX(level) as level, class, OnlineStatus FROM characters GROUP BY char_name ORDER BY level DESC LIMIT 10"
         ).fetchall()
         return render_template("home.html", stats=stats, announcements=announcements, top_chars=top_chars, class_names=CLASS_NAMES)
 
@@ -825,6 +825,46 @@ def create_app() -> Flask:
         if not row:
             return jsonify({"ok": False, "error": "armor_not_found"}), 404
         return jsonify({"ok": True, "armor": row_to_dict(row)})
+
+    @app.route("/search")
+    def search():
+        q = request.args.get("q", "").strip()
+        items_rows = []
+        weapons_rows = []
+        armors_rows = []
+        if q:
+            like = f"%{q}%"
+            db = get_db()
+            items_rows = db.execute(
+                "SELECT id, name FROM items WHERE name LIKE ? ORDER BY id LIMIT 50", (like,)
+            ).fetchall()
+            weapons_rows = db.execute(
+                "SELECT id, name FROM weapons WHERE name LIKE ? ORDER BY id LIMIT 50", (like,)
+            ).fetchall()
+            armors_rows = db.execute(
+                "SELECT id, name FROM armors WHERE name LIKE ? ORDER BY id LIMIT 50", (like,)
+            ).fetchall()
+        return render_template("search.html", q=q, items_rows=items_rows, weapons_rows=weapons_rows, armors_rows=armors_rows)
+
+    @app.route("/monster-search")
+    def monster_search():
+        q = request.args.get("q", "").strip()
+        results = []
+        if q:
+            like = f"%{q}%"
+            db = get_db()
+            monsters = db.execute(
+                "SELECT id, name, level FROM monsters WHERE name LIKE ? ORDER BY level DESC LIMIT 50", (like,)
+            ).fetchall()
+            for m in monsters:
+                drops = db.execute("""
+                    SELECT md.id, i.name AS item_name
+                    FROM monster_drops md
+                    JOIN items i ON i.id = md.item_id
+                    WHERE md.monster_id = ?
+                """, (m["id"],)).fetchall()
+                results.append({"id": m["id"], "name": m["name"], "level": m["level"], "drops": drops})
+        return render_template("monster_search.html", q=q, results=results)
 
     @app.route("/healthz")
     def healthz():
