@@ -9,6 +9,7 @@ th[data-sort]{cursor:pointer;user-select:none;white-space:nowrap}th[data-sort]::
 .badge-hero{background:#1565c0;color:#fff}
 .badge-rare{background:#2e7d32;color:#fff}
 .badge-normal{background:#37474f;color:#cfd8dc}
+.badge-epic{background:#c62828;color:#fff}
 .grade-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
 .grade-tabs .tab{padding:6px 16px;border-radius:20px;background:#0f1630;border:1px solid var(--line);color:var(--muted);font-size:14px}
 .grade-tabs .tab.active,.grade-tabs .tab:hover{background:#1c2b54;color:var(--text);border-color:var(--accent)}
