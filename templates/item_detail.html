@@ -25,7 +25,7 @@
         <td>{{ row.level }}</td>
         <td>{{ row.family }}</td>
         <td>{{ row.min_count }} ~ {{ row.max_count }}</td>
-        <td>{{ row.chance }}</td>
+        <td>{{ row.chance | drop_chance }}</td>
       </tr>
       {% else %}
       <tr><td colspan="5">這個物品目前沒有掉落來源資料</td></tr>
