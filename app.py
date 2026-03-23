@@ -912,6 +912,173 @@ def create_app() -> Flask:
         db.commit()
         return jsonify({"ok": True, "updated": updated})
 
+    # ── 屬性武器強化系統（硬碼資料，來自私服 w_屬性強化系統） ──────────
+    WEAPON_ENHANCE_DATA = {
+        "地": [
+            {"stage": 1, "chance": 100, "scroll_count": 10, "scroll_name": "地屬性強化卷軸", "effects": {"地縛": 1.0}},
+            {"stage": 2, "chance": 70,  "scroll_count": 20, "scroll_name": "地屬性強化卷軸", "effects": {"地縛": 1.5}},
+            {"stage": 3, "chance": 30,  "scroll_count": 30, "scroll_name": "地屬性強化卷軸", "effects": {"地縛": 2.0}},
+            {"stage": 4, "chance": 20,  "scroll_count": 40, "scroll_name": "地屬性強化卷軸", "effects": {"地縛": 2.5}},
+            {"stage": 5, "chance": 10,  "scroll_count": 55, "scroll_name": "地屬性強化卷軸", "effects": {"地縛": 3.0}},
+            {"stage": 6, "chance": 5,   "scroll_count": 60, "scroll_name": "地屬性強化卷軸", "effects": {"地縛": 3.5}},
+            {"stage": 7, "chance": 3,   "scroll_count": 65, "scroll_name": "地屬性強化卷軸", "effects": {"地縛": 4.0}},
+            {"stage": 8, "chance": 4,   "scroll_count": 70, "scroll_name": "地屬性強化卷軸", "effects": {"地縛": 4.5}},
+            {"stage": 9, "chance": 2,   "scroll_count": 80, "scroll_name": "地屬性強化卷軸", "effects": {"地縛": 5.0}},
+        ],
+        "水": [
+            {"stage": 1, "chance": 100, "scroll_count": 10, "scroll_name": "水屬性強化卷軸", "effects": {"吸魔": 3}},
+            {"stage": 2, "chance": 70,  "scroll_count": 20, "scroll_name": "水屬性強化卷軸", "effects": {"吸魔": 5}},
+            {"stage": 3, "chance": 30,  "scroll_count": 30, "scroll_name": "水屬性強化卷軸", "effects": {"吸魔": 7}},
+            {"stage": 4, "chance": 20,  "scroll_count": 40, "scroll_name": "水屬性強化卷軸", "effects": {"吸魔": 10}},
+            {"stage": 5, "chance": 10,  "scroll_count": 55, "scroll_name": "水屬性強化卷軸", "effects": {"吸魔": 13}},
+            {"stage": 6, "chance": 5,   "scroll_count": 60, "scroll_name": "水屬性強化卷軸", "effects": {"吸魔": 16}},
+            {"stage": 7, "chance": 4,   "scroll_count": 65, "scroll_name": "水屬性強化卷軸", "effects": {"吸魔": 20}},
+            {"stage": 8, "chance": 3,   "scroll_count": 70, "scroll_name": "水屬性強化卷軸", "effects": {"吸魔": 25}},
+            {"stage": 9, "chance": 2,   "scroll_count": 80, "scroll_name": "水屬性強化卷軸", "effects": {"吸魔": 30}},
+        ],
+        "火": [
+            {"stage": 1, "chance": 100, "scroll_count": 10, "scroll_name": "火屬性強化卷軸", "effects": {"吸血": 10}},
+            {"stage": 2, "chance": 70,  "scroll_count": 20, "scroll_name": "火屬性強化卷軸", "effects": {"吸血": 20}},
+            {"stage": 3, "chance": 30,  "scroll_count": 30, "scroll_name": "火屬性強化卷軸", "effects": {"吸血": 30}},
+            {"stage": 4, "chance": 20,  "scroll_count": 40, "scroll_name": "火屬性強化卷軸", "effects": {"吸血": 40}},
+            {"stage": 5, "chance": 10,  "scroll_count": 55, "scroll_name": "火屬性強化卷軸", "effects": {"吸血": 50}},
+            {"stage": 6, "chance": 5,   "scroll_count": 60, "scroll_name": "火屬性強化卷軸", "effects": {"吸血": 60}},
+            {"stage": 7, "chance": 4,   "scroll_count": 65, "scroll_name": "火屬性強化卷軸", "effects": {"吸血": 70}},
+            {"stage": 8, "chance": 3,   "scroll_count": 70, "scroll_name": "火屬性強化卷軸", "effects": {"吸血": 80}},
+            {"stage": 9, "chance": 2,   "scroll_count": 100, "scroll_name": "火屬性強化卷軸", "effects": {"吸血": 100}},
+        ],
+        "風": [
+            {"stage": 1, "chance": 100, "scroll_count": 10, "scroll_name": "風屬性強化卷軸", "effects": {"傷害提升": 0.8}},
+            {"stage": 2, "chance": 70,  "scroll_count": 20, "scroll_name": "風屬性強化卷軸", "effects": {"傷害提升": 1.0}},
+            {"stage": 3, "chance": 30,  "scroll_count": 30, "scroll_name": "風屬性強化卷軸", "effects": {"傷害提升": 1.2}},
+            {"stage": 4, "chance": 20,  "scroll_count": 40, "scroll_name": "風屬性強化卷軸", "effects": {"傷害提升": 1.3}},
+            {"stage": 5, "chance": 10,  "scroll_count": 55, "scroll_name": "風屬性強化卷軸", "effects": {"傷害提升": 1.4}},
+            {"stage": 6, "chance": 5,   "scroll_count": 60, "scroll_name": "風屬性強化卷軸", "effects": {"傷害提升": 1.5}},
+            {"stage": 7, "chance": 4,   "scroll_count": 65, "scroll_name": "風屬性強化卷軸", "effects": {"傷害提升": 1.6}},
+            {"stage": 8, "chance": 3,   "scroll_count": 70, "scroll_name": "風屬性強化卷軸", "effects": {"傷害提升": 1.7}},
+            {"stage": 9, "chance": 2,   "scroll_count": 80, "scroll_name": "風屬性強化卷軸", "effects": {"傷害提升": 1.8}},
+        ],
+    }
+
+    @app.route("/weapon-enhance")
+    def weapon_enhance():
+        tab = request.args.get("tab", "地")
+        if tab not in WEAPON_ENHANCE_DATA:
+            tab = "地"
+        return render_template(
+            "weapon_enhance.html",
+            tab=tab,
+            elements=list(WEAPON_ENHANCE_DATA.keys()),
+            rows=WEAPON_ENHANCE_DATA[tab],
+        )
+
+    # ── 隨機炫色系統（硬碼資料，來自私服 w_隨機能力炫色*） ──────────
+    COLOR_ENHANCE_GRADES = [
+        {"type": 1,  "note": "霸王色", "type_name": "超神話", "color_code": "fU", "css_color": "#FFD700"},
+        {"type": 2,  "note": "武裝色", "type_name": "超神",   "color_code": "f0", "css_color": "#FF4500"},
+        {"type": 3,  "note": "見聞色", "type_name": "神話",   "color_code": "f2", "css_color": "#DA70D6"},
+        {"type": 4,  "note": "傳說",   "type_name": "傳說",   "color_code": "f:", "css_color": "#C9920A"},
+        {"type": 5,  "note": "史詩",   "type_name": "史詩",   "color_code": "fA", "css_color": "#E06C00"},
+        {"type": 6,  "note": "英雄",   "type_name": "英雄",   "color_code": "fW", "css_color": "#4169E1"},
+        {"type": 7,  "note": "稀有",   "type_name": "稀有",   "color_code": "fK", "css_color": "#2E8B57"},
+        {"type": 8,  "note": "卓越",   "type_name": "卓越",   "color_code": "fM", "css_color": "#20B2AA"},
+        {"type": 9,  "note": "罕見",   "type_name": "罕見",   "color_code": "fH", "css_color": "#87CEEB"},
+        {"type": 10, "note": "常見",   "type_name": "常見",   "color_code": "f?", "css_color": "#BDB76B"},
+        {"type": 11, "note": "普通",   "type_name": "普通",   "color_code": "fR", "css_color": "#A9A9A9"},
+        {"type": 12, "note": "一般",   "type_name": "一般",   "color_code": "fG", "css_color": "#696969"},
+    ]
+
+    COLOR_ENHANCE_WEAPON = [
+        {"type": 1,  "ran": 5,  "Attack": 25, "Hit": 25, "Sp": 5, "Str": 4, "Dex": 4, "Int": 4, "Con": 2, "Cha": 2, "Wis": 2, "Hp": 200, "Mp": 200, "Mr": 15, "ReductionDmg": 3},
+        {"type": 2,  "ran": 8,  "Attack": 21, "Hit": 21, "Sp": 4, "Str": 3, "Dex": 3, "Int": 3, "Con": 1, "Cha": 1, "Wis": 1, "Hp": 100, "Mp": 100, "Mr": 10, "ReductionDmg": 2},
+        {"type": 3,  "ran": 10, "Attack": 19, "Hit": 19, "Sp": 4, "Str": 2, "Dex": 2, "Int": 2, "Con": 1, "Cha": 1, "Wis": 1, "Hp": 50,  "Mp": 50,  "Mr": 5,  "ReductionDmg": 1},
+        {"type": 4,  "ran": 15, "Attack": 17, "Hit": 17, "Sp": 3, "Str": 2, "Dex": 2, "Int": 2, "Con": 0, "Cha": 0, "Wis": 0, "Hp": 0,   "Mp": 0,   "Mr": 0,  "ReductionDmg": 0},
+        {"type": 5,  "ran": 20, "Attack": 15, "Hit": 15, "Sp": 3, "Str": 2, "Dex": 2, "Int": 2, "Con": 0, "Cha": 0, "Wis": 0, "Hp": 0,   "Mp": 0,   "Mr": 0,  "ReductionDmg": 0},
+        {"type": 6,  "ran": 30, "Attack": 13, "Hit": 13, "Sp": 3, "Str": 1, "Dex": 1, "Int": 1, "Con": 0, "Cha": 0, "Wis": 0, "Hp": 0,   "Mp": 0,   "Mr": 0,  "ReductionDmg": 0},
+        {"type": 7,  "ran": 60, "Attack": 11, "Hit": 11, "Sp": 2, "Str": 1, "Dex": 1, "Int": 1, "Con": 0, "Cha": 0, "Wis": 0, "Hp": 0,   "Mp": 0,   "Mr": 0,  "ReductionDmg": 0},
+        {"type": 8,  "ran": 70, "Attack": 9,  "Hit": 9,  "Sp": 2, "Str": 1, "Dex": 1, "Int": 1, "Con": 0, "Cha": 0, "Wis": 0, "Hp": 0,   "Mp": 0,   "Mr": 0,  "ReductionDmg": 0},
+        {"type": 9,  "ran": 80, "Attack": 7,  "Hit": 7,  "Sp": 2, "Str": 0, "Dex": 0, "Int": 0, "Con": 0, "Cha": 0, "Wis": 0, "Hp": 0,   "Mp": 0,   "Mr": 0,  "ReductionDmg": 0},
+        {"type": 10, "ran": 90, "Attack": 5,  "Hit": 5,  "Sp": 1, "Str": 0, "Dex": 0, "Int": 0, "Con": 0, "Cha": 0, "Wis": 0, "Hp": 0,   "Mp": 0,   "Mr": 0,  "ReductionDmg": 0},
+        {"type": 11, "ran": 90, "Attack": 3,  "Hit": 3,  "Sp": 1, "Str": 0, "Dex": 0, "Int": 0, "Con": 0, "Cha": 0, "Wis": 0, "Hp": 0,   "Mp": 0,   "Mr": 0,  "ReductionDmg": 0},
+        {"type": 12, "ran": 90, "Attack": 1,  "Hit": 1,  "Sp": 1, "Str": 0, "Dex": 0, "Int": 0, "Con": 0, "Cha": 0, "Wis": 0, "Hp": 0,   "Mp": 0,   "Mr": 0,  "ReductionDmg": 0},
+    ]
+
+    COLOR_ENHANCE_ARMOR = [
+        {"type": 1,  "ran": 5,  "Str": 2, "Dex": 2, "Int": 2, "Con": 2, "Cha": 2, "Wis": 2, "Hp": 60, "Mp": 60, "Mr": 5, "ReductionDmg": 5, "Hpr": 10, "Mpr": 10},
+        {"type": 2,  "ran": 8,  "Str": 1, "Dex": 1, "Int": 1, "Con": 1, "Cha": 1, "Wis": 1, "Hp": 55, "Mp": 55, "Mr": 4, "ReductionDmg": 4, "Hpr": 8,  "Mpr": 8},
+        {"type": 3,  "ran": 10, "Str": 1, "Dex": 1, "Int": 1, "Con": 1, "Cha": 1, "Wis": 1, "Hp": 50, "Mp": 50, "Mr": 3, "ReductionDmg": 4, "Hpr": 8,  "Mpr": 8},
+        {"type": 4,  "ran": 15, "Str": 0, "Dex": 0, "Int": 0, "Con": 0, "Cha": 0, "Wis": 0, "Hp": 45, "Mp": 45, "Mr": 2, "ReductionDmg": 3, "Hpr": 6,  "Mpr": 6},
+        {"type": 5,  "ran": 20, "Str": 0, "Dex": 0, "Int": 0, "Con": 0, "Cha": 0, "Wis": 0, "Hp": 40, "Mp": 40, "Mr": 1, "ReductionDmg": 3, "Hpr": 6,  "Mpr": 6},
+        {"type": 6,  "ran": 30, "Str": 0, "Dex": 0, "Int": 0, "Con": 0, "Cha": 0, "Wis": 0, "Hp": 35, "Mp": 35, "Mr": 0, "ReductionDmg": 3, "Hpr": 6,  "Mpr": 6},
+        {"type": 7,  "ran": 60, "Str": 0, "Dex": 0, "Int": 0, "Con": 0, "Cha": 0, "Wis": 0, "Hp": 30, "Mp": 30, "Mr": 0, "ReductionDmg": 2, "Hpr": 4,  "Mpr": 4},
+        {"type": 8,  "ran": 70, "Str": 0, "Dex": 0, "Int": 0, "Con": 0, "Cha": 0, "Wis": 0, "Hp": 25, "Mp": 25, "Mr": 0, "ReductionDmg": 2, "Hpr": 4,  "Mpr": 4},
+        {"type": 9,  "ran": 80, "Str": 0, "Dex": 0, "Int": 0, "Con": 0, "Cha": 0, "Wis": 0, "Hp": 20, "Mp": 20, "Mr": 0, "ReductionDmg": 2, "Hpr": 4,  "Mpr": 4},
+        {"type": 10, "ran": 90, "Str": 0, "Dex": 0, "Int": 0, "Con": 0, "Cha": 0, "Wis": 0, "Hp": 15, "Mp": 15, "Mr": 0, "ReductionDmg": 1, "Hpr": 2,  "Mpr": 2},
+        {"type": 11, "ran": 90, "Str": 0, "Dex": 0, "Int": 0, "Con": 0, "Cha": 0, "Wis": 0, "Hp": 10, "Mp": 10, "Mr": 0, "ReductionDmg": 1, "Hpr": 2,  "Mpr": 2},
+        {"type": 12, "ran": 90, "Str": 0, "Dex": 0, "Int": 0, "Con": 0, "Cha": 0, "Wis": 0, "Hp": 5,  "Mp": 5,  "Mr": 0, "ReductionDmg": 1, "Hpr": 2,  "Mpr": 2},
+    ]
+
+    COLOR_ENHANCE_SCROLLS = [
+        {"item_id": 92159, "name": "洗煉(炫裝武色)"},
+        {"item_id": 95185, "name": "洗煉武器石"},
+        {"item_id": 95183, "name": "洗煉防具石"},
+        {"item_id": 92232, "name": "炫色卷軸箱"},
+        {"item_id": 92100, "name": "對單屬性武器洗煉卷軸(捨棄)"},
+        {"item_id": 92101, "name": "對雙屬性武器洗煉卷軸(捨棄)"},
+        {"item_id": 92102, "name": "對三屬性武器洗煉卷軸(捨棄)"},
+        {"item_id": 92097, "name": "對單屬性防具洗煉卷軸(捨棄)"},
+        {"item_id": 92098, "name": "對雙屬性防具洗煉卷軸(捨棄)"},
+        {"item_id": 92099, "name": "對三屬性防具洗煉卷軸(捨棄)"},
+    ]
+
+    @app.route("/color-enhance")
+    def color_enhance():
+        tab = request.args.get("tab", "weapon")
+        if tab not in ("weapon", "armor"):
+            tab = "weapon"
+        grades_map = {g["type"]: g for g in COLOR_ENHANCE_GRADES}
+        data = COLOR_ENHANCE_WEAPON if tab == "weapon" else COLOR_ENHANCE_ARMOR
+        rows = []
+        for d in data:
+            g = grades_map.get(d["type"], {})
+            rows.append({**d, **g})
+        return render_template(
+            "color_enhance.html",
+            tab=tab,
+            rows=rows,
+            scrolls=COLOR_ENHANCE_SCROLLS,
+        )
+
+    # ── 娃娃卡冊 ────────────────────────────────────────────────
+    @app.route("/doll-card-album")
+    def doll_card_album():
+        # 單卡能力（硬碼，不連私服）
+        DOLL_CARDS = [
+            {"seq": 1, "name": "石頭高崙", "item_id": 49210, "attrs": "血量+25, 力量+1, 敏捷+1, 體質+1, 智力+1, 精神+1, 魅力+1, 防禦+1, 魔法防禦+1, 火屬性防禦+1, 風屬性防禦+1, 地屬性防禦+1, 水屬性防禦+1"},
+            {"seq": 2, "name": "狼人", "item_id": 49211, "attrs": "血量+25, 力量+1, 敏捷+1, 體質+1, 智力+1, 精神+1, 魅力+1, 防禦+1, 魔法防禦+1, 火屬性防禦+1, 風屬性防禦+1, 地屬性防禦+1, 水屬性防禦+1"},
+            {"seq": 3, "name": "食人妖精", "item_id": 49212, "attrs": "血量+25, 力量+1, 敏捷+1, 體質+1, 智力+1, 精神+1, 魅力+1, 防禦+1, 魔法防禦+1, 火屬性防禦+1, 風屬性防禦+1, 地屬性防禦+1, 水屬性防禦+1"},
+            {"seq": 4, "name": "雪怪", "item_id": 49213, "attrs": "血量+25, 力量+1, 敏捷+1, 體質+1, 智力+1, 精神+1, 魅力+1, 防禦+1, 魔法防禦+1, 火屬性防禦+1, 風屬性防禦+1, 地屬性防禦+1, 水屬性防禦+1"},
+            {"seq": 5, "name": "奎斯坦修", "item_id": 49214, "attrs": "血量+25, 力量+1, 敏捷+1, 體質+1, 智力+1, 精神+1, 魅力+1, 防禦+1, 魔法防禦+1, 火屬性防禦+1, 風屬性防禦+1, 地屬性防禦+1, 水屬性防禦+1"},
+            {"seq": 6, "name": "木刻人偶", "item_id": 49215, "attrs": "血量+25, 力量+1, 敏捷+1, 體質+1, 智力+1, 精神+1, 魅力+1, 防禦+1, 魔法防禦+1, 火屬性防禦+1, 風屬性防禦+1, 地屬性防禦+1, 水屬性防禦+1"},
+            {"seq": 7, "name": "希爾黛斯", "item_id": 49216, "attrs": "血量+25, 力量+1, 敏捷+1, 體質+1, 智力+1, 精神+1, 魅力+1, 防禦+1, 魔法防禦+1, 火屬性防禦+1, 風屬性防禦+1, 地屬性防禦+1, 水屬性防禦+1"},
+            {"seq": 8, "name": "蛇女", "item_id": 49217, "attrs": "血量+25, 力量+1, 敏捷+1, 體質+1, 智力+1, 精神+1, 魅力+1, 防禦+1, 魔法防禦+1, 火屬性防禦+1, 風屬性防禦+1, 地屬性防禦+1, 水屬性防禦+1"},
+        ]
+
+        # 套卡組合（硬碼）
+        DOLL_SUITS = [
+            {"seq": 1, "name": "我曾住過的故鄉是北島", "required": ["石頭高崙", "狼人"], "attrs": "近距離命中+1"},
+            {"seq": 2, "name": "圓圓的", "required": ["食人妖精", "雪怪"], "attrs": "血量+10"},
+            {"seq": 3, "name": "不是吃的", "required": ["奎斯坦修", "木刻人偶"], "attrs": "魔量+5"},
+            {"seq": 4, "name": "頭上戴了什麼", "required": ["石頭高崙", "木刻人偶"], "attrs": "遠戰攻擊命中+1"},
+            {"seq": 5, "name": "要一起游泳嗎", "required": ["奎斯坦修", "希爾黛斯", "蛇女"], "attrs": "回魔量+2"},
+        ]
+
+        return render_template(
+            "doll_card_album.html",
+            cards=DOLL_CARDS,
+            suits=DOLL_SUITS,
+        )
+
     init_db(app)
     return app
 

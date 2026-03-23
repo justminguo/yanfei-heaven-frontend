@@ -30,8 +30,8 @@
           <div class="dropdown-menu">
             <a href="{{ url_for('polymorphs') }}">變身</a>
             <a href="{{ url_for('dolls') }}">娃娃</a>
-            <a href="{{ url_for('card_album') }}">卡冊</a>
-            <a href="{{ url_for('synthesis') }}">合成</a>
+            <a href="{{ url_for('card_album') }}">變身卡冊</a>
+            <a href="{{ url_for('doll_card_album') }}">娃娃卡冊</a>
           </div>
         </div>
         <div class="dropdown">
@@ -46,6 +46,13 @@
           <span class="dropdown-toggle">成長系統</span>
           <div class="dropdown-menu">
             <a href="{{ url_for('tattoo') }}">紋樣</a>
+          </div>
+        </div>
+        <div class="dropdown">
+          <span class="dropdown-toggle">強化系統</span>
+          <div class="dropdown-menu">
+            <a href="{{ url_for('weapon_enhance') }}">屬性強化</a>
+            <a href="{{ url_for('color_enhance') }}">炫色強化</a>
           </div>
         </div>
       </nav>

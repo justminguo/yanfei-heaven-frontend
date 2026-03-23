@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}娃娃卡冊 — 妍菲天堂資料查詢{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>套卡組合</h1>
+  <p class="muted">集齊指定娃娃卡可激活套卡額外加成。共 {{ suits|length }} 個套卡。</p>
+  <div class="table-wrap">
+    <table data-sortable>
+      <thead>
+        <tr><th>#</th><th>套卡名稱</th><th>所需娃娃</th><th>組合加成</th></tr>
+      </thead>
+      <tbody>
+        {% for r in suits %}
+        <tr>
+          <td>{{ r.seq }}</td>
+          <td><strong>{{ r.name }}</strong></td>
+          <td style="font-size:13px">
+            {% for c in r.required %}
+              <span class="badge badge-normal">{{ c }}</span>
+            {% endfor %}
+          </td>
+          <td class="muted" style="font-size:13px">{{ r.attrs }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="4">查無資料</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="card">
+  <h2>單卡能力</h2>
+  <p class="muted">每張娃娃卡提供基礎屬性加成。共 {{ cards|length }} 張卡片。</p>
+  <div class="table-wrap">
+    <table data-sortable>
+      <thead>
+        <tr><th>#</th><th>卡片名稱</th><th>屬性加成</th></tr>
+      </thead>
+      <tbody>
+        {% for r in cards %}
+        <tr>
+          <td>{{ r.seq }}</td>
+          <td>{{ r.name }}</td>
+          <td class="muted" style="font-size:13px">{{ r.attrs }}</td>
+        </tr>
+        {% else %}
+        <tr><td colspan="3">查無資料</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

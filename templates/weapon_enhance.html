@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}屬性武器強化{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>屬性武器強化</h1>
+
+  <div class="grade-tabs">
+    {% for elem in elements %}
+    <a class="tab {{ 'active' if tab == elem }}" href="{{ url_for('weapon_enhance', tab=elem) }}">{{ elem }}</a>
+    {% endfor %}
+  </div>
+
+  <div class="table-wrap">
+    <table data-sortable>
+      <thead>
+        <tr>
+          <th>階段</th>
+          <th>成功率</th>
+          <th>所需卷軸</th>
+          <th>消耗數</th>
+          <th>獲得效果</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for row in rows %}
+        <tr>
+          <td>Lv.{{ row.stage }}</td>
+          <td>{{ row.chance }}%</td>
+          <td>{{ row.scroll_name }}</td>
+          <td>{{ row.scroll_count }}</td>
+          <td>
+            {% for ename, evalue in row.effects.items() %}
+              <span class="badge badge-effect">{{ ename }} +{{ evalue }}</span>
+            {% endfor %}
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="5">查無資料</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}
