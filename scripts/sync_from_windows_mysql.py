@@ -97,7 +97,7 @@ def main() -> None:
     parser.add_argument("--ssh-key", required=True)
     parser.add_argument("--mysql-path", default=r"C:\Program Files\MySQL\MySQL Server 5.5\bin\mysql.exe")
     parser.add_argument("--mysql-user", default="root")
-    parser.add_argument("--mysql-password", default="root")
+    parser.add_argument("--mysql-password", required=True)
     parser.add_argument("--mysql-db", default="381")
     parser.add_argument("--out", default=str(DEFAULT_DB_PATH))
     args = parser.parse_args()

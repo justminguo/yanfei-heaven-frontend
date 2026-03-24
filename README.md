@@ -20,6 +20,8 @@
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
+export SECRET_KEY=change-this-to-a-long-random-secret
+export PUSH_TOKEN=change-this-to-a-long-random-push-token
 python scripts/seed_sample.py
 python app.py
 ```
@@ -32,6 +34,12 @@ python app.py
 可用環境變數覆蓋：
 ```bash
 export YANFEI_DB_PATH=/absolute/path/to/yanfei.db
+```
+
+必要環境變數：
+```bash
+export SECRET_KEY=change-this-to-a-long-random-secret
+export PUSH_TOKEN=change-this-to-a-long-random-push-token
 ```
 
 ## 之後怎麼接 381 的資料

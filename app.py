@@ -12,10 +12,17 @@ DEFAULT_DB_PATH = BASE_DIR / "data" / "yanfei.db"
 SCHEMA_PATH = BASE_DIR / "schema.sql"
 
 
+def require_env(name: str) -> str:
+    value = os.environ.get(name, "").strip()
+    if not value:
+        raise RuntimeError(f"Missing required environment variable: {name}")
+    return value
+
+
 def create_app() -> Flask:
     app = Flask(__name__)
     app.config["DATABASE"] = os.environ.get("YANFEI_DB_PATH", str(DEFAULT_DB_PATH))
-    app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "yanfei-dev")
+    app.config["SECRET_KEY"] = require_env("SECRET_KEY")
 
     # 弱點屬性對照
     WEAK_ATTR_NAMES: dict[int, str] = {
@@ -877,7 +884,7 @@ def create_app() -> Flask:
             db.close()
 
     # ── 私服蝦推送 API ──────────────────────────────────────────
-    PUSH_TOKEN = os.environ.get("PUSH_TOKEN", "yanfei-push-secret")
+    PUSH_TOKEN = require_env("PUSH_TOKEN")
 
     @app.route("/api/push/characters", methods=["POST"])
     def api_push_characters():
