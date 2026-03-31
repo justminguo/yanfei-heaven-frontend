@@ -12,6 +12,35 @@ a { color: #6ea8fe; text-decoration: none; }
 
 .container { width: 1120px; margin: 0 auto; padding: 0 20px; }
 
+/* 全局選單 - z-index 修復 */
+.topbar, header, .navbar {
+    position: sticky;
+    top: 0;
+    z-index: 9999 !important;
+    background-color: #121933;
+}
+
+/* 分頁標籤 - 確保不被下方內容擋住 */
+.grade-tabs, .tab-container, .nav-tabs {
+    position: relative;
+    z-index: 10;
+    margin-bottom: 20px;
+}
+
+/* 表格層級降低 */
+.table-wrap {
+    position: relative;
+    z-index: 1;
+}
+
+/* 如果表頭是固定的 */
+thead th {
+    position: sticky;
+    top: 60px;
+    z-index: 5;
+    background: #121933;
+}
+
 .topbar {
     background: #121933;
     border-bottom: 1px solid #293252;
