@@ -255,44 +255,46 @@ th.sort-desc:after { content: ' \25BC'; color: #6ea8fe; }
 
 /* 響應式 -手機 */
 @media (max-width: 768px) {
-    main.container, .page { padding-top: 120px; }
-    .topbar-inner { padding: 10px; }
+    main.container, .page { padding-top: 70px; }
+    .topbar { position: fixed; top: 0; left: 0; right: 0; z-index: 9999; max-height: 100vh; overflow-y: auto; }
+    .topbar-inner { padding: 8px 10px; }
     .nav { 
         float: none; 
-        margin-top: 10px; 
+        margin-top: 8px; 
         display: block;
         width: 100%;
     }
     .nav li { 
         display: inline-block;
         margin-left: 0; 
-        margin-right: 8px;
-        margin-bottom: 8px;
-        padding: 6px 10px;
+        margin-right: 6px;
+        margin-bottom: 6px;
+        padding: 4px 8px;
         background: #1a2540;
         border-radius: 6px;
+        font-size: 13px;
     }
-    .nav li a { display: block; }
+    .nav li a { display: block; font-size: 13px; }
     
     /* 下拉選單 - 手機版 */
-    .dropdown { display: block; width: 100%; }
-    .dropdown-toggle { display: block; width: 100%; padding: 6px 10px; background: #1a2540; border-radius: 6px; }
+    .dropdown { display: block; width: 100%; margin-bottom: 6px; }
+    .dropdown-toggle { display: block; width: 100%; padding: 4px 8px; background: #1a2540; border-radius: 6px; font-size: 13px; }
     .dropdown-menu { 
         position: static; 
         display: none;
         width: 100%;
-        margin-top: 5px;
+        margin-top: 4px;
         background: #0f1630;
         border: 1px solid #293252;
         border-radius: 8px;
         box-shadow: none;
-        padding: 5px 0;
+        padding: 4px 0;
     }
-    .dropdown-menu a { padding: 10px 16px; border-bottom: 1px solid #293252; }
+    .dropdown-menu a { padding: 8px 12px; border-bottom: 1px solid #293252; font-size: 13px; }
     .dropdown-menu a:last-child { border-bottom: none; }
     .dropdown.open .dropdown-menu { display: block; }
     
-    .filters input, .filters select { width: 100%; margin-bottom: 10px; }
+    .filters input, .filters select { width: 100%; margin-bottom: 8px; }
     .filters button { clear: both; width: 100%; }
     table { min-width: 620px; }
 }
