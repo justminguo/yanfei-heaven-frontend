@@ -8,18 +8,19 @@
 
 <section class="card">
   <h2>下載工具</h2>
-  <p>請下載以下兩個檔案，放到遊戲目錄（與 <code>妍菲天堂.exe</code> 同一個資料夾）：</p>
-  <div style="display:flex; gap:16px; margin:16px 0; flex-wrap:wrap;">
-    <a href="{{ url_for('static', filename='downloads/StartGame.exe') }}" download
-       style="display:inline-block; padding:12px 28px; background:#27ae60; color:#fff; border-radius:8px; text-decoration:none; font-weight:bold; font-size:16px;">
-      StartGame.exe（一鍵啟動）
-    </a>
-    <a href="{{ url_for('static', filename='downloads/FixLauncher.exe') }}" download
-       style="display:inline-block; padding:12px 28px; background:#2980b9; color:#fff; border-radius:8px; text-decoration:none; font-weight:bold; font-size:16px;">
-      FixLauncher.exe（修補工具）
+  <p>請下載壓縮檔，解壓縮後將裡面的兩個檔案放到遊戲目錄（與 <code>妍菲天堂.exe</code> 同一個資料夾）：</p>
+  <div style="margin:16px 0;">
+    <a href="{{ url_for('static', filename='downloads/FixLauncher.zip') }}" download
+       style="display:inline-block; padding:14px 32px; background:#27ae60; color:#fff; border-radius:8px; text-decoration:none; font-weight:bold; font-size:18px;">
+      下載防閃退工具（FixLauncher.zip）
     </a>
   </div>
-  <p style="color:#e74c3c; font-weight:bold;">兩個檔案都要下載，放到遊戲目錄裡面！</p>
+  <p>壓縮檔內含：</p>
+  <ul>
+    <li><strong>StartGame.exe</strong> — 一鍵啟動（自動開啟修補工具 + 登入器）</li>
+    <li><strong>FixLauncher.exe</strong> — 修補工具本體</li>
+  </ul>
+  <p style="color:#e74c3c; font-weight:bold;">兩個檔案都要放到遊戲目錄裡面！</p>
 </section>
 
 <section class="card">
