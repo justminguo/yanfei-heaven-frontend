@@ -1226,12 +1226,6 @@ def init_db(app: Flask) -> None:
         conn.close()
 
 
-app = create_app()
-
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=False)
-
 
 def ensure_announcements(app: Flask) -> None:
     """Insert fix-launcher announcement if not exists."""
@@ -1261,3 +1255,10 @@ def ensure_announcements(app: Flask) -> None:
         pass
     finally:
         conn.close()
+
+
+app = create_app()
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=False)
