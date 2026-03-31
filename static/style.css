@@ -1,14 +1,5 @@
-/* IE 兼容修复版 */
+/* IE 相容修復版 - 完全去除 CSS 變數和現代語法 */
 * { box-sizing: border-box; }
-
-:root {
-    --bg: #0b1020;
-    --card: #121933;
-    --line: #293252;
-    --text: #eaf0ff;
-    --muted: #aeb8d6;
-    --accent: #6ea8fe;
-}
 
 body {
     margin: 0;
@@ -19,33 +10,25 @@ body {
 
 a { color: #6ea8fe; text-decoration: none; }
 
-.container { width: 92vw; max-width: 1120px; margin: 0 auto; }
+.container { width: 1120px; margin: 0 auto; padding: 0 20px; }
 
 .topbar {
-    position: relative;
     background: #121933;
     border-bottom: 1px solid #293252;
 }
 
 .topbar-inner {
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-pack: justify;
-    justify-content: space-between;
-    -ms-flex-align: center;
-    align-items: center;
-    padding: 14px 0;
+    display: block;
+    padding: 14px 20px;
+    overflow: hidden;
 }
 
-.brand { font-weight: 800; color: #fff; }
+.brand { font-weight: 800; color: #fff; float: left; }
 
-.nav {
-    display: -ms-flexbox;
-    display: flex;
-    gap: 18px;
-}
+.nav { float: right; margin: 0; padding: 0; list-style: none; }
+.nav li { display: inline-block; margin-left: 18px; }
 
-.page { padding: 28px 0 40px; }
+.page { padding: 28px 0 40px; clear: both; }
 
 .card {
     background: #121933;
@@ -60,63 +43,46 @@ a { color: #6ea8fe; text-decoration: none; }
 
 .muted { color: #aeb8d6; }
 
-.stats {
-    display: -ms-grid;
-    display: grid;
-    -ms-grid-columns: repeat(4, 1fr);
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    margin-top: 18px;
-}
-
+/* 4欄統計 - 用 float */
+.stats { overflow: hidden; margin-top: 18px; }
 .stats div {
+    float: left;
+    width: 23%;
+    margin-right: 2.66%;
     background: #0f1630;
     border: 1px solid #293252;
     padding: 14px;
     border-radius: 14px;
+    text-align: center;
 }
-
+.stats div:last-child { margin-right: 0; }
 .stats strong { display: block; font-size: 28px; }
 
-.grid.two {
-    display: -ms-grid;
-    display: grid;
-    -ms-grid-columns: 1fr 1fr;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
-}
+/* 2欄網格 */
+.grid.two { overflow: hidden; margin-bottom: 18px; }
+.grid.two .card { float: left; width: 48.5%; margin-right: 3%; }
+.grid.two .card:nth-child(2) { margin-right: 0; }
 
 .simple-list { list-style: none; margin: 0; padding: 0; }
-
 .simple-list li {
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-pack: justify;
-    justify-content: space-between;
-    gap: 10px;
+    display: block;
     padding: 10px 0;
     border-bottom: 1px solid rgba(255,255,255,.06);
+    overflow: hidden;
 }
+.simple-list li:after { content: ""; display: table; clear: both; }
 
-.filters {
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin: 14px 0 18px;
-}
-
+.filters { margin: 14px 0 18px; overflow: hidden; }
 .filters input, .filters select, .filters button {
+    float: left;
     background: #0f1630;
     border: 1px solid #293252;
     color: #eaf0ff;
     padding: 10px 12px;
+    margin-right: 10px;
     border-radius: 12px;
 }
-
-.filters input, .filters select { min-width: 180px; }
-
+.filters input, .filters select { width: 180px; }
 .filters button { cursor: pointer; background: #1c2b54; }
 
 .table-wrap { overflow: auto; }
@@ -129,56 +95,41 @@ th, td {
     text-align: left;
     vertical-align: top;
 }
-
 th { color: #c8d5ff; font-size: 14px; }
 
-.detail-grid {
-    display: -ms-grid;
-    display: grid;
-    -ms-grid-columns: repeat(2, 1fr);
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-}
-
+/* 詳細網格 */
+.detail-grid { overflow: hidden; }
 .detail-grid div {
+    float: left;
+    width: 48%;
+    margin-right: 4%;
+    margin-bottom: 12px;
     background: #0f1630;
     border: 1px solid #293252;
     border-radius: 12px;
     padding: 12px;
 }
-
+.detail-grid div:nth-child(2n) { margin-right: 0; }
 .detail-grid strong { display: block; margin-bottom: 4px; color: #c8d5ff; }
 
 .simple-table { width: 100%; border-collapse: collapse; }
-
 .simple-table th, .simple-table td {
     padding: 8px 10px;
     border-bottom: 1px solid rgba(255,255,255,.08);
     text-align: left;
 }
-
 .simple-table th { color: #c8d5ff; font-size: 14px; }
 
 .empty { color: #aeb8d6; font-style: italic; }
 
-@media (max-width: 800px) {
-    .grid.two, .stats, .detail-grid { -ms-grid-columns: 1fr; grid-template-columns: 1fr; }
-    .nav { gap: 12px; font-size: 14px; }
-    table { min-width: 620px; }
-}
+/* 排序箭頭 */
+th[data-sort] { cursor: pointer; white-space: nowrap; }
+th[data-sort]:after { content: ' \21C5'; color: #aeb8d6; font-size: 11px; }
+th.sort-asc:after { content: ' \25B2'; color: #6ea8fe; }
+th.sort-desc:after { content: ' \25BC'; color: #6ea8fe; }
 
-th[data-sort] { cursor: pointer; -ms-user-select: none; user-select: none; white-space: nowrap; }
-th[data-sort]::after { content: ' \21C5'; color: #aeb8d6; font-size: 11px; }
-th.sort-asc::after { content: ' \25B2'; color: #6ea8fe; }
-th.sort-desc::after { content: ' \25BC'; color: #6ea8fe; }
-
-@media (max-width: 768px) {
-    .filters input, .filters select { min-width: 140px; font-size: 14px; }
-    .table-wrap { -webkit-overflow-scrolling: touch; }
-}
-
+/* Badge */
 .badge { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; }
-
 .badge-myth { background: #6a0dad; color: #fff; }
 .badge-legend { background: #c9920a; color: #fff; }
 .badge-hero { background: #1565c0; color: #fff; }
@@ -186,34 +137,28 @@ th.sort-desc::after { content: ' \25BC'; color: #6ea8fe; }
 .badge-normal { background: #37474f; color: #cfd8dc; }
 .badge-epic { background: #c62828; color: #fff; }
 
-.grade-tabs {
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 14px 0;
-}
-
+/* 等級標籤 */
+.grade-tabs { overflow: hidden; margin: 14px 0; }
 .grade-tabs .tab {
+    float: left;
     padding: 6px 16px;
     border-radius: 20px;
     background: #0f1630;
     border: 1px solid #293252;
     color: #aeb8d6;
     font-size: 14px;
+    margin-right: 8px;
+    cursor: pointer;
 }
-
 .grade-tabs .tab.active, .grade-tabs .tab:hover {
     background: #1c2b54;
     color: #eaf0ff;
     border-color: #6ea8fe;
 }
 
-.dropdown { position: relative; }
-
-.dropdown-toggle { cursor: pointer; color: #6ea8fe; padding: 4px 0; }
-
+/* 下拉選單 */
+.dropdown { position: relative; display: inline-block; }
+.dropdown-toggle { cursor: pointer; color: #6ea8fe; padding: 8px 12px; }
 .dropdown-menu {
     display: none;
     position: absolute;
@@ -227,23 +172,18 @@ th.sort-desc::after { content: ' \25BC'; color: #6ea8fe; }
     z-index: 100;
     box-shadow: 0 8px 24px rgba(0,0,0,.4);
 }
-
 .dropdown-menu a { display: block; padding: 8px 16px; color: #eaf0ff; white-space: nowrap; }
 .dropdown-menu a:hover { background: #1c2b54; color: #6ea8fe; }
+.dropdown:hover .dropdown-menu { display: block; }
 
-.dropdown:hover > .dropdown-menu { display: block; }
-
-@media (max-width: 768px) {
-    .nav { -ms-flex-wrap: wrap; flex-wrap: wrap; }
-    .dropdown-menu { position: static; border: none; box-shadow: none; padding: 0 0 0 12px; background: transparent; }
-}
-
+/* 掉落詳情 */
 .drop-detail td { background: #0a0e1a; padding: 12px 16px; }
 .drop-detail .simple-table { margin: 0; background: transparent; }
 .drop-detail .simple-table td, .drop-detail .simple-table th { padding: 6px 10px; }
 
 .badge-effect { background: #1c2b54; color: #6ea8fe; border: 1px solid #293252; }
 
+/* 等級顏色 */
 .grade-normal { color: #fff; }
 .grade-rare { color: #3498db; font-weight: 600; }
 .grade-hero { color: #e74c3c; font-weight: 700; }
@@ -261,3 +201,25 @@ th.sort-desc::after { content: ' \25BC'; color: #6ea8fe; }
 .faq p { margin-top: 0; margin-bottom: 12px; color: #ccc; }
 .nav-link { color: #ccc; text-decoration: none; padding: 8px 12px; }
 .nav-link:hover { color: #00ffd5; }
+
+/* 清除浮動 */
+.clearfix:after { content: ""; display: table; clear: both; }
+
+/* 響應式 -平板 */
+@media (max-width: 1120px) {
+    .container { width: 100%; }
+    .stats div { width: 48%; margin-bottom: 10px; }
+    .stats div:nth-child(2n) { margin-right: 0; }
+    .grid.two .card { float: none; width: 100%; margin-right: 0; }
+    .detail-grid div { float: none; width: 100%; margin-right: 0; }
+}
+
+/* 響應式 -手機 */
+@media (max-width: 768px) {
+    .topbar-inner { padding: 10px; }
+    .nav { float: none; margin-top: 10px; }
+    .nav li { margin-left: 0; margin-right: 12px; }
+    .filters input, .filters select { width: 140px; margin-bottom: 10px; }
+    .filters button { clear: both; }
+    table { min-width: 620px; }
+}
