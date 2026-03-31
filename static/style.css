@@ -246,9 +246,42 @@ th.sort-desc:after { content: ' \25BC'; color: #6ea8fe; }
 /* 響應式 -手機 */
 @media (max-width: 768px) {
     .topbar-inner { padding: 10px; }
-    .nav { float: none; margin-top: 10px; }
-    .nav li { margin-left: 0; margin-right: 12px; }
-    .filters input, .filters select { width: 140px; margin-bottom: 10px; }
-    .filters button { clear: both; }
+    .nav { 
+        float: none; 
+        margin-top: 10px; 
+        display: block;
+        width: 100%;
+    }
+    .nav li { 
+        display: inline-block;
+        margin-left: 0; 
+        margin-right: 8px;
+        margin-bottom: 8px;
+        padding: 6px 10px;
+        background: #1a2540;
+        border-radius: 6px;
+    }
+    .nav li a { display: block; }
+    
+    /* 下拉選單 - 手機版 */
+    .dropdown { display: block; width: 100%; }
+    .dropdown-toggle { display: block; width: 100%; padding: 6px 10px; background: #1a2540; border-radius: 6px; }
+    .dropdown-menu { 
+        position: static; 
+        display: none;
+        width: 100%;
+        margin-top: 5px;
+        background: #0f1630;
+        border: 1px solid #293252;
+        border-radius: 8px;
+        box-shadow: none;
+        padding: 5px 0;
+    }
+    .dropdown-menu a { padding: 10px 16px; border-bottom: 1px solid #293252; }
+    .dropdown-menu a:last-child { border-bottom: none; }
+    .dropdown.open .dropdown-menu { display: block; }
+    
+    .filters input, .filters select { width: 100%; margin-bottom: 10px; }
+    .filters button { clear: both; width: 100%; }
     table { min-width: 620px; }
 }
