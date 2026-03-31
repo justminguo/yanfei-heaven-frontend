@@ -36,32 +36,32 @@
           </td>
           <td>{{ row.ran }}%</td>
           {% if tab == 'weapon' %}
-          <td>{{ row.Attack if row.Attack else '+0%' }}</td>
-          <td>{{ row.Hit if row.Hit else '+0%' }}</td>
-          <td>{{ row.Sp if row.Sp else '+0%' }}</td>
-          <td>{{ row.Str if row.Str else '+0%' }}</td>
-          <td>{{ row.Dex if row.Dex else '+0%' }}</td>
-          <td>{{ row.Int if row.Int else '+0%' }}</td>
-          <td>{{ row.Con if row.Con else '+0%' }}</td>
-          <td>{{ row.Cha if row.Cha else '+0%' }}</td>
-          <td>{{ row.Wis if row.Wis else '+0%' }}</td>
-          <td>{{ row.Hp if row.Hp else '+0%' }}</td>
-          <td>{{ row.Mp if row.Mp else '+0%' }}</td>
-          <td>{{ row.Mr if row.Mr else '+0%' }}</td>
-          <td>{{ row.ReductionDmg if row.ReductionDmg else '+0%' }}</td>
+          <td>{% if row.Attack %}{{ row.Attack }}{% endif %}</td>
+          <td>{% if row.Hit %}{{ row.Hit }}{% endif %}</td>
+          <td>{% if row.Sp %}{{ row.Sp }}{% endif %}</td>
+          <td>{% if row.Str %}{{ row.Str }}{% endif %}</td>
+          <td>{% if row.Dex %}{{ row.Dex }}{% endif %}</td>
+          <td>{% if row.Int %}{{ row.Int }}{% endif %}</td>
+          <td>{% if row.Con %}{{ row.Con }}{% endif %}</td>
+          <td>{% if row.Cha %}{{ row.Cha }}{% endif %}</td>
+          <td>{% if row.Wis %}{{ row.Wis }}{% endif %}</td>
+          <td>{% if row.Hp %}{{ row.Hp }}{% endif %}</td>
+          <td>{% if row.Mp %}{{ row.Mp }}{% endif %}</td>
+          <td>{% if row.Mr %}{{ row.Mr }}{% endif %}</td>
+          <td>{% if row.ReductionDmg %}{{ row.ReductionDmg }}{% endif %}</td>
           {% else %}
-          <td>{{ row.Str if row.Str else '+0%' }}</td>
-          <td>{{ row.Dex if row.Dex else '+0%' }}</td>
-          <td>{{ row.Int if row.Int else '+0%' }}</td>
-          <td>{{ row.Con if row.Con else '+0%' }}</td>
-          <td>{{ row.Cha if row.Cha else '+0%' }}</td>
-          <td>{{ row.Wis if row.Wis else '+0%' }}</td>
-          <td>{{ row.Hp if row.Hp else '+0%' }}</td>
-          <td>{{ row.Mp if row.Mp else '+0%' }}</td>
-          <td>{{ row.Mr if row.Mr else '+0%' }}</td>
-          <td>{{ row.ReductionDmg if row.ReductionDmg else '+0%' }}</td>
-          <td>{{ row.FireDef if row.FireDef else '+0%' }}</td>
-          <td>{{ row.WindDef if row.WindDef else '+0%' }}</td>
+          <td>{% if row.Str %}{{ row.Str }}{% endif %}</td>
+          <td>{% if row.Dex %}{{ row.Dex }}{% endif %}</td>
+          <td>{% if row.Int %}{{ row.Int }}{% endif %}</td>
+          <td>{% if row.Con %}{{ row.Con }}{% endif %}</td>
+          <td>{% if row.Cha %}{{ row.Cha }}{% endif %}</td>
+          <td>{% if row.Wis %}{{ row.Wis }}{% endif %}</td>
+          <td>{% if row.Hp %}{{ row.Hp }}{% endif %}</td>
+          <td>{% if row.Mp %}{{ row.Mp }}{% endif %}</td>
+          <td>{% if row.Mr %}{{ row.Mr }}{% endif %}</td>
+          <td>{% if row.ReductionDmg %}{{ row.ReductionDmg }}{% endif %}</td>
+          <td>{% if row.FireDef %}{{ row.FireDef }}{% endif %}</td>
+          <td>{% if row.WindDef %}{{ row.WindDef }}{% endif %}</td>
           {% endif %}
         </tr>
       {% else %}

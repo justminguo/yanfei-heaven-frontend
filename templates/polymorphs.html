@@ -23,7 +23,7 @@
   .grade-awaken { color:#00e5ff; font-weight:700; }
   .grade-myth   { color:#f1c40f; font-weight:700; }
   .grade-legend { color:#9b59b6; font-weight:700; }
-  .grade-hero   { color:#e67e22; font-weight:700; }
+  .grade-hero   { color:#e74c3c; font-weight:700; }
   .grade-rare   { color:#3498db; }
   .grade-high   { color:#27ae60; }
   .grade-normal { color:#aaa; }
@@ -136,7 +136,7 @@
               {% elif mag_val > 50 %}<span style="color:#4caf50;font-weight:700">{{ mag }}</span>
               {% elif mag_val > 20 %}<span style="color:#ffca28">{{ mag }}</span>
               {% else %}<span class="muted">{{ mag }}</span>{% endif %}
-            {% else %}<span class="muted">+0%</span>{% endif %}
+            {% else %}<span class="muted">—</span>{% endif %}
           </td>
         </tr>
         {% else %}

@@ -296,6 +296,7 @@ def create_app() -> Flask:
             WHERE name NOT LIKE '%娃娃%'
               AND name NOT LIKE '%變身%'
               AND name NOT LIKE '%魔法娃娃%'
+              AND name NOT LIKE '%(捨棄)%'
         """
         params: list[Any] = []
         if q:
@@ -321,6 +322,7 @@ def create_app() -> Flask:
             SELECT id, name, nameid, level, hp, mp, ac, exp, family, note, gfxid
             FROM monsters
             WHERE level < 500 AND hp < 5000000
+              AND name NOT LIKE '█%' AND name <> '—'
         """
         params: list[Any] = []
         if q:
@@ -362,6 +364,8 @@ def create_app() -> Flask:
             JOIN monsters m ON m.id = md.monster_id
             JOIN items i ON i.id = md.item_id
             WHERE 1=1
+              AND i.name NOT LIKE '%(捨棄)%'
+              AND m.name NOT LIKE '█%' AND m.name <> '—'
         """
         params: list[Any] = []
         if q:
@@ -396,6 +400,7 @@ def create_app() -> Flask:
               AND name NOT LIKE '%幣%'
               AND name NOT LIKE '%藥劑%'
               AND name NOT LIKE '%能量石%'
+              AND name NOT LIKE '%(捨棄)%'
               AND doll_effects IS NOT NULL AND doll_effects != ''
         """
         params: list[Any] = []
@@ -536,7 +541,10 @@ def create_app() -> Flask:
     @app.route("/monster/<int:monster_id>")
     def monster_detail(monster_id: int):
         db = get_db()
-        monster = db.execute("SELECT * FROM monsters WHERE id = ?", (monster_id,)).fetchone()
+        monster = db.execute(
+            "SELECT * FROM monsters WHERE id = ? AND name NOT LIKE '█%' AND name <> '—'",
+            (monster_id,),
+        ).fetchone()
         if not monster:
             abort(404)
         drops = db.execute(
@@ -545,6 +553,7 @@ def create_app() -> Flask:
             FROM monster_drops md
             JOIN items i ON i.id = md.item_id
             WHERE md.monster_id = ?
+              AND i.name NOT LIKE '%(捨棄)%'
             ORDER BY md.chance DESC, i.name ASC
             """,
             (monster_id,),
@@ -554,7 +563,10 @@ def create_app() -> Flask:
     @app.route("/item/<int:item_id>")
     def item_detail(item_id: int):
         db = get_db()
-        item = db.execute("SELECT * FROM items WHERE id = ?", (item_id,)).fetchone()
+        item = db.execute(
+            "SELECT * FROM items WHERE id = ? AND name NOT LIKE '%(捨棄)%'",
+            (item_id,),
+        ).fetchone()
         if not item:
             abort(404)
         drop_sources = db.execute(
@@ -563,6 +575,7 @@ def create_app() -> Flask:
             FROM monster_drops md
             JOIN monsters m ON m.id = md.monster_id
             WHERE md.item_id = ?
+              AND m.name NOT LIKE '█%' AND m.name <> '—'
             ORDER BY md.chance DESC, m.level DESC
             """,
             (item_id,),
@@ -640,7 +653,7 @@ def create_app() -> Flask:
         q = request.args.get("q", "").strip()
         item_type = request.args.get("item_type", "").strip()
         limit = min(int(request.args.get("limit", 100)), 500)
-        sql = "SELECT * FROM items WHERE 1=1"
+        sql = "SELECT * FROM items WHERE 1=1 AND name NOT LIKE '%(捨棄)%'"
         params: list[Any] = []
         if q:
             like = f"%{q}%"
@@ -657,7 +670,10 @@ def create_app() -> Flask:
     @app.route("/api/item/<int:item_id>")
     def api_item_detail(item_id: int):
         db = get_db()
-        item = db.execute("SELECT * FROM items WHERE id = ?", (item_id,)).fetchone()
+        item = db.execute(
+            "SELECT * FROM items WHERE id = ? AND name NOT LIKE '%(捨棄)%'",
+            (item_id,),
+        ).fetchone()
         if not item:
             return jsonify({"ok": False, "error": "item_not_found"}), 404
         drop_sources = db.execute(
@@ -666,6 +682,7 @@ def create_app() -> Flask:
             FROM monster_drops md
             JOIN monsters m ON m.id = md.monster_id
             WHERE md.item_id = ?
+              AND m.name NOT LIKE '█%' AND m.name <> '—'
             ORDER BY md.chance DESC, m.level DESC
             """,
             (item_id,),
@@ -678,7 +695,7 @@ def create_app() -> Flask:
         min_level = request.args.get("min_level", "").strip()
         max_level = request.args.get("max_level", "").strip()
         limit = min(int(request.args.get("limit", 100)), 500)
-        sql = "SELECT * FROM monsters WHERE 1=1"
+        sql = "SELECT * FROM monsters WHERE 1=1 AND name NOT LIKE '█%' AND name <> '—'"
         params: list[Any] = []
         if q:
             like = f"%{q}%"
@@ -698,7 +715,10 @@ def create_app() -> Flask:
     @app.route("/api/monster/<int:monster_id>")
     def api_monster_detail(monster_id: int):
         db = get_db()
-        monster = db.execute("SELECT * FROM monsters WHERE id = ?", (monster_id,)).fetchone()
+        monster = db.execute(
+            "SELECT * FROM monsters WHERE id = ? AND name NOT LIKE '█%' AND name <> '—'",
+            (monster_id,),
+        ).fetchone()
         if not monster:
             return jsonify({"ok": False, "error": "monster_not_found"}), 404
         drops = db.execute(
@@ -707,6 +727,7 @@ def create_app() -> Flask:
             FROM monster_drops md
             JOIN items i ON i.id = md.item_id
             WHERE md.monster_id = ?
+              AND i.name NOT LIKE '%(捨棄)%'
             ORDER BY md.chance DESC, i.name ASC
             """,
             (monster_id,),
@@ -736,6 +757,8 @@ def create_app() -> Flask:
             JOIN monsters m ON m.id = md.monster_id
             JOIN items i ON i.id = md.item_id
             WHERE 1=1
+              AND i.name NOT LIKE '%(捨棄)%'
+              AND m.name NOT LIKE '█%' AND m.name <> '—'
         """
         params: list[Any] = []
         if q:
@@ -847,7 +870,8 @@ def create_app() -> Flask:
             like = f"%{q}%"
             db = get_db()
             items_rows = db.execute(
-                "SELECT id, name FROM items WHERE name LIKE ? ORDER BY id LIMIT 50", (like,)
+                "SELECT id, name FROM items WHERE name LIKE ? AND name NOT LIKE '%(捨棄)%' ORDER BY id LIMIT 50",
+                (like,),
             ).fetchall()
             weapons_rows = db.execute(
                 "SELECT id, name FROM weapons WHERE name LIKE ? ORDER BY id LIMIT 50", (like,)
@@ -865,7 +889,8 @@ def create_app() -> Flask:
             like = f"%{q}%"
             db = get_db()
             monsters = db.execute(
-                "SELECT id, name, level FROM monsters WHERE name LIKE ? ORDER BY level DESC LIMIT 50", (like,)
+                "SELECT id, name, level FROM monsters WHERE name LIKE ? AND name NOT LIKE '█%' AND name <> '—' ORDER BY level DESC LIMIT 50",
+                (like,),
             ).fetchall()
             for m in monsters:
                 drops = db.execute("""
@@ -873,6 +898,7 @@ def create_app() -> Flask:
                     FROM monster_drops md
                     JOIN items i ON i.id = md.item_id
                     WHERE md.monster_id = ?
+                      AND i.name NOT LIKE '%(捨棄)%'
                 """, (m["id"],)).fetchall()
                 results.append({"id": m["id"], "name": m["name"], "level": m["level"], "drops": drops})
         return render_template("monster_search.html", q=q, results=results)
