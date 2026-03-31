@@ -3,7 +3,23 @@
 {% block content %}
 <section class="card">
   <h1>防閃退修補工具 使用說明</h1>
-  <p>此工具可修復使用 LinHelperZ 外掛時遊戲閃退的問題。更新後會自動下載到遊戲目錄。</p>
+  <p>此工具可修復使用 LinHelperZ 外掛時遊戲閃退的問題。</p>
+</section>
+
+<section class="card">
+  <h2>下載工具</h2>
+  <p>請下載以下兩個檔案，放到遊戲目錄（與 <code>妍菲天堂.exe</code> 同一個資料夾）：</p>
+  <div style="display:flex; gap:16px; margin:16px 0; flex-wrap:wrap;">
+    <a href="{{ url_for('static', filename='downloads/StartGame.exe') }}" download
+       style="display:inline-block; padding:12px 28px; background:#27ae60; color:#fff; border-radius:8px; text-decoration:none; font-weight:bold; font-size:16px;">
+      StartGame.exe（一鍵啟動）
+    </a>
+    <a href="{{ url_for('static', filename='downloads/FixLauncher.exe') }}" download
+       style="display:inline-block; padding:12px 28px; background:#2980b9; color:#fff; border-radius:8px; text-decoration:none; font-weight:bold; font-size:16px;">
+      FixLauncher.exe（修補工具）
+    </a>
+  </div>
+  <p style="color:#e74c3c; font-weight:bold;">兩個檔案都要下載，放到遊戲目錄裡面！</p>
 </section>
 
 <section class="card">
