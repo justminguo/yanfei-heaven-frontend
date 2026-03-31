@@ -83,10 +83,13 @@
         {% for r in rows %}
         <tr>
           <td>
-            {% if r.grade == '覺醒' %}
-              <span class="grade-awaken">{{ (r.note or '—') | clean_name }}</span>
-            {% else %}
-              {{ (r.note or '—') | clean_name }}
+            {% if r.grade == '覺醒' %}<span class="grade-awaken">{{ (r.note or '') | clean_name }}</span>
+            {% elif r.grade == '神話' %}<span class="grade-myth">{{ (r.note or '') | clean_name }}</span>
+            {% elif r.grade == '傳說' %}<span class="grade-legend">{{ (r.note or '') | clean_name }}</span>
+            {% elif r.grade == '英雄' %}<span class="grade-hero">{{ (r.note or '') | clean_name }}</span>
+            {% elif r.grade == '稀有' %}<span class="grade-rare">{{ (r.note or '') | clean_name }}</span>
+            {% elif r.grade == '高級' %}<span class="grade-high">{{ (r.note or '') | clean_name }}</span>
+            {% else %}{{ (r.note or '') | clean_name }}
             {% endif %}
           </td>
           <td>
@@ -133,7 +136,7 @@
               {% elif mag_val > 50 %}<span style="color:#4caf50;font-weight:700">{{ mag }}</span>
               {% elif mag_val > 20 %}<span style="color:#ffca28">{{ mag }}</span>
               {% else %}<span class="muted">{{ mag }}</span>{% endif %}
-            {% else %}<span class="muted">—</span>{% endif %}
+            {% else %}<span class="muted">+0%</span>{% endif %}
           </td>
         </tr>
         {% else %}

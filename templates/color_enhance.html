@@ -36,32 +36,32 @@
           </td>
           <td>{{ row.ran }}%</td>
           {% if tab == 'weapon' %}
-          <td>{{ row.Attack or '—' }}</td>
-          <td>{{ row.Hit or '—' }}</td>
-          <td>{{ row.Sp or '—' }}</td>
-          <td>{{ row.Str or '—' }}</td>
-          <td>{{ row.Dex or '—' }}</td>
-          <td>{{ row.Int or '—' }}</td>
-          <td>{{ row.Con or '—' }}</td>
-          <td>{{ row.Cha or '—' }}</td>
-          <td>{{ row.Wis or '—' }}</td>
-          <td>{{ row.Hp or '—' }}</td>
-          <td>{{ row.Mp or '—' }}</td>
-          <td>{{ row.Mr or '—' }}</td>
-          <td>{{ row.ReductionDmg or '—' }}</td>
+          <td>{{ row.Attack if row.Attack else '+0%' }}</td>
+          <td>{{ row.Hit if row.Hit else '+0%' }}</td>
+          <td>{{ row.Sp if row.Sp else '+0%' }}</td>
+          <td>{{ row.Str if row.Str else '+0%' }}</td>
+          <td>{{ row.Dex if row.Dex else '+0%' }}</td>
+          <td>{{ row.Int if row.Int else '+0%' }}</td>
+          <td>{{ row.Con if row.Con else '+0%' }}</td>
+          <td>{{ row.Cha if row.Cha else '+0%' }}</td>
+          <td>{{ row.Wis if row.Wis else '+0%' }}</td>
+          <td>{{ row.Hp if row.Hp else '+0%' }}</td>
+          <td>{{ row.Mp if row.Mp else '+0%' }}</td>
+          <td>{{ row.Mr if row.Mr else '+0%' }}</td>
+          <td>{{ row.ReductionDmg if row.ReductionDmg else '+0%' }}</td>
           {% else %}
-          <td>{{ row.Str or '—' }}</td>
-          <td>{{ row.Dex or '—' }}</td>
-          <td>{{ row.Int or '—' }}</td>
-          <td>{{ row.Con or '—' }}</td>
-          <td>{{ row.Cha or '—' }}</td>
-          <td>{{ row.Wis or '—' }}</td>
-          <td>{{ row.Hp or '—' }}</td>
-          <td>{{ row.Mp or '—' }}</td>
-          <td>{{ row.Mr or '—' }}</td>
-          <td>{{ row.ReductionDmg or '—' }}</td>
-          <td>{{ row.FireDef or '—' }}</td>
-          <td>{{ row.WindDef or '—' }}</td>
+          <td>{{ row.Str if row.Str else '+0%' }}</td>
+          <td>{{ row.Dex if row.Dex else '+0%' }}</td>
+          <td>{{ row.Int if row.Int else '+0%' }}</td>
+          <td>{{ row.Con if row.Con else '+0%' }}</td>
+          <td>{{ row.Cha if row.Cha else '+0%' }}</td>
+          <td>{{ row.Wis if row.Wis else '+0%' }}</td>
+          <td>{{ row.Hp if row.Hp else '+0%' }}</td>
+          <td>{{ row.Mp if row.Mp else '+0%' }}</td>
+          <td>{{ row.Mr if row.Mr else '+0%' }}</td>
+          <td>{{ row.ReductionDmg if row.ReductionDmg else '+0%' }}</td>
+          <td>{{ row.FireDef if row.FireDef else '+0%' }}</td>
+          <td>{{ row.WindDef if row.WindDef else '+0%' }}</td>
           {% endif %}
         </tr>
       {% else %}
