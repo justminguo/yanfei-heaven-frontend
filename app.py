@@ -1186,6 +1186,7 @@ def create_app() -> Flask:
         )
 
     init_db(app)
+    ensure_announcements(app)
     return app
 
 
@@ -1230,3 +1231,33 @@ app = create_app()
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=False)
+
+
+def ensure_announcements(app: Flask) -> None:
+    """Insert fix-launcher announcement if not exists."""
+    db_path = Path(app.config["DATABASE"])
+    if not db_path.exists():
+        return
+    conn = sqlite3.connect(db_path)
+    try:
+        cur = conn.execute(
+            "SELECT COUNT(*) FROM announcements WHERE title LIKE '%防閃退%'"
+        )
+        if cur.fetchone()[0] == 0:
+            conn.execute(
+                """INSERT INTO announcements (title, body, category, url, pinned, published_at)
+                   VALUES (?, ?, ?, ?, ?, ?)""",
+                (
+                    "新增防閃退修補工具，請用 StartGame.exe 啟動遊戲",
+                    "更新後會自動下載 FixLauncher.exe 和 StartGame.exe 到遊戲目錄。使用方式請參閱說明頁面。",
+                    "更新公告",
+                    "/fix-guide",
+                    1,
+                    "2026-03-31",
+                ),
+            )
+            conn.commit()
+    except Exception:
+        pass
+    finally:
+        conn.close()
