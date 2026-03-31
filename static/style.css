@@ -14,10 +14,20 @@ a { color: #6ea8fe; text-decoration: none; }
 
 /* 全局選單 - z-index 修復 */
 .topbar, header, .navbar {
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
     z-index: 9999 !important;
     background-color: #121933;
+    width: 100%;
+}
+
+/* 讓 main 內容不要被 fixed navbar 擋住 */
+main.container, .page {
+    padding-top: 80px;
+    position: relative;
+    z-index: 1;
 }
 
 /* 分頁標籤 - 確保不被下方內容擋住 */
@@ -245,6 +255,7 @@ th.sort-desc:after { content: ' \25BC'; color: #6ea8fe; }
 
 /* 響應式 -手機 */
 @media (max-width: 768px) {
+    main.container, .page { padding-top: 120px; }
     .topbar-inner { padding: 10px; }
     .nav { 
         float: none; 
