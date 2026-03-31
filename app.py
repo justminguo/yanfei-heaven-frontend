@@ -255,6 +255,10 @@ def create_app() -> Flask:
             "armors": db.execute("SELECT COUNT(*) AS c FROM armors").fetchone()["c"],
             "characters": db.execute("SELECT COUNT(*) AS c FROM characters").fetchone()["c"],
         }
+    @app.route("/fix-guide")
+    def fix_guide():
+        return render_template("fix_guide.html")
+
 
     @app.route("/")
     def home():

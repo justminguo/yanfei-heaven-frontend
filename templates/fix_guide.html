@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}防閃退工具使用說明 - 妍菲天堂{% endblock %}
+{% block content %}
+<section class="card">
+  <h1>防閃退修補工具 使用說明</h1>
+  <p>此工具可修復使用 LinHelperZ 外掛時遊戲閃退的問題。更新後會自動下載到遊戲目錄。</p>
+</section>
+
+<section class="card">
+  <h2>方式一：一鍵啟動（推薦）</h2>
+  <ol class="guide-steps">
+    <li>到遊戲目錄找到 <code>StartGame.exe</code></li>
+    <li>雙擊執行，它會自動啟動 <strong>FixLauncher</strong> 和 <strong>登入器</strong></li>
+    <li>正常登入遊戲，選擇角色進入世界</li>
+    <li>進入遊戲後，切到 FixLauncher 視窗按 <kbd>Home</kbd> 鍵</li>
+    <li>看到「修補完成！22/22」即表示成功</li>
+    <li>回到遊戲正常遊玩，不會再閃退</li>
+  </ol>
+</section>
+
+<section class="card">
+  <h2>方式二：手動啟動</h2>
+  <ol class="guide-steps">
+    <li>到遊戲目錄找到 <code>FixLauncher.exe</code>，右鍵「以系統管理員身分執行」</li>
+    <li>正常從登入器開啟遊戲</li>
+    <li>選擇角色進入遊戲世界</li>
+    <li>切到 FixLauncher 視窗，按 <kbd>Home</kbd> 鍵修補</li>
+    <li>看到「修補完成！22/22 safe_deref, VEH=OK, Anti-Exit=OK」即成功</li>
+    <li>按 <kbd>Q</kbd> 可退出 FixLauncher（修補已生效，可關閉）</li>
+  </ol>
+</section>
+
+<section class="card">
+  <h2>注意事項</h2>
+  <ul class="guide-notes">
+    <li>FixLauncher 需要<strong>系統管理員權限</strong>才能運作，StartGame.exe 會自動請求權限</li>
+    <li>必須<strong>先進入遊戲世界（角色在地圖上）</strong>再按 Home 修補</li>
+    <li>每次開遊戲都需要重新修補一次</li>
+    <li>修補成功後可以安心使用 LinHelperZ，不會再閃退</li>
+    <li>如果 FixLauncher 顯示「OpenProcess FAILED」，請確認以管理員身分執行</li>
+  </ul>
+</section>
+
+<section class="card">
+  <h2>常見問題</h2>
+  <div class="faq">
+    <h3>Q: 按了 Home 沒反應？</h3>
+    <p>A: 確認 FixLauncher 視窗是否在最前面（有焦點）。必須在 FixLauncher 的黑色視窗中按 Home。</p>
+
+    <h3>Q: 顯示「代碼尚未解密」？</h3>
+    <p>A: 遊戲還在載入中，請等角色完全進入世界後再按 Home。</p>
+
+    <h3>Q: 修補後還是閃退？</h3>
+    <p>A: 確認顯示「22/22 safe_deref, VEH=OK, Anti-Exit=OK」。如果數字不是 22/22，請重新嘗試。</p>
+  </div>
+</section>
+{% endblock %}

@@ -21,3 +21,15 @@ th[data-sort]{cursor:pointer;user-select:none;white-space:nowrap}th[data-sort]::
 .grade-hero{color:#e74c3c;font-weight:700}
 .grade-legend{color:#9b59b6;font-weight:700}
 .grade-myth{color:#f1c40f;font-weight:700}
+
+/* Fix Guide Page */
+.guide-steps { padding-left: 1.5em; line-height: 2.2; }
+.guide-steps li { margin-bottom: 8px; }
+.guide-steps code { background: rgba(255,255,255,0.1); padding: 2px 8px; border-radius: 4px; font-family: monospace; color: #00ffd5; }
+.guide-steps kbd { background: #444; padding: 2px 8px; border-radius: 4px; border: 1px solid #666; font-family: monospace; color: #fff; }
+.guide-notes { padding-left: 1.5em; line-height: 2; }
+.guide-notes li { margin-bottom: 6px; }
+.faq h3 { color: #00ffd5; margin-top: 16px; margin-bottom: 4px; }
+.faq p { margin-top: 0; margin-bottom: 12px; color: #ccc; }
+.nav-link { color: #ccc; text-decoration: none; padding: 8px 12px; }
+.nav-link:hover { color: #00ffd5; }
