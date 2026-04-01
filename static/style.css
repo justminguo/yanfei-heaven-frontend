@@ -377,3 +377,19 @@ main.container, .page {
     .filters button { clear: both; width: 100%; }
     table { min-width: 620px; }
 }
+
+/* Navigation safety overrides (final) */
+header.topbar {
+    overflow: visible !important;
+    z-index: 1000 !important;
+}
+
+.nav-links,
+.navigation {
+    overflow: visible !important;
+}
+
+.dropdown-menu {
+    position: absolute !important;
+    z-index: 99999 !important;
+}
