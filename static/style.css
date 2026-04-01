@@ -45,12 +45,13 @@ body, html {
 .table-wrap {
     position: relative;
     z-index: 1;
+    padding-top: 10px;
 }
 
 /* 如果表頭是固定的 */
 thead th {
     position: sticky;
-    top: 60px;
+    top: 0;
     z-index: 5;
     background: #121933;
 }
