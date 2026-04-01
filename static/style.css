@@ -68,7 +68,8 @@ thead th {
 
 .brand { font-weight: 800; color: #fff; float: left; }
 
-.nav { float: right; margin: 0; padding: 0; list-style: none; }
+.nav { float: right; margin: 0; padding: 0; list-style: none; overflow: visible !important; }
+.nav-links, .navigation { overflow: visible !important; }
 .nav li { display: inline-block; margin-left: 18px; }
 
 .page { padding: 28px 0 40px; clear: both; }
@@ -200,11 +201,11 @@ th.sort-desc:after { content: ' \25BC'; color: #6ea8fe; }
 }
 
 /* 下拉選單 */
-.dropdown { position: relative; display: inline-block; }
+.dropdown { position: relative; display: inline-block; overflow: visible !important; }
 .dropdown-toggle { cursor: pointer; color: #6ea8fe; padding: 8px 12px; }
 .dropdown-menu {
     display: none;
-    position: absolute;
+    position: absolute !important;
     top: 100%;
     left: 0;
     background: #121933;
@@ -212,7 +213,7 @@ th.sort-desc:after { content: ' \25BC'; color: #6ea8fe; }
     border-radius: 10px;
     min-width: 140px;
     padding: 6px 0;
-    z-index: 100;
+    z-index: 99999 !important;
     box-shadow: 0 8px 24px rgba(0,0,0,.4);
 }
 /* 橋接層 - 填補滑鼠移動間隙 */
