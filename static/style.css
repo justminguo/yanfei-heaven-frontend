@@ -253,6 +253,21 @@ th.sort-desc:after { content: ' \25BC'; color: #6ea8fe; }
     .detail-grid div { float: none; width: 100%; margin-right: 0; }
 }
 
+/* 全局選單 - z-index 修復 */
+.topbar, header, .navbar {
+    position: sticky;
+    top: 0;
+    z-index: 9999 !important;
+    background-color: #121933;
+}
+
+/* 讓 main 內容不要被 sticky navbar 擋住 */
+main.container, .page {
+    padding-top: 70px;
+    position: relative;
+    z-index: 1;
+}
+
 /* 響應式 -手機 */
 @media (max-width: 768px) {
     main.container, .page { padding-top: 70px; }
