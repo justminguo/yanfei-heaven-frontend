@@ -242,6 +242,18 @@ main, .main-content, #root > div:nth-child(2) {
     padding-top: 20px;
 }
 
+/* 確保主內容的邊框不會擋住導航 */
+main.container {
+    border: none !important;
+    outline: none !important;
+    background: transparent !important;
+}
+
+.page {
+    border: none !important;
+    box-shadow: none !important;
+}
+
 /* 掉落詳情 */
 .drop-detail td { background: #0a0e1a; padding: 12px 16px; }
 .drop-detail .simple-table { margin: 0; background: transparent; }
