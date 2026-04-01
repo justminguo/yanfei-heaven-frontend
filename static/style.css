@@ -393,3 +393,28 @@ header.topbar {
     position: absolute !important;
     z-index: 99999 !important;
 }
+
+/* Navigation dropdown final precedence overrides */
+.nav-links,
+.navigation {
+    position: relative;
+    z-index: 1001 !important;
+    overflow: visible !important;
+}
+
+.dropdown-menu,
+.submenu {
+    position: absolute !important;
+    top: 100%;
+    left: 0;
+    z-index: 99999 !important;
+    background-color: #121933 !important;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+    display: none;
+}
+
+.nav-item:hover .dropdown-menu {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
