@@ -234,6 +234,14 @@ header, .banner, .navbar-container {
     overflow: visible !important;
 }
 
+/* 修正主內容區塊擋住選單 */
+main, .main-content, #root > div:nth-child(2) {
+    position: relative !important;
+    z-index: 1 !important;
+    margin-top: 0 !important;
+    padding-top: 20px;
+}
+
 /* 掉落詳情 */
 .drop-detail td { background: #0a0e1a; padding: 12px 16px; }
 .drop-detail .simple-table { margin: 0; background: transparent; }
