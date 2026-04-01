@@ -14,20 +14,24 @@ a { color: #6ea8fe; text-decoration: none; }
 
 /* 全局選單 - z-index 修復 */
 .topbar, header, .navbar {
-    position: fixed;
+    position: sticky;
     top: 0;
-    left: 0;
-    right: 0;
     z-index: 9999 !important;
     background-color: #121933;
-    width: 100%;
+    pointer-events: auto !important;
 }
 
-/* 讓 main 內容不要被 fixed navbar 擋住 */
+/* 讓 main 內容不要被 navbar 擋住 */
 main.container, .page {
-    padding-top: 80px;
+    padding-top: 70px;
     position: relative;
     z-index: 1;
+    margin-top: 0 !important;
+}
+
+/* 確保沒有負值margin */
+body, html {
+    margin-top: 0 !important;
 }
 
 /* 分頁標籤 - 確保不被下方內容擋住 */
